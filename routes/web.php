@@ -24,3 +24,8 @@ Route::get('/dashboard', function () {
 Route::get('/user', function () {
     return view('admin.user');
 });
+
+Route::get('/login', function () {
+    return view('auth.login');
+});
+

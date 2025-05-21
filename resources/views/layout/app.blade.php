@@ -21,13 +21,13 @@
 			<span class="text"></span>
 		</a>
 		<ul class="side-menu top">
-			<li class="active">
+			<li class="{{ request()->is('dashboard') ? 'active' : '' }}">
 				<a href="{{url("dashboard")}}">
 					<i class="fa-solid fa-gauge-high"></i>
 					<span class="text">Dashboard</span>
 				</a>
 			</li>
-			<li>
+			<li class="{{ request()->is('user') ? 'active' : '' }}">
 				<a href="{{url("user")}}">
                     <i class="fa-solid fa-user"></i>
 					<span class="text">User</span>
