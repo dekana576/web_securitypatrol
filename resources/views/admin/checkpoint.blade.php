@@ -1,6 +1,6 @@
 @extends('layout.app')
 
-@section('title','User')
+@section('title','Checkpoint')
 
 @section('content')
 
@@ -8,7 +8,7 @@
     <main>
         <div class="head-title">
             <div class="left">
-                <h1>User</h1>
+                <h1>Checkpoint Name</h1>
                 <!-- <ul class="breadcrumb">
                     <li>
                         <a href="#">Dashboard</a>
@@ -19,23 +19,26 @@
                     </li>
                 </ul> -->
             </div>
-           
+         
         </div>
 
         <div class="control-button top">
-            <a href="{{url("adduser")}}" class="btn-tambah">
+            <a href="{{url("")}}" class="btn-tambah-cp">
                 <i class="fa-solid fa-plus"></i>
-                <span class="text">Tambah User</span>
+                <span class="text">Tambah Checkpoint</span>
             </a>
-            <a href="#" class="btn-import" type="button" data-bs-toggle="modal" data-bs-target="#importModal">
+            <a href="#" class="btn-import-cp" data-bs-toggle="modal" data-bs-target="#importModal">
                 <i class="fa-solid fa-file-import"></i>
-                <span class="text">Import User</span>
+                <span class="text">Import Checkpoint</span>
+            </a>
+            <a href="" class="btn-print"  onclick="printTable()">
+                <i class="fa-solid fa-print"></i>
+                <span class="text">Print data</span>
             </a>
         </div>
-              
 
-            <!-- Modal -->
-            <div class="modal fade" id="importModal" tabindex="-1" aria-labelledby="importModalLabel" aria-hidden="true">
+        <!-- Modal -->
+        <div class="modal fade" id="importModal" tabindex="-1" aria-labelledby="importModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <form action="" method="POST" enctype="multipart/form-data">
                 @csrf
@@ -59,25 +62,21 @@
             </div>
             </div>
 
-          
+
         <div class="table-data">
             <table id="example" class="table table-striped">
                 <thead>
                     <tr>
-                        <th>Name</th>
-                        <th>NIK</th>
-                        <th>Phone Number</th>
-                        <th>Gender</th>
-                        <th>Sales Office</th>
+                        <th>Checkpoint Name</th>
+                        <th>ID Checkpoint</th>
+                        <th>Sales Office Name</th>
                         <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td>Tiger Nixon</td>
-                        <td>123456789</td>
-                        <td>0823456789</td>
-                        <td>Male</td>
+                        <td>lantai 3</td>
+                        <td>123</td>
                         <td>Denpasar</td>
                         <td>
                             <a href="#" class="action-icon edit-icon">
@@ -85,7 +84,7 @@
                               </a>
                               <a href="#" class="action-icon delete-icon"  onclick="hapus()">
                                 <i class="fa-solid fa-trash" title="Delete"></i>
-                              </a>                              
+                            </a>   
                         </td>
                     </tr>
                     

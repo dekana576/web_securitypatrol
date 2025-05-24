@@ -49,15 +49,24 @@
             </li>
         </ul>
 
+        <!-- Filter data -->
+        <div class="d-flex align-items-center gap-2 mt-5 filter-wrapper">
+            <label for="date-filter" class="form-label mb-0">Filter data :</label>
+            <div class="position-relative rounded-pill bg-light px-3 py-2 date-input-wrapper">
+              <input type="date" id="date-filter" class="form-control border-0 bg-transparent p-0 ps-1"placeholder="dd/mm/yyyy" style="width: 110px; font-size: 14px;">
+            </div>
+          </div>
+
+
 
         <div class="table-data">
            
-            <div class="todo">
+            {{-- <div class="todo">
                 <div class="head">
                     <h3></h3>
                 </div>
                
-            </div>
+            </div> --}}
         </div>
     </main>
     <!-- MAIN -->   

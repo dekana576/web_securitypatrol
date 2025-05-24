@@ -36,47 +36,48 @@
                 </div>
                 <form action="/submit" method="POST" class="form-input">
                     <div class="form-group">
-                      <label for="nama">Name</label>
-                      <input type="text" id="nama" name="nama" required>
+                      <label for="name">Name</label>
+                      <input type="text" id="name" name="name" class="form-control"  required>
                     </div>
-                  
+                    <div class="form-group">
+                      <label for="nik">NIK</label>
+                      <input type="number" id="nik" name="nik" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                      <label for="phone_number">Phone Number</label>
+                      <input type="number" id="phone_number" name="phone_number" class="form-control" required>
+                    </div>  
+                    <div class="form-group">
+                      <label for="gender">Gender</label>
+                      <input type="text" id="gender" name="gender" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                      <label for="username">Username</label>
+                      <input type="text" id="username" name="username" class="form-control" required>
+                    </div>
                     <div class="form-group">
                       <label for="email">Email</label>
-                      <input type="email" id="email" name="email" required>
+                      <input type="email" id="email" name="email" class="form-control" required>
                     </div>
-                  
                     <div class="form-group">
                       <label for="password">Password</label>
-                      <input type="password" id="password" name="password" required>
+                      <input type="password" id="password" name="password" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                      <label for="sales_office_name">Sales Office Name</label>
+                      <select id="sales_office_name" name="sales_office_name" class="form-control" required>
+                        <option value="">-- Pilih Sales Office --</option>
+                        <option value="Denpasar">Denpasar</option>
+                        <option value="Badung">Badung</option>
+                      </select>
                     </div>
                   
                     <button type="submit">Tambah</button>
+                    <button class="btn-cancel">Batal</button>
                     
                   </form>
             </div>
-            <form action="#" method="POST">
-              <div class="row">
-                
-                  <div class="card card-primary">
-                    
-                    <div class="card-body">
-                      <div class="form-group">
-                        <label for="name">Name</label>
-                        <input type="text" id="name" class="form-control" placeholder="Masukkan Nama" name="name">
-                      </div>
-                    </div>
-                  </div>
-                
-              </div>
-      
-              <div class="row">
-                <div class="col-12">
-                  <a href="{{ url()->previous() }}" class="btn btn-secondary" style="margin-right: 10px;">Cancel</a>
-                  <input type="submit" value="Submit" class="btn btn-success">
-                </div>
-              </div>
-      
-            </form>
+         
         </div>
     </main>
     <!-- MAIN -->   
