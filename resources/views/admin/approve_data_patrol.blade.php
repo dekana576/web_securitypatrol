@@ -1,6 +1,6 @@
 @extends('layout.app')
 
-@section('title','Data Patrol')
+@section('title','Approve Data Patrol')
 
 @section('content')
 

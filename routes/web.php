@@ -55,3 +55,7 @@ Route::get('/kriteria_checkpoint', function () {
 Route::get('/sales_office', function () {
     return view('admin.sales_office');
 });
+
+Route::get('/user_jadwal', function () {
+    return view('user.user_jadwal');
+});

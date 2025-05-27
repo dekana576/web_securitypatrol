@@ -1,0 +1,150 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+  
+body {
+    background-color: #f3f3f3;
+    margin: 0;
+    padding: 0;
+}
+a {
+    text-decoration: none;
+}
+li {
+    list-style: none;
+}
+
+.sidebar {
+    height: 100vh;
+    width: 250px;
+    position: fixed;
+    top: 0;
+    left: -250px;
+    background-color: #343a40;
+    color: white;
+    transition: all 0.3s ease;
+    padding-top: 60px;
+    z-index: 900;
+    overflow-x: hidden;
+    scrollbar-width: none;
+}
+.sidebar .sidebar-menu {
+    width: 100%;
+    margin-top: 48px;
+}
+.sidebar .sidebar-menu li {
+    height: 48px;
+    background: transparent;
+    margin-left: 6px;
+    border-radius: 48px 0 0 48px;
+    padding: 4px;
+}
+ 
+.sidebar .sidebar-menu li a.logout {
+    color: red;
+}
+
+.sidebar a {
+    display: flex;
+    align-items: center;
+    gap: 22px; 
+    color: white;
+    padding: 10px 20px;
+    transition: background-color 0.3s ease;
+}
+.sidebar ul {
+
+    padding-left: 0;
+
+}
+.sidebar.active {
+    left: 0;
+}
+
+.card {
+    outline: none;
+    border-radius: 10px;
+    box-shadow: 0 0 8px rgba(0,0,0,0.05);
+}
+
+.camera-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: black;
+    color: white;
+    padding: 10px;
+    border-radius: 10px;
+    width: 50px;
+    height: 40px;
+    margin: auto;
+    cursor: pointer;
+}
+
+.save-btn {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 10px;
+    width: 100%;
+}
+
+#cameraInput {
+    display: none;
+}
+#content nav .profile img {
+    width: 36px;
+    height: 36px;
+    object-fit: cover;
+    border-radius: 50%;
+}
+#content nav .profile{
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+}
+#content nav {
+    height: 56px;
+    background: white;
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    grid-gap: 24px;
+    font-family: var(--lato);
+    position: sticky;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+}
+
+.link-jadwal {
+    color: #007bff;
+    text-decoration: underline;
+    font-size: 14px;
+    display:block;
+    margin-top: 10px;
+    text-align: center;
+}
+.camera-button {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: black;
+    color: white;
+    padding: 12px 15px;
+    border-radius: 10px;
+    font-size: 20px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    cursor: pointer;
+    width: 88px;
+    height: 48px;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+  

@@ -6,9 +6,11 @@
 
 	<!-- Font awesome -->
 	<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
-	<!-- My CSS -->
+	<!-- Bootstrap -->
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.3/css/bootstrap.min.css">
+	<!-- Data tabel -->
 	<link rel="stylesheet" href="https://cdn.datatables.net/2.3.1/css/dataTables.bootstrap5.css">
+	<!-- My CSS -->
 	<link rel="stylesheet" href="{{url("css/style.css")}}">
 	
 	<title>@yield('title')</title>

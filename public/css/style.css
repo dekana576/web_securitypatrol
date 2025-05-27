@@ -540,7 +540,7 @@ body {
   }
   
   .edit-icon {
-    background-color: #0d6efd; 
+    background-color: #2899ef; 
   }
 
   .edit-icon:hover {
@@ -548,11 +548,19 @@ body {
   }
 
   .delete-icon {
-    background-color: #dc3545; 
+    background-color: #f63a4d; 
   }
 
   .delete-icon:hover {
     background-color: #bb2d3b;
+  }
+
+  .approve-icon {
+    background-color: #24ff54; 
+  }
+
+  .approve-icon:hover {
+    background-color: #39d431;
   }
 
   
