@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\RegionController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -17,27 +18,32 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+//Admin Routes
 Route::get('/dashboard', function () {
     return view('admin.dashboard');
 });
 
 Route::get('/user', function () {
-    return view('admin.user');
+    return view('admin.user.user');
 });
 Route::get('/adduser', function () {
-    return view('admin.add_user');
+    return view('admin.user.add_user');
 });
 
 Route::get('/login', function () {
     return view('auth.login');
 });
 
-Route::get('/region', function () {
-    return view('admin.region');
-});
+
+Route::get('/region', [RegionController::class, 'index'])->name('region.index');
+Route::get('/region-data', [RegionController::class, 'getdata'])->name('region.data');
+Route::get('/region/create', [RegionController::class, 'create'])->name('region.create');
+Route::post('/region', [RegionController::class, 'store'])->name('region.store');
+Route::put('/region/{id}', [RegionController::class, 'update'])->name('region.update');
+Route::delete('/region/{id}', [RegionController::class, 'destroy'])->name('region.destroy');
 
 Route::get('/data_patrol', function () {
-    return view('admin.data_patrol');
+    return view('admin.data_patrol.data_patrol');
 });
 
 Route::get('/jadwal_patrol', function () {
@@ -45,15 +51,15 @@ Route::get('/jadwal_patrol', function () {
 });
 
 Route::get('/checkpoint', function () {
-    return view('admin.checkpoint');
+    return view('admin.checkpoint.checkpoint');
 });
 
 Route::get('/kriteria_checkpoint', function () {
-    return view('admin.kriteria_checkpoint');
+    return view('admin.checkpoint.kriteria_checkpoint');
 });
 
 Route::get('/sales_office', function () {
-    return view('admin.sales_office');
+    return view('admin.sales_office.sales_office');
 });
 
 Route::get('/user_jadwal', function () {
