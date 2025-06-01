@@ -1,67 +1,41 @@
 <?php
 
-use App\Http\Controllers\Admin\RegionController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\RegionController;
 
 /*
 |--------------------------------------------------------------------------
 | Web Routes
 |--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
 */
 
 Route::get('/', function () {
     return view('welcome');
 });
 
-//Admin Routes
-Route::get('/dashboard', function () {
-    return view('admin.dashboard');
+// Dashboard & Auth
+Route::get('/dashboard', fn () => view('admin.dashboard'))->name('dashboard');
+Route::get('/login', fn () => view('auth.login'))->name('login');
+
+// User Management
+Route::get('/user', fn () => view('admin.user.user'))->name('user.index');
+Route::get('/adduser', fn () => view('admin.user.add_user'))->name('user.create');
+
+// Region Routes (Group untuk kerapihan dan konsistensi)
+Route::prefix('region')->name('region.')->group(function () {
+    Route::get('/', [RegionController::class, 'index'])->name('index');
+    Route::get('/data', [RegionController::class, 'getdata'])->name('data');
+    Route::get('/create', [RegionController::class, 'create'])->name('create');
+    Route::post('/', [RegionController::class, 'store'])->name('store');
+    Route::get('/{id}/edit', [RegionController::class, 'edit'])->name('edit'); // <- ditambahkan
+    Route::put('/{id}', [RegionController::class, 'update'])->name('update');
+    Route::delete('/{id}', [RegionController::class, 'destroy'])->name('destroy');
 });
 
-Route::get('/user', function () {
-    return view('admin.user.user');
-});
-Route::get('/adduser', function () {
-    return view('admin.user.add_user');
-});
-
-Route::get('/login', function () {
-    return view('auth.login');
-});
-
-
-Route::get('/region', [RegionController::class, 'index'])->name('region.index');
-Route::get('/region-data', [RegionController::class, 'getdata'])->name('region.data');
-Route::get('/region/create', [RegionController::class, 'create'])->name('region.create');
-Route::post('/region', [RegionController::class, 'store'])->name('region.store');
-Route::put('/region/{id}', [RegionController::class, 'update'])->name('region.update');
-Route::delete('/region/{id}', [RegionController::class, 'destroy'])->name('region.destroy');
-
-Route::get('/data_patrol', function () {
-    return view('admin.data_patrol.data_patrol');
-});
-
-Route::get('/jadwal_patrol', function () {
-    return view('admin.jadwal_patrol');
-});
-
-Route::get('/checkpoint', function () {
-    return view('admin.checkpoint.checkpoint');
-});
-
-Route::get('/kriteria_checkpoint', function () {
-    return view('admin.checkpoint.kriteria_checkpoint');
-});
-
-Route::get('/sales_office', function () {
-    return view('admin.sales_office.sales_office');
-});
-
-Route::get('/user_jadwal', function () {
-    return view('user.user_jadwal');
-});
+// Static Views (sementara)
+Route::get('/data_patrol', fn () => view('admin.data_patrol.data_patrol'))->name('data_patrol');
+Route::get('/jadwal_patrol', fn () => view('admin.jadwal_patrol'))->name('jadwal_patrol');
+Route::get('/checkpoint', fn () => view('admin.checkpoint.checkpoint'))->name('checkpoint');
+Route::get('/kriteria_checkpoint', fn () => view('admin.checkpoint.kriteria_checkpoint'))->name('kriteria_checkpoint');
+Route::get('/sales_office', fn () => view('admin.sales_office.sales_office'))->name('sales_office');
+Route::get('/user_jadwal', fn () => view('user.user_jadwal'))->name('user_jadwal');

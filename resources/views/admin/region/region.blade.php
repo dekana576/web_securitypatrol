@@ -125,23 +125,26 @@
 
         // Hapus handler
         $('#region-table').on('click', '.delete', function () {
-            let id = $(this).data('id');
-            if (confirm("Apakah Anda yakin ingin menghapus region ini?")) {
+            const id = $(this).data('id');
+
+            if (confirm("Yakin ingin menghapus region ini?")) {
                 $.ajax({
-                    url: '{{ url("admin/region") }}/' + id,
+                    url: `/region/${id}`,
                     type: 'DELETE',
-                    data: { _token: '{{ csrf_token() }}' },
-                    success: function (res) {
-                        alert(res.message);
-                        table.ajax.reload();
+                    data: {
+                        _token: '{{ csrf_token() }}'
                     },
-                    error: function (err) {
+                    success: function (response) {
+                        alert(response.message);
+                        $('#region-table').DataTable().ajax.reload();
+                    },
+                    error: function () {
                         alert('Gagal menghapus data.');
-                        console.error(err);
                     }
                 });
             }
         });
+
     });
 </script>
 @endpush

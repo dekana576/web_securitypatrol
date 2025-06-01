@@ -9,12 +9,13 @@ use Yajra\DataTables\Facades\DataTables;
 
 class RegionController extends Controller
 {
-    public function index(Request $request)
+    // Halaman utama Region
+    public function index()
     {
-
         return view('admin.region.region');
     }
-    
+
+    // Ambil data untuk DataTables
     public function getdata(Request $request)
     {
         $regions = Region::query();
@@ -23,39 +24,69 @@ class RegionController extends Controller
             ->addIndexColumn()
             ->addColumn('action', function ($row) {
                 return '
-                    <button class="btn btn-sm btn-primary edit" data-id="'.$row->id.'">Edit</button>
-                    <button class="btn btn-sm btn-danger delete" data-id="'.$row->id.'">Delete</button>
+                    <a href="' . route('region.edit', $row->id) . '" class="btn btn-sm btn-primary">Edit</a>
+                    <button class="btn btn-sm btn-danger delete" data-id="' . $row->id . '">Delete</button>
                 ';
             })
             ->rawColumns(['action'])
             ->make(true);
     }
-    
-    
+
+    // Tampilkan form tambah region
     public function create()
     {
         return view('admin.region.add_region');
     }
 
+    // Simpan data baru
     public function store(Request $request)
     {
-        $request->validate(['name' => 'required|string|max:255']);
+        $request->validate([
+            'name' => 'required|string|max:255'
+        ]);
+
         Region::create($request->only('name'));
+
         return redirect()->route('region.index')->with('success', 'Region berhasil ditambahkan.');
     }
 
-    public function update(Request $request, $id)
+    // Tampilkan form edit
+    public function edit($id)
     {
-        $request->validate(['name' => 'required|string|max:255']);
         $region = Region::findOrFail($id);
-        $region->update($request->only('name'));
-        return response()->json(['message' => 'Region updated']);
+        return view('admin.region.edit_region', compact('region'));
     }
 
-    public function destroy($id)
+    // Proses update
+    public function update(Request $request, $id)
     {
+        $request->validate([
+            'name' => 'required|string|max:255'
+        ]);
+
         $region = Region::findOrFail($id);
-        $region->delete();
-        return response()->json(['message' => 'Region deleted']);
+        $region->update($request->only('name'));
+
+        return redirect()->route('region.index')->with('success', 'Region berhasil diperbarui.');
     }
+
+    // Hapus data
+    public function destroy($id)
+{
+    $region = Region::find($id);
+
+    if (!$region) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Region tidak ditemukan.'
+        ], 404);
+    }
+
+    $region->delete();
+
+    return response()->json([
+        'success' => true,
+        'message' => 'Region berhasil dihapus.'
+    ]);
+}
 }
