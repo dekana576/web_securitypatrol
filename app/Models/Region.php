@@ -10,4 +10,12 @@ class Region extends Model
     use HasFactory;
 
     protected $fillable = ['name'];
+
+    public function salesOffices()
+    {
+        return $this->hasMany(SalesOffice::class);
+    }
 }
+
+
+

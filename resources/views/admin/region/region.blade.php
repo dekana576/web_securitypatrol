@@ -79,7 +79,7 @@
 
 <script>
     $(document).ready(function () {
-        let table = $('#region-table').DataTable({
+        const table = $('#region-table').DataTable({
             processing: true,
             serverSide: true,
             ajax: '{{ route("region.data") }}',
@@ -87,14 +87,11 @@
                 {
                     data: 'DT_RowIndex',
                     name: 'DT_RowIndex',
-                    orderable: false,  
-                    searchable: false, 
+                    orderable: false,
+                    searchable: false,
                     className: 'text-center'
                 },
-                {
-                    data: 'name',
-                    name: 'name'
-                },
+                { data: 'name', name: 'name' },
                 {
                     data: 'action',
                     name: 'action',
@@ -103,27 +100,29 @@
                     className: 'text-center'
                 }
             ],
+            responsive: true,
             dom: '<"row mb-3"<"col-sm-6"l><"col-sm-6 text-end"f>>' +
                  '<"table-responsive"tr>' +
                  '<"row mt-3"<"col-sm-6"i><"col-sm-6 text-end"p>>',
             language: {
-                search: "_INPUT_",
-                searchPlaceholder: "Cari region...",
+                search: "",
+                searchPlaceholder: " Cari region...",
                 lengthMenu: "Tampilkan _MENU_ entri",
-                info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ entri",
-                infoEmpty: "Tidak ada data",
-                emptyTable: "Data tidak tersedia",
+                info: "Menampilkan _START_ - _END_ dari _TOTAL_ entri",
+                infoEmpty: "Tidak ada data untuk ditampilkan",
+                emptyTable: "Belum ada data region.",
                 paginate: {
-                    previous: "Sebelumnya",
-                    next: "Berikutnya"
+                    previous: "<button class='btn btn-primary btn-sm me-2'>←</button>",
+                    next: "<button class='btn btn-primary btn-sm'>→</button>"
                 },
-                processing: "Memuat..."
+                processing: "Sedang memuat data..."
             },
             lengthMenu: [5, 10, 25, 50],
             pageLength: 10,
         });
+    
 
-        // Hapus handler
+        // Handler tombol delete
         $('#region-table').on('click', '.delete', function () {
             const id = $(this).data('id');
 
@@ -136,17 +135,17 @@
                     },
                     success: function (response) {
                         alert(response.message);
-                        $('#region-table').DataTable().ajax.reload();
+                        table.ajax.reload();
                     },
                     error: function () {
-                        alert('Gagal menghapus data.');
+                        alert('Terjadi kesalahan saat menghapus data.');
                     }
                 });
             }
         });
-
     });
 </script>
+
 @endpush
 
     

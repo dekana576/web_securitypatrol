@@ -24,8 +24,8 @@ class RegionController extends Controller
             ->addIndexColumn()
             ->addColumn('action', function ($row) {
                 return '
-                    <a href="' . route('region.edit', $row->id) . '" class="btn btn-sm btn-primary">Edit</a>
-                    <button class="btn btn-sm btn-danger delete" data-id="' . $row->id . '">Delete</button>
+                    <a href="' . route('region.edit', $row->id) . '" class="action-icon edit-icon"><i class="fa-solid fa-file-pen" title="Edit"></i></a>
+                    <button class="action-icon delete-icon delete" data-id="' . $row->id . '"><i class="fa-solid fa-trash" title="Delete"></i></button>
                 ';
             })
             ->rawColumns(['action'])
@@ -72,21 +72,21 @@ class RegionController extends Controller
 
     // Hapus data
     public function destroy($id)
-{
-    $region = Region::find($id);
+    {
+        $region = Region::find($id);
 
-    if (!$region) {
+        if (!$region) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Region tidak ditemukan.'
+            ], 404);
+        }
+
+        $region->delete();
+
         return response()->json([
-            'success' => false,
-            'message' => 'Region tidak ditemukan.'
-        ], 404);
+            'success' => true,
+            'message' => 'Region berhasil dihapus.'
+        ]);
     }
-
-    $region->delete();
-
-    return response()->json([
-        'success' => true,
-        'message' => 'Region berhasil dihapus.'
-    ]);
-}
 }
