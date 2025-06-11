@@ -15,6 +15,10 @@ class Region extends Model
     {
         return $this->hasMany(SalesOffice::class);
     }
+    public function checkpoint()
+    {
+        return $this->hasMany(Checkpoint::class);
+    }
 }
 
 

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\CheckpointController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\RegionController;
 use App\Http\Controllers\Admin\SalesOfficeController;
@@ -28,7 +29,7 @@ Route::prefix('region')->name('region.')->group(function () {
     Route::get('/data', [RegionController::class, 'getdata'])->name('data');
     Route::get('/create', [RegionController::class, 'create'])->name('create');
     Route::post('/', [RegionController::class, 'store'])->name('store');
-    Route::get('/{id}/edit', [RegionController::class, 'edit'])->name('edit'); // <- ditambahkan
+    Route::get('/{id}/edit', [RegionController::class, 'edit'])->name('edit'); 
     Route::put('/{id}', [RegionController::class, 'update'])->name('update');
     Route::delete('/{id}', [RegionController::class, 'destroy'])->name('destroy');
 });
@@ -43,9 +44,21 @@ Route::prefix('region')->name('region.')->group(function () {
         Route::delete('/{id}', [SalesOfficeController::class, 'destroy'])->name('destroy');
     });
 
+    Route::prefix('checkpoint')->name('checkpoint.')->group(function () {
+        Route::get('/', [CheckpointController::class, 'index'])->name('index');
+        Route::get('/data', [CheckpointController::class, 'data'])->name('data');
+        Route::get('/create', [CheckpointController::class, 'create'])->name('create');
+        Route::post('/', [CheckpointController::class, 'store'])->name('store');
+        Route::get('/{id}/edit', [CheckpointController::class, 'edit'])->name('edit');
+        Route::put('/{id}', [CheckpointController::class, 'update'])->name('update');
+        Route::delete('/{id}', [CheckpointController::class, 'destroy'])->name('destroy');
+    });
+Route::get('/get-sales-offices/{region}', [CheckpointController::class, 'getSalesOfficesByRegion']);
+
+
 // Static Views (sementara)
 Route::get('/data_patrol', fn () => view('admin.data_patrol.data_patrol'))->name('data_patrol');
 Route::get('/jadwal_patrol', fn () => view('admin.jadwal_patrol'))->name('jadwal_patrol');
-Route::get('/checkpoint', fn () => view('admin.checkpoint.checkpoint'))->name('checkpoint');
+
 Route::get('/kriteria_checkpoint', fn () => view('admin.checkpoint.kriteria_checkpoint'))->name('kriteria_checkpoint');
 Route::get('/user_jadwal', fn () => view('user.user_jadwal'))->name('user_jadwal');

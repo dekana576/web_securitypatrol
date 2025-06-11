@@ -3,97 +3,110 @@
 @section('title','Checkpoint')
 
 @section('content')
-
-    <!-- MAIN -->
-    <main>
-        <div class="head-title">
-            <div class="left">
-                <h1>Checkpoint Name</h1>
-                <!-- <ul class="breadcrumb">
-                    <li>
-                        <a href="#">Dashboard</a>
-                    </li>
-                    <li><i class='bx bx-chevron-right' ></i></li>
-                    <li>
-                        <a class="active" href="#">Home</a>
-                    </li>
-                </ul> -->
-            </div>
-         
+<main>
+    <div class="head-title">
+        <div class="left">
+            <h1>Checkpoint</h1>
         </div>
+    </div>
 
-        <div class="control-button top">
-            <a href="{{url("")}}" class="btn-tambah-cp">
-                <i class="fa-solid fa-plus"></i>
-                <span class="text">Tambah Checkpoint</span>
-            </a>
-            <a href="#" class="btn-import-cp" data-bs-toggle="modal" data-bs-target="#importModal">
-                <i class="fa-solid fa-file-import"></i>
-                <span class="text">Import Checkpoint</span>
-            </a>
-            <a href="" class="btn-print"  onclick="printTable()">
-                <i class="fa-solid fa-print"></i>
-                <span class="text">Print data</span>
-            </a>
-        </div>
+    <div class="control-button top mb-3">
+        <a href="{{ route('checkpoint.create') }}" class="btn-tambah">
+            <i class="fa-solid fa-plus"></i>
+            <span class="text">Tambah Checkpoint</span>
+        </a>
+    </div>
 
-        <!-- Modal -->
-        <div class="modal fade" id="importModal" tabindex="-1" aria-labelledby="importModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <form action="" method="POST" enctype="multipart/form-data">
-                @csrf
-                <div class="modal-content">
-                    <div class="modal-header">
-                    <h5 class="modal-title" id="importModalLabel">Import Data dari Excel</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
-                    </div>
-                    <div class="modal-body">
-                    <div class="mb-3">
-                        <label for="file" class="form-label">Pilih File Excel</label>
-                        <input type="file" class="form-control" name="file" required accept=".xlsx,.xls">
-                    </div>
-                    </div>
-                    <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                    <button type="submit" class="btn btn-success">Import</button>
-                    </div>
-                </div>
-                </form>
-            </div>
-            </div>
-
-
-        <div class="table-data">
-            <table id="example" class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>Checkpoint Name</th>
-                        <th>ID Checkpoint</th>
-                        <th>Sales Office Name</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>lantai 3</td>
-                        <td>123</td>
-                        <td>Denpasar</td>
-                        <td>
-                            <a href="#" class="action-icon edit-icon">
-                                <i class="fa-solid fa-file-pen" title="Edit"></i>
-                              </a>
-                              <a href="#" class="action-icon delete-icon"  onclick="hapus()">
-                                <i class="fa-solid fa-trash" title="Delete"></i>
-                            </a>   
-                        </td>
-                    </tr>
-                    
-                </tbody>
-            </table>
-           
-        </div>
-    </main>
-    <!-- MAIN -->   
-
+    <div class="table-data mt-4">
+        <table id="checkpoint-table" class="table table-striped">
+            <thead>
+                <tr>
+                    <th>No</th>
+                    <th>Region</th>
+                    <th>Sales Office</th>
+                    <th>Checkpoint Name</th>
+                    <th>Kode</th>
+                    <th>QR Code</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</main>
 @endsection
-    
+
+@push('styles')
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+@endpush
+
+@push('scripts')
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script>
+    $(document).ready(function () {
+        const table = $('#checkpoint-table').DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: '{{ route("checkpoint.data") }}',
+        columns: [
+            { data: 'DT_RowIndex', orderable: false, searchable: false, className: 'text-center' },
+            { data: 'region_name', name: 'region.name' },
+            { data: 'sales_office_name', name: 'sales_office.sales_office_name' },
+            { data: 'checkpoint_name', name: 'checkpoint_name' },
+            { data: 'checkpoint_code', name: 'checkpoint_code' },
+            { data: 'qr_code', name: 'qr_code', orderable: false, searchable: false },
+            { 
+                    data: 'action', 
+                    name: 'action', 
+                    orderable: false, 
+                    searchable: false, 
+                    className: 'text-center' 
+            }
+        ],
+
+        responsive: true,
+            dom: '<"row mb-3"<"col-sm-6"l><"col-sm-6 text-end"f>>' +
+                 '<"table-responsive"tr>' +
+                 '<"row mt-3"<"col-sm-6"i><"col-sm-6 text-end"p>>',
+            language: {
+                search: "",
+                searchPlaceholder: " Cari sales office...",
+                lengthMenu: "Tampilkan _MENU_ entri",
+                info: "Menampilkan _START_ - _END_ dari _TOTAL_ entri",
+                infoEmpty: "Tidak ada data untuk ditampilkan",
+                emptyTable: "Belum ada data Sales Office.",
+                paginate: {
+                    previous: "<button class='btn btn-primary btn-sm me-2'>←</button>",
+                    next: "<button class='btn btn-primary btn-sm'>→</button>"
+                },
+                processing: "Sedang memuat data..."
+            },
+            lengthMenu: [5, 10, 25, 50],
+            pageLength: 10,
+
+    });
+
+    // Handler tombol delete
+        $('#checkpoint-table').on('click', '.delete', function () {
+            const id = $(this).data('id');
+
+            if (confirm("Yakin ingin menghapus checkpoint ini?")) {
+                $.ajax({
+                    url: `/checkpoint/${id}`,
+                    type: 'DELETE',
+                    data: {
+                        _token: '{{ csrf_token() }}'
+                    },
+                    success: function (response) {
+                        alert(response.message);
+                        table.ajax.reload();
+                    },
+                    error: function () {
+                        alert('Terjadi kesalahan saat menghapus data.');
+                    }
+                });
+            }
+        });
+    });
+</script>
+@endpush
