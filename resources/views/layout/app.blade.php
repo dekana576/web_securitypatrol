@@ -73,7 +73,7 @@
 		</ul>
 		<ul class="side-menu">
 			<li>
-				<a href="#" class="logout">
+				<a href="{{route('logout')}}" class="logout">
 					<i class="fa-solid fa-arrow-right-from-bracket"></i>
 					<span class="text">Logout</span>
 				</a>

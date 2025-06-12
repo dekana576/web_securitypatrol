@@ -24,4 +24,9 @@ class SalesOffice extends Model
     {
         return $this->hasMany(Checkpoint::class);
     }
+
+    public function user()
+    {
+        return $this->hasMany(User::class);
+    }
 }

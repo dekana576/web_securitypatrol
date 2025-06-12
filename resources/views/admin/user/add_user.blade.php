@@ -32,50 +32,100 @@
            
             <div class="todo">
                 <div class="head">
-                    <h3></h3>
+                    <h3>Form Tambah User</h3>
                 </div>
-                <form action="/submit" method="POST" class="form-input">
-                    <div class="form-group">
+                <form action="{{ route('user.store') }}" method="POST" class="form-input">
+                  @csrf
+  
+                  <div class="form-group">
                       <label for="name">Name</label>
-                      <input type="text" id="name" name="name" class="form-control"  required>
-                    </div>
-                    <div class="form-group">
-                      <label for="nik">NIK</label>
-                      <input type="number" id="nik" name="nik" class="form-control" required>
-                    </div>
-                    <div class="form-group">
-                      <label for="phone_number">Phone Number</label>
-                      <input type="number" id="phone_number" name="phone_number" class="form-control" required>
-                    </div>  
-                    <div class="form-group">
-                      <label for="gender">Gender</label>
-                      <input type="text" id="gender" name="gender" class="form-control" required>
-                    </div>
-                    <div class="form-group">
+                      <input type="text" id="name" name="name" class="form-control @error('name') is-invalid @enderror" value="{{ old('name') }}" required>
+                      @error('name')
+                          <div class="invalid-feedback">{{ $message }}</div>
+                      @enderror
+                  </div>
+  
+                  <div class="form-group">
                       <label for="username">Username</label>
-                      <input type="text" id="username" name="username" class="form-control" required>
-                    </div>
-                    <div class="form-group">
-                      <label for="email">Email</label>
-                      <input type="email" id="email" name="email" class="form-control" required>
-                    </div>
-                    <div class="form-group">
-                      <label for="password">Password</label>
-                      <input type="password" id="password" name="password" class="form-control" required>
-                    </div>
-                    <div class="form-group">
-                      <label for="sales_office_name">Sales Office Name</label>
-                      <select id="sales_office_name" name="sales_office_name" class="form-control" required>
-                        <option value="">-- Pilih Sales Office --</option>
-                        <option value="Denpasar">Denpasar</option>
-                        <option value="Badung">Badung</option>
+                      <input type="text" id="username" name="username" class="form-control @error('username') is-invalid @enderror" value="{{ old('username') }}" required>
+                      @error('username')
+                          <div class="invalid-feedback">{{ $message }}</div>
+                      @enderror
+                  </div>
+  
+                  <div class="form-group">
+                      <label for="nik">NIK</label>
+                      <input type="number" id="nik" name="nik" class="form-control @error('nik') is-invalid @enderror" value="{{ old('nik') }}" required>
+                      @error('nik')
+                          <div class="invalid-feedback">{{ $message }}</div>
+                      @enderror
+                  </div>
+  
+                  <div class="form-group">
+                      <label for="phone_number">Phone Number</label>
+                      <input type="number" id="phone_number" name="phone_number" class="form-control @error('phone_number') is-invalid @enderror" value="{{ old('phone_number') }}" required>
+                      @error('phone_number')
+                          <div class="invalid-feedback">{{ $message }}</div>
+                      @enderror
+                  </div>
+  
+                  <div class="form-group">
+                      <label for="gender">Gender</label>
+                      <select id="gender" name="gender" class="form-control @error('gender') is-invalid @enderror" required>
+                          <option value="">-- Pilih Gender --</option>
+                          <option value="male" {{ old('gender') == 'male' ? 'selected' : '' }}>Laki-laki</option>
+                          <option value="female" {{ old('gender') == 'female' ? 'selected' : '' }}>Perempuan</option>
                       </select>
-                    </div>
-                  
-                    <button type="submit">Tambah</button>
-                    <button class="btn-cancel">Batal</button>
-                    
-                  </form>
+                      @error('gender')
+                          <div class="invalid-feedback">{{ $message }}</div>
+                      @enderror
+                  </div>
+  
+                  <div class="form-group">
+                      <label for="role">Role</label>
+                      <select id="role" name="role" class="form-control @error('role') is-invalid @enderror" required>
+                          <option value="security" {{ old('role') == 'security' ? 'selected' : '' }}>Security</option>
+                          <option value="admin" {{ old('role') == 'admin' ? 'selected' : '' }}>Admin</option>
+                      </select>
+                      @error('role')
+                          <div class="invalid-feedback">{{ $message }}</div>
+                      @enderror
+                  </div>
+  
+                  <div class="form-group">
+                      <label for="sales_office_id">Sales Office</label>
+                      <select id="sales_office_id" name="sales_office_id" class="form-control @error('sales_office_id') is-invalid @enderror" required>
+                          <option value="">-- Pilih Sales Office --</option>
+                          @foreach ($salesOffices as $office)
+                              <option value="{{ $office->id }}" {{ old('sales_office_id') == $office->id ? 'selected' : '' }}>
+                                  {{ $office->sales_office_name }}
+                              </option>
+                          @endforeach
+                      </select>
+                      @error('sales_office_id')
+                          <div class="invalid-feedback">{{ $message }}</div>
+                      @enderror
+                  </div>
+  
+                  <div class="form-group">
+                      <label for="email">Email</label>
+                      <input type="email" id="email" name="email" class="form-control @error('email') is-invalid @enderror" value="{{ old('email') }}" required>
+                      @error('email')
+                          <div class="invalid-feedback">{{ $message }}</div>
+                      @enderror
+                  </div>
+  
+                  <div class="form-group">
+                      <label for="password">Password</label>
+                      <input type="password" id="password" name="password" class="form-control @error('password') is-invalid @enderror" required>
+                      @error('password')
+                          <div class="invalid-feedback">{{ $message }}</div>
+                      @enderror
+                  </div>
+  
+                  <button type="submit" class="btn btn-primary">Tambah</button>
+                  <a href="{{ route('user.index') }}" class="btn-cancel">Batal</a>
+              </form>
             </div>
          
         </div>

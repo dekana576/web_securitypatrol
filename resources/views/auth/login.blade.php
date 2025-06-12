@@ -23,21 +23,25 @@
             </div>
             <div class="login-form">
                 <h2>Welcome</h2>
-                <form method="POST" action="">
+                
+
+                <form method="POST" action="{{ route('login.index') }}">
                     @csrf
-                    <input name="username" type="text" placeholder="Username" required>
+
+                    <input class="form-control @error('username') is-invalid @enderror" name="username" type="text" placeholder="Username" value="{{ old('username') }}" required>
+
                     <input name="password" type="password" placeholder="Password" required>
 
                     <div class="custome-checkbox">
                         <label class="remember-me">
-                            <input type="checkbox" name="remember">
+                            <input type="checkbox" name="remember" {{ old('remember') ? 'checked' : '' }}>
                             Remember me
                         </label>
                     </div>
 
                     <button type="submit">Login</button>
                     <hr>
-                    <a href="{{}}" class="forgot">Forgot Password?</a>
+                    <a href="#" class="forgot">Forgot Password?</a>
                 </form>
             </div>
         </div>

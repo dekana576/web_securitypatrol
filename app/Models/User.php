@@ -19,8 +19,14 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
+        'username',
+        'nik',
+        'phone_number',
+        'gender',
         'email',
         'password',
+        'sales_office_id',
+        'role',
     ];
 
     /**
@@ -42,4 +48,9 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function salesOffice()
+    {
+        return $this->belongsTo(SalesOffice::class, 'sales_office_id');
+    }
 }

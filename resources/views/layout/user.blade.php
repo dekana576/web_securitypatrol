@@ -46,7 +46,7 @@
   <!-- Content -->
   <section id="content">
        <!-- Navbar -->
-        <nav>
+        <nav >
             <i class="fa-solid fa-bars" id="toggleSidebar"></i>
             <a href="#" class="profile"><img src="{{url("img/user.png")}}"/></a>
         </nav>
