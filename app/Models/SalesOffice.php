@@ -29,4 +29,8 @@ class SalesOffice extends Model
     {
         return $this->hasMany(User::class);
     }
+    public function security_schedule()
+    {
+        return $this->hasMany(SecuritySchedule::class);
+    }
 }

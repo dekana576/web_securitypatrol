@@ -19,6 +19,10 @@ class Region extends Model
     {
         return $this->hasMany(Checkpoint::class);
     }
+    public function security_schedule()
+    {
+        return $this->hasMany(SecuritySchedule::class);
+    }
 }
 
 

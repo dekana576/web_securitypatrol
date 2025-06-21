@@ -53,4 +53,8 @@ class User extends Authenticatable
     {
         return $this->belongsTo(SalesOffice::class, 'sales_office_id');
     }
+    public function security_schedule()
+    {
+        return $this->hasMany(SecuritySchedule::class);
+    }
 }

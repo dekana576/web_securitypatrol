@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\CheckpointController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\RegionController;
 use App\Http\Controllers\Admin\SalesOfficeController;
+use App\Http\Controllers\Admin\SecurityScheduleController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 
@@ -22,6 +23,7 @@ Route::middleware(['auth'])->group(function () {
     // Group khusus Admin
     Route::middleware(['cek_login:admin'])->group(function () {
 
+        Route::get('/dashboard', fn () => view('admin.dashboard'))->name('dashboard');
         // ====================== User Management ======================
         Route::prefix('user')->name('user.')->group(function () {
             Route::get('/', [UserController::class, 'index'])->name('index');
@@ -66,6 +68,17 @@ Route::middleware(['auth'])->group(function () {
             Route::delete('/{id}', [CheckpointController::class, 'destroy'])->name('destroy');
         });
 
+        Route::prefix('security_schedule')->name('security_schedule.')->group(function () {
+            Route::get('/', [SecurityScheduleController::class, 'index'])->name('index');
+            Route::get('/create/{sales_office_id}', [SecurityScheduleController::class, 'create'])->name('create');
+            Route::post('/store', [SecurityScheduleController::class, 'store'])->name('store');
+            Route::get('/edit/{sales_office_id}', [SecurityScheduleController::class, 'edit'])->name('edit');
+            Route::post('/update/{sales_office_id}', [SecurityScheduleController::class, 'update'])->name('update');
+        });
+
+        // Static Views (sementara)
+        Route::get('/data_patrol', fn () => view('admin.data_patrol.data_patrol'))->name('data_patrol');
+
     });
 
     // Group khusus Security (jika ingin ditambahkan route khusus security)
@@ -76,7 +89,7 @@ Route::middleware(['auth'])->group(function () {
 });
 
 // Dashboard & Auth
-Route::get('/dashboard', fn () => view('admin.dashboard'))->name('dashboard');
+
 Route::prefix('login')->name('login.')->group(function () {
     Route::get('/', [AuthController::class, 'index'])->name('index');
     Route::post('/', [AuthController::class, 'Login'])->name('login');
@@ -90,9 +103,7 @@ Route::get('/logout',[AuthController::class, 'logout'])->name('logout');
 Route::get('/get-sales-offices/{region}', [CheckpointController::class, 'getSalesOfficesByRegion']);
 
 
-// Static Views (sementara)
-Route::get('/data_patrol', fn () => view('admin.data_patrol.data_patrol'))->name('data_patrol');
-Route::get('/jadwal_patrol', fn () => view('admin.jadwal_patrol'))->name('jadwal_patrol');
+
 
 Route::get('/kriteria_checkpoint', fn () => view('admin.checkpoint.kriteria_checkpoint'))->name('kriteria_checkpoint');
 Route::get('/user_jadwal', fn () => view('user.user_jadwal'))->name('user_jadwal');

@@ -40,8 +40,8 @@
 					<span class="text">Data Patrol</span>
 				</a>
 			</li>
-			<li class="{{ request()->is('jadwal_patrol*') ? 'active' : '' }}">
-				<a href="{{ url('jadwal_patrol') }}">
+			<li class="{{ request()->is('security_schedule*') ? 'active' : '' }}">
+				<a href="{{ url('security_schedule') }}">
 					<i class="fa-solid fa-table"></i>
 					<span class="text">Jadwal Patrol</span>
 				</a>
