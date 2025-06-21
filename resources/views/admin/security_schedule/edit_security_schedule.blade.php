@@ -23,7 +23,7 @@
             <input type="hidden" name="sales_office_id" value="{{ $salesOfficeId }}">
 
             @php
-                $shiftNames = ['Pagi', 'Siang', 'Sore'];
+                $shiftNames = ['Pagi', 'Siang', 'Malam'];
             @endphp
 
             <div class="row">

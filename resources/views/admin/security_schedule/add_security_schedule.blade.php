@@ -23,7 +23,7 @@
             <input type="hidden" name="region_id" value="{{ $regionId }}">
 
             @php
-                $shiftNames = ['Pagi', 'Siang', 'Sore'];
+                $shiftNames = ['Pagi', 'Siang', 'Malam'];
             @endphp
 
             <div class="row">
