@@ -70,7 +70,7 @@
                  '<"row mt-3"<"col-sm-6"i><"col-sm-6 text-end"p>>',
             language: {
                 search: "",
-                searchPlaceholder: " Cari sales office...",
+                searchPlaceholder: " Cari Checkpoint...",
                 lengthMenu: "Tampilkan _MENU_ entri",
                 info: "Menampilkan _START_ - _END_ dari _TOTAL_ entri",
                 infoEmpty: "Tidak ada data untuk ditampilkan",

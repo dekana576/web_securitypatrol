@@ -58,25 +58,25 @@
 				</a>
 				<ul class="collapse list-unstyled ms-4 mt-1 {{ request()->is('region*') || request()->is('sales_office*') || request()->is('checkpoint*') || request()->is('kriteria_checkpoint*') ? 'show' : '' }}" id="masterData">
 					<li class="{{ request()->is('region*') ? 'active' : '' }}">
-						<a href="{{ url('region') }}">
+						<a href="{{ url('region') }}"  style="color: grey">
 							<i class="fa-solid fa-flag"></i>
 							<span class="text">Region</span>
 						</a>
 					</li>
 					<li class="{{ request()->is('sales_office*') ? 'active' : '' }}">
-						<a href="{{ url('sales_office') }}">
+						<a href="{{ url('sales_office') }}" style="color: grey">
 							<i class="fa-solid fa-building"></i>
-							<span class="text">Sales Office</span>
+							<span class="text" >Sales Office</span>
 						</a>
 					</li>
 					<li class="{{ request()->is('checkpoint*') ? 'active' : '' }}">
-						<a href="{{ url('checkpoint') }}">
+						<a href="{{ url('checkpoint') }}" style="color: grey">
 							<i class="fa-solid fa-location-dot"></i>
 							<span class="text">Checkpoint</span>
 						</a>
 					</li>
 					<li class="{{ request()->is('kriteria_checkpoint*') ? 'active' : '' }}">
-						<a href="{{ url('kriteria_checkpoint') }}">
+						<a href="{{ url('kriteria_checkpoint') }}" style="color: grey">
 							<i class="fa-solid fa-list-check"></i>
 							<span class="text">Kriteria Checkpoint</span>
 						</a>
