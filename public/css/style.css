@@ -69,15 +69,12 @@ body {
 }
 
 #sidebar .brand {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: rgb(90, 148, 255);
   padding: 1rem 1rem 1rem 1rem;
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  background-color: var(--light);
-  
+  width: auto;
+  margin-top: 10px;
 }
 
 #sidebar.hide .brand .text {

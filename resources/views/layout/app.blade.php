@@ -21,8 +21,8 @@
 <body>
 	<!-- SIDEBAR -->
 	<section id="sidebar">
-		<a href="#" class="brand">
-			<span class="text fw-bold fs-5">Security App</span>
+		<a href="{{ url('dashboard') }}" class="brand">
+			<img src="{{ url('img/logo_astra.png') }}" width="150" alt="logo">
 		</a>
 		<ul class="side-menu top">
 			<li class="{{ request()->is('dashboard') ? 'active' : '' }}">
@@ -54,7 +54,7 @@
 		
 			<li class="has-submenu">
 				<a class="d-flex align-items-center" data-bs-toggle="collapse" href="#masterData">
-					<i class="fa-solid fa-database"></i><span class="text"> Master Data<i class="fa-solid fa-chevron-down ms-4"></i></span>
+					<i class="fa-solid fa-database"></i><span class="text"> Master Data</span>
 				</a>
 				<ul class="collapse list-unstyled ms-4 mt-1 {{ request()->is('region*') || request()->is('sales_office*') || request()->is('checkpoint*') || request()->is('kriteria_checkpoint*') ? 'show' : '' }}" id="masterData">
 					<li class="{{ request()->is('region*') ? 'active' : '' }}">
