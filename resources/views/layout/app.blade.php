@@ -3,23 +3,26 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-	<!-- Font awesome -->
+	
+	<!-- Font Awesome -->
 	<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+	
 	<!-- Bootstrap -->
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.3/css/bootstrap.min.css">
-	<!-- DataTables Bootstrap 5 -->
-	<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
-	<!-- My CSS -->
-	<link rel="stylesheet" href="{{ url('css/style.css') }}">
 	
+	<!-- DataTables -->
+	<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+	
+	<!-- Custom CSS -->
+	<link rel="stylesheet" href="{{ url('css/style.css') }}">
+
 	<title>@yield('title')</title>
 </head>
 <body>
 	<!-- SIDEBAR -->
 	<section id="sidebar">
 		<a href="#" class="brand">
-			<span class="text"></span>
+			<span class="text fw-bold fs-5">Security App</span>
 		</a>
 		<ul class="side-menu top">
 			<li class="{{ request()->is('dashboard') ? 'active' : '' }}">
@@ -30,7 +33,7 @@
 			</li>
 			<li class="{{ request()->is('user*') ? 'active' : '' }}">
 				<a href="{{ url('user') }}">
-                    <i class="fa-solid fa-user"></i>
+					<i class="fa-solid fa-user"></i>
 					<span class="text">User</span>
 				</a>
 			</li>
@@ -46,67 +49,79 @@
 					<span class="text">Jadwal Patrol</span>
 				</a>
 			</li>
-			<li class="{{ request()->is('region*') ? 'active' : '' }}">
-				<a href="{{ url('region') }}">
-					<i class="fa-solid fa-flag"></i>
-					<span class="text">Region</span>
+
+			<!-- Master Data Dropdown -->
+		
+			<li class="has-submenu">
+				<a class="d-flex align-items-center" data-bs-toggle="collapse" href="#masterData">
+					<i class="fa-solid fa-database"></i><span class="text"> Master Data<i class="fa-solid fa-chevron-down ms-4"></i></span>
 				</a>
+				<ul class="collapse list-unstyled ms-4 mt-1 {{ request()->is('region*') || request()->is('sales_office*') || request()->is('checkpoint*') || request()->is('kriteria_checkpoint*') ? 'show' : '' }}" id="masterData">
+					<li class="{{ request()->is('region*') ? 'active' : '' }}">
+						<a href="{{ url('region') }}">
+							<i class="fa-solid fa-flag"></i>
+							<span class="text">Region</span>
+						</a>
+					</li>
+					<li class="{{ request()->is('sales_office*') ? 'active' : '' }}">
+						<a href="{{ url('sales_office') }}">
+							<i class="fa-solid fa-building"></i>
+							<span class="text">Sales Office</span>
+						</a>
+					</li>
+					<li class="{{ request()->is('checkpoint*') ? 'active' : '' }}">
+						<a href="{{ url('checkpoint') }}">
+							<i class="fa-solid fa-location-dot"></i>
+							<span class="text">Checkpoint</span>
+						</a>
+					</li>
+					<li class="{{ request()->is('kriteria_checkpoint*') ? 'active' : '' }}">
+						<a href="{{ url('kriteria_checkpoint') }}">
+							<i class="fa-solid fa-list-check"></i>
+							<span class="text">Kriteria Checkpoint</span>
+						</a>
+					</li>
+				</ul>
 			</li>
-            <li class="{{ request()->is('sales_office*') ? 'active' : '' }}">
-				<a href="{{ url('sales_office') }}">
-					<i class="fa-solid fa-building"></i>
-					<span class="text">Sales Office</span>
-				</a>
-			</li>
-            <li class="{{ request()->is('checkpoint*') ? 'active' : '' }}">
-				<a href="{{ url('checkpoint') }}">
-					<i class="fa-solid fa-location-dot"></i>
-					<span class="text">Checkpoint</span>
-				</a>
-			</li>
-            <li class="{{ request()->is('kriteria_checkpoint*') ? 'active' : '' }}">
-				<a href="{{ url('kriteria_checkpoint') }}">
-					<i class="fa-solid fa-list-check"></i>
-					<span class="text">Kriteria Checkpoint</span>
-				</a>
-			</li>
-		</ul>
-		<ul class="side-menu">
+
+
+		<!-- Logout -->
+		<ul class="side-menu mt-5">
 			<li>
-				<a href="{{route('logout')}}" class="logout">
+				<a href="{{ route('logout') }}" class="logout">
 					<i class="fa-solid fa-arrow-right-from-bracket"></i>
 					<span class="text">Logout</span>
 				</a>
 			</li>
 		</ul>
 	</section>
-	<!-- SIDEBAR -->
+	<!-- END SIDEBAR -->
 
 	<!-- CONTENT -->
 	<section id="content">
 		<!-- NAVBAR -->
-		<nav>
+		<nav class="shadow-sm">
 			<i class="fa-solid fa-bars"></i>
 			<a href="#" class="profile">
-				<img src="{{ url('img/user.png') }}">
+				<img src="{{ url('img/user.png') }}" alt="Profile">
 			</a>
-            <span>Admin</span>
+            <span class="ms-2">Admin</span>
 		</nav>
-		<!-- NAVBAR -->
 
-        {{--  MAIN CONTENT --}}
-        @yield('content')
-        {{--  MAIN CONTENT --}}
+		<!-- MAIN -->
+		@yield('content')
 	</section>
-	<!-- CONTENT -->
+	<!-- END CONTENT -->
 
-    <!-- Scripts -->
-	<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+	<!-- Scripts -->
+	<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
 	<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 	<script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
-	<script src="{{ url('js/script.js') }}"></script>
 	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+	<!-- Custom Scripts -->
+	<script src="{{ url('js/script.js') }}"></script>
 	<script src="{{ url('js/datatable.js') }}"></script>
 	<script src="{{ url('js/sweetalert.js') }}"></script>
 	<script src="{{ url('js/print.js') }}"></script>

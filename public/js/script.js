@@ -7,7 +7,7 @@ allSideMenu.forEach(item=> {
 		allSideMenu.forEach(i=> {
 			i.parentElement.classList.remove('active');
 		})
-		li.classList.add('active');
+		a.classList.add('active');
 	})
 });
 

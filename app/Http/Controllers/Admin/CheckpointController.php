@@ -36,7 +36,7 @@ class CheckpointController extends Controller
             ->addColumn('action', function ($row) {
                 return '
                 <a href="' . route('checkpoint.edit', $row->id) . '" class="action-icon edit-icon"><i class="fa-solid fa-file-pen" title="Edit"></i></a>
-                <button class="action-icon delete-icon delete" data-id="' . $row->id . '"><i class="fa-solid fa-trash" title="Delete"></i></button>
+                <a href="" class="action-icon delete-icon delete" data-id="' . $row->id . '"><i class="fa-solid fa-trash" title="Delete"></i></a>
             ';
             })
             ->rawColumns(['qr_code', 'action'])
