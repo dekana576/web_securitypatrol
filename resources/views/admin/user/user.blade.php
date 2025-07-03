@@ -85,7 +85,7 @@
                 { data: 'nik', name: 'nik' },
                 { data: 'phone_number', name: 'phone_number' },
                 { data: 'gender', name: 'gender' },
-                { data: 'sales_office.sales_office_name', name: 'sales_office.sales_office_name' },
+                { data: 'sales_office.sales_office_name', name: 'salesOffice.sales_office_name' },
                 { 
                     data: 'action', 
                     name: 'action', 

@@ -51,7 +51,7 @@
         columns: [
             { data: 'DT_RowIndex', orderable: false, searchable: false, className: 'text-center' },
             { data: 'region_name', name: 'region.name' },
-            { data: 'sales_office_name', name: 'sales_office.sales_office_name' },
+            { data: 'sales_office_name', name: 'salesOffice.sales_office_name' },
             { data: 'checkpoint_name', name: 'checkpoint_name' },
             { data: 'checkpoint_code', name: 'checkpoint_code' },
             { data: 'qr_code', name: 'qr_code', orderable: false, searchable: false },
