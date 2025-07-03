@@ -14,15 +14,17 @@ use App\Http\Controllers\UserController;
 |--------------------------------------------------------------------------
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Route::get('/', function () {
+//     return view('welcome');
+// });
 
 Route::middleware(['auth'])->group(function () {
 
     // Group khusus Admin
     Route::middleware(['cek_login:admin'])->group(function () {
 
+
+        Route::get('/', fn () => view('admin.dashboard'))->name('dashboard');
         Route::get('/dashboard', fn () => view('admin.dashboard'))->name('dashboard');
         // ====================== User Management ======================
         Route::prefix('user')->name('user.')->group(function () {
@@ -84,6 +86,10 @@ Route::middleware(['auth'])->group(function () {
     // Group khusus Security (jika ingin ditambahkan route khusus security)
     Route::middleware(['cek_login:security'])->group(function () {
         // Tambahkan route khusus untuk security di sini
+        Route::get('/security', fn () => view('user.user_home'))->name('user_home');
+        Route::get('/input', fn () => view('user.user_input'))->name('user_input');
+        Route::get('/jadwal', fn () => view('user.user_jadwal'))->name('user_jadwal');
+        Route::get('/scan', fn () => view('user.user_scan_qr'))->name('user_scan');
     });
 
 });
