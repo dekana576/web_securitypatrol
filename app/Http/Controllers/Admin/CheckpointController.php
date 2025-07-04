@@ -23,7 +23,7 @@ class CheckpointController extends Controller
         $checkpoints = Checkpoint::with(['region', 'salesOffice']);
 
         return DataTables::of($checkpoints)
-            ->addIndexColumn() 
+            ->addIndexColumn()
             ->addColumn('region_name', function ($row) {
                 return $row->region->name ?? '-';
             })
@@ -35,13 +35,21 @@ class CheckpointController extends Controller
             })
             ->addColumn('action', function ($row) {
                 return '
-                <a href="' . route('checkpoint.edit', $row->id) . '" class="action-icon edit-icon"><i class="fa-solid fa-file-pen" title="Edit"></i></a>
-                <a href="" class="action-icon delete-icon delete" data-id="' . $row->id . '"><i class="fa-solid fa-trash" title="Delete"></i></a>
-            ';
+                    <a href="' . route('checkpoint.edit', $row->id) . '" class="action-icon edit-icon me-2" title="Edit">
+                        <i class="fa-solid fa-file-pen"></i>
+                    </a>
+                    <a href="' . route('checkpoint_criteria.index', $row->id) . '" class="action-icon criteria-icon me-2" title="Create Kriteria">
+                        <i class="fa-solid fa-list-check"></i>
+                    </a>
+                    <a href="#" class="action-icon delete-icon delete" data-id="' . $row->id . '" title="Delete">
+                        <i class="fa-solid fa-trash"></i>
+                    </a>
+                ';
             })
             ->rawColumns(['qr_code', 'action'])
             ->make(true);
-    }
+    }   
+
 
     public function create()
     {

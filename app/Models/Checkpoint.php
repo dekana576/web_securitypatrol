@@ -17,5 +17,11 @@ class Checkpoint extends Model
     {
         return $this->belongsTo(SalesOffice::class);
     }
+
+    public function criterias()
+    {
+        return $this->hasMany(CheckpointCriteria::class);
+    }
+
 }
 

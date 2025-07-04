@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\CheckpointController;
+use App\Http\Controllers\Admin\CheckpointCriteriaController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\RegionController;
 use App\Http\Controllers\Admin\SalesOfficeController;
@@ -78,6 +79,13 @@ Route::middleware(['auth'])->group(function () {
             Route::post('/update/{sales_office_id}', [SecurityScheduleController::class, 'update'])->name('update');
         });
 
+        Route::prefix('checkpoint-criteria')->name('checkpoint_criteria.')->group(function () {
+            Route::get('/{checkpointId}', [CheckpointCriteriaController::class, 'index'])->name('index');
+            Route::post('/{checkpointId}', [CheckpointCriteriaController::class, 'store'])->name('store');
+            Route::delete('/{id}', [CheckpointCriteriaController::class, 'destroy'])->name('destroy');
+        });
+
+
         // Static Views (sementara)
         Route::get('/data_patrol', fn () => view('admin.data_patrol.data_patrol'))->name('data_patrol');
 
@@ -111,5 +119,4 @@ Route::get('/get-sales-offices/{region}', [CheckpointController::class, 'getSale
 
 
 
-Route::get('/kriteria_checkpoint', fn () => view('admin.checkpoint.kriteria_checkpoint'))->name('kriteria_checkpoint');
 Route::get('/user_jadwal', fn () => view('user.user_jadwal'))->name('user_jadwal');

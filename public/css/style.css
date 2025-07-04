@@ -545,6 +545,14 @@ body {
   .delete-icon:hover {
     background-color: #bb2d3b;
   }
+  
+  .criteria-icon {
+    background-color: #f6e33a; 
+  }
+
+  .criteria-icon:hover {
+    background-color: #c0b12e;
+  }
 
   .approve-icon {
     background-color: #24ff54; 

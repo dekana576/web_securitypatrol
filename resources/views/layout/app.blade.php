@@ -75,12 +75,12 @@
 							<span class="text">Checkpoint</span>
 						</a>
 					</li>
-					<li class="{{ request()->is('kriteria_checkpoint*') ? 'active' : '' }}">
+					{{-- <li class="{{ request()->is('kriteria_checkpoint*') ? 'active' : '' }}">
 						<a href="{{ url('kriteria_checkpoint') }}" style="color: grey">
 							<i class="fa-solid fa-list-check"></i>
 							<span class="text">Kriteria Checkpoint</span>
 						</a>
-					</li>
+					</li> --}}
 				</ul>
 			</li>
 
