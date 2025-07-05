@@ -13,16 +13,15 @@
       </div>
 
       <div class="d-grid gap-2 mb-3">
-        <a href="" class="btn btn-primary">Lihat Jadwal</a>
+        <a href="#" class="btn btn-primary">Lihat Jadwal</a>
       </div>
 
       <div class="d-grid gap-2">
         <button id="startScan" class="btn btn-success">
-          <i class="fas fa-camera me-2"></i> Mulai Scan QR
+          <i class="fas fa-camera me-2"></i> Scan QR Checkpoint
         </button>
       </div>
 
-      <!-- QR Scanner Container -->
       <div id="scanner" class="mt-4 d-none">
         <div id="reader" style="width: 100%; max-width: 500px; margin: auto;"></div>
         <div class="text-center mt-2">
@@ -35,8 +34,7 @@
 @endsection
 
 @push('scripts')
-<!-- Load HTML5 QR Code library -->
-<script src="https://unpkg.com/html5-qrcode"></script>
+<script src="https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 <script>
   const scannerContainer = document.getElementById('scanner');
   const readerDiv = document.getElementById('reader');
@@ -46,32 +44,47 @@
   let html5QrCode;
   let isScanning = false;
 
-  startBtn.addEventListener('click', () => {
-    if (isScanning) return;
-
+  async function startCameraScan() {
     scannerContainer.classList.remove('d-none');
     html5QrCode = new Html5Qrcode("reader");
 
-    html5QrCode.start(
-      { facingMode: "environment" }, // Kamera belakang
-      { fps: 10, qrbox: { width: 250, height: 250 } },
-      (decodedText, decodedResult) => {
-        html5QrCode.stop().then(() => {
-          isScanning = false;
-          scannerContainer.classList.add('d-none');
-          html5QrCode.clear();
-          // Redirect ke halaman patrol
-          window.location.href = `/patrol/${encodeURIComponent(decodedText)}/create`;
-        });
-      },
-      (errorMessage) => {
-        // console.log("Scanning...", errorMessage);
-      }
-    ).then(() => {
+    const config = { fps: 10, qrbox: 250 };
+
+    try {
+      // Coba kamera belakang dulu
+      await html5QrCode.start({ facingMode: "environment" }, config, handleScan, handleError);
       isScanning = true;
-    }).catch(err => {
-      alert("Gagal mengakses kamera: " + err);
+    } catch (err) {
+      console.warn("Kamera belakang tidak tersedia, gunakan kamera depan:", err);
+
+      try {
+        // Fallback ke kamera depan
+        await html5QrCode.start({ facingMode: "user" }, config, handleScan, handleError);
+        isScanning = true;
+      } catch (err2) {
+        alert("Gagal membuka kamera depan dan belakang: " + err2.message);
+        scannerContainer.classList.add('d-none');
+      }
+    }
+  }
+
+  function handleScan(decodedText, decodedResult) {
+    html5QrCode.stop().then(() => {
+      isScanning = false;
+      scannerContainer.classList.add('d-none');
+      html5QrCode.clear();
+
+      // Arahkan ke halaman patrol
+      window.location.href = `/patrol/${encodeURIComponent(decodedText)}/create`;
     });
+  }
+
+  function handleError(errorMessage) {
+    // Konsol error bisa diabaikan
+  }
+
+  startBtn.addEventListener('click', () => {
+    if (!isScanning) startCameraScan();
   });
 
   stopBtn.addEventListener('click', () => {

@@ -4,56 +4,66 @@ namespace App\Http\Controllers\Security;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\{DataPatrol, Checkpoint, KriteriaCheckpoint, User, Region, SalesOffice};
+use App\Models\{DataPatrol, Checkpoint, CheckpointCriteria, User};
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
 class DataPatrolController extends Controller
 {
     // Tampilkan form setelah QR scan
-    public function create($checkpoint_id)
+    public function create($checkpointCode)
     {
-        $checkpoint = Checkpoint::with('region', 'salesOffice')->findOrFail($checkpoint_id);
-        $kriteriaList = $checkpoint->kriteria_checkpoints;
+        $checkpoint = Checkpoint::where('checkpoint_code', $checkpointCode)
+                        ->with(['region', 'salesOffice'])
+                        ->firstOrFail();
 
-        return view('security.patrol.create', compact('checkpoint', 'kriteriaList'));
+        $criterias = CheckpointCriteria::where('checkpoint_id', $checkpoint->id)->get();
+        $user = Auth::user();
+
+        return view('user.user_scan_qr', compact('checkpoint', 'criterias', 'user'));
     }
+
 
     // Simpan data patrol
     public function store(Request $request)
     {
         $request->validate([
-            'checkpoint_id' => 'required|exists:checkpoints,id',
-            'description' => 'required|string',
-            'answers' => 'required|array',
-            'answers.*' => 'in:positive,negative',
-            'image' => 'required|image|max:2048',
-            'location' => 'required|string',
+            'checkpoint_id'     => 'required|exists:checkpoints,id',
+            'region_id'         => 'required|exists:regions,id',
+            'sales_office_id'   => 'required|exists:sales_offices,id',
+            'description'       => 'required|string',
+            'criteria'          => 'required|array',
+            'criteria.*'        => 'required|string',
+            'image'             => 'required|image|max:2048',
+            'latitude'          => 'required|numeric',
+            'longitude'         => 'required|numeric',
         ]);
 
-        $checkpoint = Checkpoint::with('region', 'salesOffice')->findOrFail($request->checkpoint_id);
-        $security = Auth::user();
+        $checkpoint = Checkpoint::findOrFail($request->checkpoint_id);
+        $user = Auth::user();
 
         // Simpan gambar
         $imagePath = $request->file('image')->store('patrol_images', 'public');
 
-        // Buat ringkasan jawaban
-        $negatives = array_filter($request->answers, fn($val) => $val === 'negative');
+        // Deteksi apakah ada jawaban negatif
+        $negativeAnswers = collect($request->criteria)->filter(function ($answer) {
+            return stripos($answer, 'tidak') !== false || stripos($answer, 'negative') !== false;
+        });
 
         $dataPatrol = DataPatrol::create([
-            'tanggal' => now(),
-            'region_id' => $checkpoint->region_id,
-            'sales_office_id' => $checkpoint->sales_office_id,
-            'checkpoint_id' => $checkpoint->id,
-            'security_id' => $security->id,
-            'description' => $request->description,
-            'kriteria_result' => json_encode($request->answers),
-            'status' => 'submitted',
-            'image' => $imagePath,
-            'location' => $request->location,
-            'feedback_admin' => null,
+            'tanggal'           => now(),
+            'region_id'         => $request->region_id,
+            'sales_office_id'   => $request->sales_office_id,
+            'checkpoint_id'     => $request->checkpoint_id,
+            'security_id'       => $user->id,
+            'description'       => $request->description,
+            'kriteria_result'   => json_encode($request->criteria),
+            'status'            => 'submitted',
+            'image'             => $imagePath,
+            'location'          => $request->latitude . ',' . $request->longitude,
+            'feedback_admin'    => null,
         ]);
 
-        return redirect()->route('security.dashboard')->with('success', 'Data patroli berhasil dikirim.');
+        return redirect()->route('user.home')->with('success', 'Data patroli berhasil dikirim.');
     }
 }

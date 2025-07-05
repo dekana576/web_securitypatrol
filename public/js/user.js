@@ -12,3 +12,4 @@ document.getElementById('cameraInput').addEventListener('change', function (even
     alert("Gambar berhasil diambil!");
   }
 });
+
