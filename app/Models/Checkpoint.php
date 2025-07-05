@@ -22,6 +22,10 @@ class Checkpoint extends Model
     {
         return $this->hasMany(CheckpointCriteria::class);
     }
+    public function data_patrols()
+    {
+        return $this->hasMany(DataPatrol::class);
+    }
 
 }
 

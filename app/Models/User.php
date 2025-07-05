@@ -62,5 +62,9 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Region::class, 'region_id');
     }
+    public function data_patrols()
+    {
+        return $this->hasMany(DataPatrol::class);
+    }
 
 }

@@ -7,6 +7,10 @@ use App\Http\Controllers\Admin\RegionController;
 use App\Http\Controllers\Admin\SalesOfficeController;
 use App\Http\Controllers\Admin\SecurityScheduleController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\Security\DataPatrolController;
+use App\Http\Controllers\Security\UserHomeController;
+use App\Http\Controllers\Security\UserPatrolController;
+use App\Http\Controllers\Security\ScanQRController;
 use App\Http\Controllers\UserController;
 
 /*
@@ -93,11 +97,13 @@ Route::middleware(['auth'])->group(function () {
 
     // Group khusus Security (jika ingin ditambahkan route khusus security)
     Route::middleware(['cek_login:security'])->group(function () {
-        // Tambahkan route khusus untuk security di sini
-        Route::get('/security', fn () => view('user.user_home'))->name('user_home');
-        Route::get('/input', fn () => view('user.user_input'))->name('user_input');
-        Route::get('/jadwal', fn () => view('user.user_jadwal'))->name('user_jadwal');
-        Route::get('/scan', fn () => view('user.user_scan_qr'))->name('user_scan');
+        // Halaman utama security
+        Route::get('/security', [UserHomeController::class, 'index'])->name('user.home');
+        Route::get('/scan-qr', [ScanQRController::class, 'form'])->name('user.scan.qr');
+        Route::get('/scan-qr/result', [ScanQRController::class, 'result'])->name('user.scan.qr.result');
+        Route::get('/patrol/{checkpoint}/create', [DataPatrolController::class, 'create'])->name('patrol.create');
+
+
     });
 
 });
@@ -114,9 +120,3 @@ Route::get('/logout',[AuthController::class, 'logout'])->name('logout');
 
 
 
-Route::get('/get-sales-offices/{region}', [CheckpointController::class, 'getSalesOfficesByRegion']);
-
-
-
-
-Route::get('/user_jadwal', fn () => view('user.user_jadwal'))->name('user_jadwal');

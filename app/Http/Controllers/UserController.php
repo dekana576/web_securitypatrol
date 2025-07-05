@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Checkpoint;
+use App\Models\CheckpointCriteria;
 use App\Models\Region;
 use App\Models\SalesOffice;
 use Illuminate\Http\Request;
@@ -135,6 +137,9 @@ class UserController extends Controller
             'message' => 'User berhasil dihapus.'
         ]);
     }
+
+
+
 
 
     

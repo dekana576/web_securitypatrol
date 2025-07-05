@@ -27,6 +27,10 @@ class Region extends Model
     {
         return $this->hasMany(User::class);
     }
+    public function data_patrols()
+    {
+        return $this->hasMany(DataPatrol::class);
+    }
 }
 
 

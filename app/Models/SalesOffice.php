@@ -33,4 +33,8 @@ class SalesOffice extends Model
     {
         return $this->hasMany(SecuritySchedule::class);
     }
+    public function data_patrols()
+    {
+        return $this->hasMany(DataPatrol::class);
+    }
 }

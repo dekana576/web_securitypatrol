@@ -1,26 +1,18 @@
 @extends('layout.user')
-@section('title','User Scan QR')
-
+@section('title','Scan QR Checkpoint')
 
 @section('content')
 <main>
-  <div  id="mainContent">
+  <div class="mainContent">
     <div class="container mt-5">
-      <div class="card p-3 mb-3">
-        <h6><strong>Description</strong></h6>
-        <textarea class="form-control" placeholder="Add Description" rows="3"></textarea>
-      </div>
+      <form action="{{ route('user.scan.qr.result') }}" method="GET" class="card p-4 shadow">
+        <label for="code"><strong>Masukkan / Scan QR Code:</strong></label>
+        <input type="text" name="code" class="form-control mb-3" placeholder="Scan atau masukkan kode checkpoint" required>
 
-      <div class="card p-3 mb-3">
-        <h6><strong>Upload Image</strong></h6>
-        <div class="text-center mb-2 text-muted">Add Image</div>
-        <label for="cameraInput" class="camera-btn">
-          <i class="fa-solid fa-camera"></i>
-        </label>
-        <input type="file" accept="image/*" capture="environment" id="cameraInput">
-      </div>
-
-      <button class="save-btn">Simpan</button>
+        <button type="submit" class="btn btn-success w-100">
+          <i class="fas fa-search me-2"></i> Lanjutkan
+        </button>
+      </form>
     </div>
   </div>
 </main>
