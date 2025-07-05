@@ -91,21 +91,23 @@
                           <div class="invalid-feedback">{{ $message }}</div>
                       @enderror
                   </div>
-  
+
                   <div class="form-group">
-                      <label for="sales_office_id">Sales Office</label>
-                      <select id="sales_office_id" name="sales_office_id" class="form-control @error('sales_office_id') is-invalid @enderror" required>
-                          <option value="">-- Pilih Sales Office --</option>
-                          @foreach ($salesOffices as $office)
-                              <option value="{{ $office->id }}" {{ old('sales_office_id') == $office->id ? 'selected' : '' }}>
-                                  {{ $office->sales_office_name }}
-                              </option>
-                          @endforeach
-                      </select>
-                      @error('sales_office_id')
-                          <div class="invalid-feedback">{{ $message }}</div>
-                      @enderror
-                  </div>
+                    <label for="region_id">Region</label>
+                    <select id="region_id" name="region_id" class="form-control" required>
+                        <option value="">-- Pilih Region --</option>
+                        @foreach($regions as $region)
+                            <option value="{{ $region->id }}">{{ $region->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="sales_office_id">Sales Office</label>
+                    <select id="sales_office_id" name="sales_office_id" class="form-control" required>
+                        <option value="">-- Pilih Sales Office --</option>
+                    </select>
+                </div>
   
                   <div class="form-group">
                       <label for="email">Email</label>
@@ -133,4 +135,17 @@
     <!-- MAIN -->   
 
 @endsection
+@push('scripts')
+<script>
+    $('#region_id').on('change', function () {
+        var regionId = $(this).val();
+        $.get('/get-sales-offices/' + regionId, function (data) {
+            $('#sales_office_id').empty().append('<option value="">-- Pilih Sales Office --</option>');
+            $.each(data, function (index, so) {
+                $('#sales_office_id').append('<option value="' + so.id + '">' + so.sales_office_name + '</option>');
+            });
+        });
+    });
+</script>
+@endpush
     

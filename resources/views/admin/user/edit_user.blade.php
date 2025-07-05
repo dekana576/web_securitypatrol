@@ -65,12 +65,24 @@
                     </div>
 
                     <div class="form-group">
+                        <label for="region_id">Region</label>
+                        <select name="region_id" id="region_id" class="form-control" required>
+                            <option value="">-- Pilih Region --</option>
+                            @foreach ($regions as $region)
+                                <option value="{{ $region->id }}" {{ $region->id == $user->region_id ? 'selected' : '' }}>
+                                    {{ $region->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+    
+                    <div class="form-group">
                         <label for="sales_office_id">Sales Office</label>
-                        <select id="sales_office_id" name="sales_office_id" class="form-control" required>
+                        <select name="sales_office_id" id="sales_office_id" class="form-control" required>
                             <option value="">-- Pilih Sales Office --</option>
-                            @foreach ($salesOffices as $office)
-                                <option value="{{ $office->id }}" {{ $user->sales_office_id == $office->id ? 'selected' : '' }}>
-                                    {{ $office->sales_office_name }}
+                            @foreach ($salesOffices as $so)
+                                <option value="{{ $so->id }}" {{ $so->id == $user->sales_office_id ? 'selected' : '' }}>
+                                    {{ $so->sales_office_name }}
                                 </option>
                             @endforeach
                         </select>
@@ -94,3 +106,16 @@
     </main>
     <!-- MAIN -->
 @endsection
+@push('scripts')
+<script>
+    $('#region_id').on('change', function () {
+        var regionId = $(this).val();
+        $.get('/get-sales-offices/' + regionId, function (data) {
+            $('#sales_office_id').empty().append('<option value="">-- Pilih Sales Office --</option>');
+            $.each(data, function (index, so) {
+                $('#sales_office_id').append('<option value="' + so.id + '">' + so.sales_office_name + '</option>');
+            });
+        });
+    });
+</script>
+@endpush

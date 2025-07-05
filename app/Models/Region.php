@@ -23,6 +23,10 @@ class Region extends Model
     {
         return $this->hasMany(SecuritySchedule::class);
     }
+    public function users()
+    {
+        return $this->hasMany(User::class);
+    }
 }
 
 

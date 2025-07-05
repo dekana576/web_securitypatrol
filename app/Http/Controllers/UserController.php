@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Region;
 use App\Models\SalesOffice;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -20,12 +21,13 @@ class UserController extends Controller
     public function create()
     {
         $salesOffices = SalesOffice::all();
-        return view('admin.user.add_user', compact('salesOffices'));
+        $regions = Region::all();
+        return view('admin.user.add_user', compact('salesOffices','regions'));
     }
 
     public function getdata(Request $request)
     {
-        $users = User::with('salesOffice');
+        $users = User::with(['salesOffice','region']);
 
         return DataTables::of($users)
             ->addIndexColumn()
@@ -52,6 +54,7 @@ class UserController extends Controller
             'password' => 'required|string|min:8',
             'role' => 'required|in:admin,security',
             'sales_office_id' => 'required|exists:sales_offices,id',
+            'region_id' => 'required|exists:regions,id',
             'email' => 'required|email|unique:users,email',
         ]);
 
@@ -64,6 +67,7 @@ class UserController extends Controller
             'password' => bcrypt($request->password),
             'role' => $request->role,
             'sales_office_id' => $request->sales_office_id,
+            'region_id' => $request->region_id,
             'email' => $request->email,
         ]);
 
@@ -74,8 +78,9 @@ class UserController extends Controller
     {
         $user = User::findOrFail($id);
         $salesOffices = SalesOffice::all();
+        $regions = Region::all();
     
-        return view('admin.user.edit_user', compact('user', 'salesOffices'));
+        return view('admin.user.edit_user', compact('user', 'salesOffices','regions'));
     }
     
     public function update(Request $request, $id)
@@ -88,6 +93,7 @@ class UserController extends Controller
             'gender' => 'required|in:male,female',
             'role' => 'required|in:admin,security',
             'sales_office_id' => 'required|exists:sales_offices,id',
+            'region_id' => 'required|exists:regions,id',
             'password' => 'nullable|string|min:8',
         ]);
     
@@ -100,6 +106,7 @@ class UserController extends Controller
         $user->gender = $request->gender;
         $user->role = $request->role;
         $user->sales_office_id = $request->sales_office_id;
+        $user->region_id = $request->region_id;
     
         if ($request->filled('password')) {
             $user->password = bcrypt($request->password);

@@ -26,6 +26,7 @@ class User extends Authenticatable
         'email',
         'password',
         'sales_office_id',
+        'region_id',
         'role',
     ];
 
@@ -57,4 +58,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(SecuritySchedule::class);
     }
+    public function region()
+    {
+        return $this->belongsTo(Region::class, 'region_id');
+    }
+
 }

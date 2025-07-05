@@ -27,7 +27,7 @@ li {
     color: white;
     transition: all 0.3s ease;
     padding-top: 60px;
-    z-index: 900;
+    z-index: 1000;
     overflow-x: hidden;
     scrollbar-width: none;
 }
@@ -153,6 +153,7 @@ li {
 	margin-top: 24px;
 	width: 100%;
 	color: black;
+    z-index: 800;
 }
 #content main .table-data > div {
 	border-radius: 20px;
