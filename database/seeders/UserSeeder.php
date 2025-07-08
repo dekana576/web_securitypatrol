@@ -18,6 +18,7 @@ class UserSeeder extends Seeder
             'gender' => 'male',
             'email' => 'admin@admin.com',
             'password' => Hash::make('12345678'), // ubah sesuai kebutuhan
+            'region_id' => 1, // pastikan ada sales office dengan ID 1
             'sales_office_id' => 1, // pastikan ada sales office dengan ID 1
             'role' => 'admin', // sesuaikan dengan role yang kamu pakai
         ]);
