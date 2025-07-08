@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\DataPatrol;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\Facades\DataTables;
 
 class DataPatrolAdminController extends Controller
@@ -32,16 +34,18 @@ class DataPatrolAdminController extends Controller
                 return $isNegative ? "<span class='text-danger'>{$text}</span>" : $text;
             })
             ->addColumn('status', fn($row) => ucfirst($row->status))
-            ->addColumn('action', function ($row) {
+           ->addColumn('action', function ($row) {
+                $deleteUrl = route('data_patrol.destroy', $row->id);
+                $viewUrl = route('data_patrol.show', $row->id);
 
                 return '
-                    <a href="'.route('data_patrol.show', $row->id) .'" class="action-icon view-icon view" data-id="' . $row->id . '" title="Delete">
+                    <a href="' . $viewUrl . '" class="action-icon view-icon view" title="Lihat">
                         <i class="fa-solid fa-eye"></i>
                     </a>
-                    <a href="#" class="action-icon approve-icon approve" data-id="' . $row->id . '" title="Delete">
+                    <a href="#" class="action-icon approve-icon approve" data-id="' . $row->id . '" title="Setujui">
                         <i class="fa-solid fa-circle-check"></i>
                     </a>
-                    <a href="#" class="action-icon delete-icon delete" data-id="' . $row->id . '" title="Delete">
+                    <a href="#" class="action-icon delete-icon delete" data-url="' . $deleteUrl . '" title="Hapus">
                         <i class="fa-solid fa-trash"></i>
                     </a>
                 ';
@@ -55,6 +59,7 @@ class DataPatrolAdminController extends Controller
     public function show($id)
     {
         $dataPatrol = DataPatrol::with(['region', 'salesOffice', 'checkpoint', 'user'])->findOrFail($id);
+        
         return view('admin.data_patrol.view_data_patrol', compact('dataPatrol'));
     }
 
@@ -80,16 +85,21 @@ class DataPatrolAdminController extends Controller
         if (!$data) {
             return response()->json([
                 'success' => false,
-                'message' => 'Checkpoint tidak ditemukan.'
+                'message' => 'Data patroli tidak ditemukan.'
             ], 404);
         }
 
+        // Hapus gambar dari storage
+        if ($data->image && Storage::disk('public')->exists($data->image)) {
+            Storage::disk('public')->delete($data->image);
+        }
+
+        // Hapus data dari database
         $data->delete();
 
         return response()->json([
             'success' => true,
-            'message' => 'Checkpoint berhasil dihapus.'
+            'message' => 'Data patroli dan gambar berhasil dihapus.'
         ]);
     }
-
 }

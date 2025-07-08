@@ -11,14 +11,14 @@
             <div class="row mb-3">
                 <div class="col-md-6">
                     <p><strong>Nama Security:</strong> {{ $dataPatrol->user->name }}</p>
-                    <p><strong>Tanggal:</strong> {{ \Carbon\Carbon::parse($dataPatrol->tanggal)->format('d M Y H:i') }}</p>
+                    <p><strong>Tanggal:</strong> {{ \Carbon\Carbon::parse($dataPatrol->created_at)->format('d M Y H:i') }}</p>
                     <p>
                         <strong>Status:</strong> 
                         <span class="badge bg-{{ $dataPatrol->status === 'approved' ? 'success' : 'warning' }}">
                             {{ ucfirst($dataPatrol->status) }}
                         </span>
                     </p>
-                    <p><strong>Region:</strong> {{ $dataPatrol->region->region_name ?? '-' }}</p>
+                    <p><strong>Region:</strong> {{ $dataPatrol->region->name ?? '-' }}</p>
                     <p><strong>Sales Office:</strong> {{ $dataPatrol->salesOffice->sales_office_name ?? '-' }}</p>
                     <p><strong>Checkpoint:</strong> {{ $dataPatrol->checkpoint->checkpoint_name ?? '-' }}</p>
                 </div>
@@ -50,7 +50,7 @@
                             @if($kriteria)
                                 <li class="list-group-item d-flex justify-content-between align-items-center">
                                     <span>{{ $kriteria->nama_kriteria }}</span>
-                                    <span class="badge {{ str_contains(strtolower($answer), 'tidak') ? 'bg-danger' : 'bg-success' }}">
+                                    <span class="badge {{ str_contains(strtolower($answer), 'tidak') ? 'bg-success' : 'bg-danger' }}">
                                         {{ ucfirst($answer) }}
                                     </span>
                                 </li>
@@ -62,7 +62,7 @@
                         @endforeach
                     </ul>
                 @else
-                    <p class="text-muted">Belum ada data kriteria.</p>
+                    <p class="text-muted">Belum ada data kriteria. </p>
                 @endif
             </div>
 

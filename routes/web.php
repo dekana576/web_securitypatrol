@@ -13,6 +13,7 @@ use App\Http\Controllers\Security\DataPatrolController;
 use App\Http\Controllers\Security\UserHomeController;
 use App\Http\Controllers\Security\ScanQRController;
 use App\Http\Controllers\UserController;
+use Illuminate\Support\Facades\Storage;
 
 /*
 |--------------------------------------------------------------------------
@@ -94,9 +95,9 @@ Route::middleware(['auth'])->group(function () {
         Route::prefix('data_patrol')->name('data_patrol.')->group(function () {
             Route::get('/', [DataPatrolAdminController::class, 'index'])->name('index');
             Route::get('/data', [DataPatrolAdminController::class, 'getData'])->name('data');
-            Route::delete('/data_patrol/{id}', [DataPatrolAdminController::class, 'destroy'])->name('destroy');
-            Route::get('/data_patrol/{id}/view', [DataPatrolAdminController::class, 'show'])->name('show');
-            Route::put('/data_patrol/{id}/feedback', [DataPatrolAdminController::class, 'updateFeedback'])->name('feedback');
+            Route::delete('/{id}', [DataPatrolAdminController::class, 'destroy'])->name('destroy');
+            Route::get('/{id}/view', [DataPatrolAdminController::class, 'show'])->name('show');
+            Route::put('/{id}/feedback', [DataPatrolAdminController::class, 'updateFeedback'])->name('feedback');
 
 
         });
@@ -130,6 +131,16 @@ Route::get('/get-sales-offices/{regionId}', [AjaxController::class, 'getSalesOff
 
 
 Route::get('/test-map', fn() => view('test_map'));
+Route::get('/debug-patrol/{id}', function ($id) {
+    $data = App\Models\DataPatrol::find($id);
+    // dd(Storage::disk('public')->exists($data->image));
+    dd([
+    'image' => $data->image,
+    'path' => storage_path('app/public/' . $data->image),
+    'exists' => Storage::disk('public')->exists($data->image)
+]);
+});
+
 
 
 

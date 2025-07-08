@@ -8,6 +8,7 @@ use App\Models\{DataPatrol, Checkpoint, CheckpointCriteria};
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Intervention\Image\Facades\Image;
 
 class DataPatrolController extends Controller
 {
@@ -32,35 +33,44 @@ class DataPatrolController extends Controller
             'region_id'         => 'required|exists:regions,id',
             'sales_office_id'   => 'required|exists:sales_offices,id',
             'description'       => 'required|string',
-            'criteria'          => 'required|array',
-            'criteria.*'        => 'required|string',
-            'image'             => 'required|image|max:2048',
+            'criteria'          => ['required', 'array'],
+            'criteria.*'        => ['required'],
+            'image'             => 'required|image',
             'latitude'          => 'required|numeric',
             'longitude'         => 'required|numeric',
         ]);
 
         $user = Auth::user();
+        $imagePath = null;
 
-        // Simpan gambar
-        $imagePath = $request->file('image')->store('patrol_images', 'public');
+        //  Kompres dan simpan gambar
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $filename = time() . '_' . preg_replace('/\s+/', '_', $image->getClientOriginalName());
 
-        // Deteksi apakah ada jawaban negatif
+            $imageResized = Image::make($image)->resize(1024, null, function ($constraint) {
+                $constraint->aspectRatio();
+                $constraint->upsize();
+            })->encode('jpg', 75);
+
+            Storage::disk('public')->put('patrol_images/' . $filename, $imageResized);
+            $imagePath = 'patrol_images/' . $filename;
+        }
+
+
         $negativeAnswers = collect($request->criteria)->filter(fn($val) => str_contains(strtolower($val), 'tidak') || str_contains(strtolower($val), 'negative'));
 
-        $dataPatrol = DataPatrol::create([
+        DataPatrol::create([
             'tanggal'           => Carbon::now(),
             'region_id'         => $request->region_id,
             'sales_office_id'   => $request->sales_office_id,
             'checkpoint_id'     => $request->checkpoint_id,
-
-            // UBAH DARI 'security_id' KE 'user_id' JIKA DATABASENYA BEGITU
-            'user_id'           => $user->id, // <- Pastikan kolom di DB ini
-
+            'user_id'           => $user->id,
             'description'       => $request->description,
             'kriteria_result'   => json_encode($request->criteria),
             'status'            => 'submitted',
             'image'             => $imagePath,
-            'lokasi'          => $request->latitude . ',' . $request->longitude,
+            'lokasi'            => $request->latitude . ',' . $request->longitude,
             'feedback_admin'    => null,
         ]);
 
