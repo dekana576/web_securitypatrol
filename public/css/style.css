@@ -561,6 +561,13 @@ body {
   .approve-icon:hover {
     background-color: #39d431;
   }
+  .view-icon {
+    background-color: #929292; 
+  }
+
+  .view-icon:hover {
+    background-color: #474747;
+  }
 
   
 

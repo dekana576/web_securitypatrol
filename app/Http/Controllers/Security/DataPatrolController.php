@@ -4,7 +4,8 @@ namespace App\Http\Controllers\Security;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\{DataPatrol, Checkpoint, CheckpointCriteria, User};
+use App\Models\{DataPatrol, Checkpoint, CheckpointCriteria};
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
@@ -23,7 +24,6 @@ class DataPatrolController extends Controller
         return view('user.user_scan_qr', compact('checkpoint', 'criterias', 'user'));
     }
 
-
     // Simpan data patrol
     public function store(Request $request)
     {
@@ -39,28 +39,28 @@ class DataPatrolController extends Controller
             'longitude'         => 'required|numeric',
         ]);
 
-        $checkpoint = Checkpoint::findOrFail($request->checkpoint_id);
         $user = Auth::user();
 
         // Simpan gambar
         $imagePath = $request->file('image')->store('patrol_images', 'public');
 
         // Deteksi apakah ada jawaban negatif
-        $negativeAnswers = collect($request->criteria)->filter(function ($answer) {
-            return stripos($answer, 'tidak') !== false || stripos($answer, 'negative') !== false;
-        });
+        $negativeAnswers = collect($request->criteria)->filter(fn($val) => str_contains(strtolower($val), 'tidak') || str_contains(strtolower($val), 'negative'));
 
         $dataPatrol = DataPatrol::create([
-            'tanggal'           => now(),
+            'tanggal'           => Carbon::now(),
             'region_id'         => $request->region_id,
             'sales_office_id'   => $request->sales_office_id,
             'checkpoint_id'     => $request->checkpoint_id,
-            'security_id'       => $user->id,
+
+            // UBAH DARI 'security_id' KE 'user_id' JIKA DATABASENYA BEGITU
+            'user_id'           => $user->id, // <- Pastikan kolom di DB ini
+
             'description'       => $request->description,
             'kriteria_result'   => json_encode($request->criteria),
             'status'            => 'submitted',
             'image'             => $imagePath,
-            'location'          => $request->latitude . ',' . $request->longitude,
+            'lokasi'          => $request->latitude . ',' . $request->longitude,
             'feedback_admin'    => null,
         ]);
 

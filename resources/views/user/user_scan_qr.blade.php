@@ -5,7 +5,8 @@
 <main>
   <div class="mainContent">
     <div class="container mt-4">
-      <form action="" method="POST" enctype="multipart/form-data" id="patrolForm">
+      <!-- ✅ Ganti action jadi route yang benar -->
+      <form action="{{ route('patrol.store') }}" method="POST" enctype="multipart/form-data" id="patrolForm">
         @csrf
 
         <input type="hidden" name="checkpoint_id" value="{{ $checkpoint->id }}">
@@ -52,7 +53,7 @@
 
 @push('scripts')
 <script>
-  // Ambil lokasi
+  // Ambil lokasi GPS
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(function(position) {
       document.getElementById("latitude").value = position.coords.latitude;

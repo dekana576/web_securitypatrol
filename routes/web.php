@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\CheckpointController;
 use App\Http\Controllers\Admin\CheckpointCriteriaController;
+use App\Http\Controllers\Admin\DataPatrolAdminController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\RegionController;
 use App\Http\Controllers\Admin\SalesOfficeController;
@@ -90,8 +91,15 @@ Route::middleware(['auth'])->group(function () {
         });
 
 
-        // Static Views (sementara)
-        Route::get('/data_patrol', fn () => view('admin.data_patrol.data_patrol'))->name('data_patrol');
+        Route::prefix('data_patrol')->name('data_patrol.')->group(function () {
+            Route::get('/', [DataPatrolAdminController::class, 'index'])->name('index');
+            Route::get('/data', [DataPatrolAdminController::class, 'getData'])->name('data');
+            Route::delete('/data_patrol/{id}', [DataPatrolAdminController::class, 'destroy'])->name('destroy');
+            Route::get('/data_patrol/{id}/view', [DataPatrolAdminController::class, 'show'])->name('show');
+            Route::put('/data_patrol/{id}/feedback', [DataPatrolAdminController::class, 'updateFeedback'])->name('feedback');
+
+
+        });
 
     });
 
@@ -102,6 +110,8 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/scan-qr', [ScanQRController::class, 'form'])->name('user.scan.qr');
         Route::get('/scan-qr/result', [ScanQRController::class, 'result'])->name('user.scan.qr.result');
         Route::get('/patrol/{checkpoint}/create', [DataPatrolController::class, 'create'])->name('patrol.create');
+        Route::post('/patrol', [DataPatrolController::class, 'store'])->name('patrol.store');
+
 
 
     });
@@ -116,6 +126,9 @@ Route::prefix('login')->name('login.')->group(function () {
 });
 
 Route::get('/logout',[AuthController::class, 'logout'])->name('logout');
+
+Route::get('/test-map', fn() => view('test_map'));
+
 
 
 
