@@ -7,10 +7,10 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\RegionController;
 use App\Http\Controllers\Admin\SalesOfficeController;
 use App\Http\Controllers\Admin\SecurityScheduleController;
+use App\Http\Controllers\AjaxController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Security\DataPatrolController;
 use App\Http\Controllers\Security\UserHomeController;
-use App\Http\Controllers\Security\UserPatrolController;
 use App\Http\Controllers\Security\ScanQRController;
 use App\Http\Controllers\UserController;
 
@@ -126,6 +126,8 @@ Route::prefix('login')->name('login.')->group(function () {
 });
 
 Route::get('/logout',[AuthController::class, 'logout'])->name('logout');
+Route::get('/get-sales-offices/{regionId}', [AjaxController::class, 'getSalesOfficesByRegion']);
+
 
 Route::get('/test-map', fn() => view('test_map'));
 
