@@ -93,7 +93,7 @@
                             </button>
                         </form>
 
-                        @if($dataPatrol->status === 'submitted')
+                        @if($dataPatrol->status != 'approved')
                             <form action="{{ route('data_patrol.approve', $dataPatrol->id) }}" method="POST" onsubmit="return confirm('Setujui data patroli ini?')" class="mt-3">
                                 @csrf
                                 @method('PUT')
