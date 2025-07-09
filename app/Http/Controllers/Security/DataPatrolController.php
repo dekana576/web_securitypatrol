@@ -57,7 +57,8 @@ class DataPatrolController extends Controller
             $imagePath = 'patrol_images/' . $filename;
         }
 
-
+        // Simpan gambar
+        // $imagePath = $request->file('image')->store('patrol_images', 'public');
         $negativeAnswers = collect($request->criteria)->filter(fn($val) => str_contains(strtolower($val), 'tidak') || str_contains(strtolower($val), 'negative'));
 
         DataPatrol::create([
