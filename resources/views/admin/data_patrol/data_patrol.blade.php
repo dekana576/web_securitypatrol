@@ -75,6 +75,29 @@
             pageLength: 10,
         });
 
+        // Handler tombol approve
+        $('#data-patrol-table').on('click', '.approve', function () {
+            const id = $(this).data('id');
+
+            if (confirm("Setujui data patroli ini?")) {
+                $.ajax({
+                    url: `/data_patrol/${id}/approve`,
+                    type: 'PUT',
+                    data: {
+                        _token: '{{ csrf_token() }}'
+                    },
+                    success: function (response) {
+                        alert(response.message);
+                        table.ajax.reload();
+                    },
+                    error: function () {
+                        alert('Terjadi kesalahan saat menyetujui data.');
+                    }
+                });
+            }
+        });
+
+
         // Handler tombol delete
         $('#data-patrol-table').on('click', '.delete', function () {
             const url = $(this).data('url');

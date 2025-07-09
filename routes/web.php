@@ -97,7 +97,10 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/data', [DataPatrolAdminController::class, 'getData'])->name('data');
             Route::delete('/{id}', [DataPatrolAdminController::class, 'destroy'])->name('destroy');
             Route::get('/{id}/view', [DataPatrolAdminController::class, 'show'])->name('show');
+            Route::put('/{id}/approve', [DataPatrolAdminController::class, 'approve'])->name('approve');
+            Route::put('/{id}/approve', [DataPatrolAdminController::class, 'approveView'])->name('approve');
             Route::put('/{id}/feedback', [DataPatrolAdminController::class, 'updateFeedback'])->name('feedback');
+
 
 
         });

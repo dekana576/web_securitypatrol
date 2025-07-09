@@ -29,11 +29,26 @@ class DataPatrolAdminController extends Controller
             ->addColumn('tanggal', fn($row) => $row->tanggal)
             ->addColumn('kriteria_result', function ($row) {
                 $hasil = json_decode($row->kriteria_result, true);
-                $isNegative = collect($hasil)->filter(fn($value) => stripos($value, 'tidak') !== false || stripos($value, 'negative') !== false)->isNotEmpty();
-                $text = implode(', ', $hasil);
-                return $isNegative ? "<span class='text-danger'>{$text}</span>" : $text;
+
+                $isNegative = collect($hasil)->filter(function ($val) {
+                    return stripos($val, 'tidak') !== false || stripos($val, 'negative') !== false;
+                })->isNotEmpty();
+
+                if ($isNegative) {
+                    return '<span class="badge bg-danger text-white">Tidak Aman</span>';
+                } else {
+                    return '<span class="badge bg-success text-white">Aman</span>';
+                }
             })
-            ->addColumn('status', fn($row) => ucfirst($row->status))
+            ->addColumn('status', function ($row) {
+                if ($row->status === 'submitted') {
+                    return '<span class="badge bg-warning text-white">Submitted</span>';
+                } elseif ($row->status === 'approved') {
+                    return '<span class="badge bg-success text-white">Approved</span>';
+                }
+                return '<span class="badge bg-secondary text-white">' . ucfirst($row->status) . '</span>';
+            })
+
            ->addColumn('action', function ($row) {
                 $deleteUrl = route('data_patrol.destroy', $row->id);
                 $viewUrl = route('data_patrol.show', $row->id);
@@ -50,7 +65,7 @@ class DataPatrolAdminController extends Controller
                     </a>
                 ';
             })
-            ->rawColumns(['kriteria_result', 'action'])
+            ->rawColumns(['kriteria_result', 'action', 'status'])
             ->make(true);
 
             
@@ -76,6 +91,41 @@ class DataPatrolAdminController extends Controller
 
         return redirect()->route('data_patrol.show', $id)->with('success', 'Feedback berhasil disimpan.');
     }
+
+    public function approve($id)
+    {
+        $data = DataPatrol::find($id);
+
+        if (!$data) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Data patroli tidak ditemukan.'
+            ], 404);
+        }
+
+        $data->status = 'approved';
+        $data->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Data patroli berhasil disetujui.'
+        ]);
+    }
+
+    public function approveView($id)
+    {
+        $data = DataPatrol::find($id);
+
+        if (!$data) {
+            return redirect()->back()->with('error', 'Data patroli tidak ditemukan.');
+        }
+
+        $data->status = 'approved';
+        $data->save();
+
+        return redirect()->route('data_patrol.show', $id)->with('success', 'Data patroli berhasil disetujui.');
+    }
+
 
 
     public function destroy($id)
