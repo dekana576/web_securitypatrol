@@ -20,7 +20,7 @@
   <section class="sidebar" id="sidebar">
     <ul class="sidebar-menu top">
         <li class="active">
-            <a href="#">
+            <a href="{{ route('user.home') }}">
               <i class="fa-solid fa-house"></i>
               <span class="text">Home</span>
             </a>
@@ -34,7 +34,7 @@
     </ul>
      <ul class="sidebar-menu">
         <li>
-            <a href="#" class="logout">
+            <a href="{{ route('logout') }}" class="logout">
               <i class="fa-solid fa-arrow-right-from-bracket"></i>
               <span class="text">Logout</span>
             </a>

@@ -8,20 +8,7 @@
         <div class="card-body">
             <h4 class="mb-4 fw-semibold">Detail Data Patrol</h4>
 
-            {{-- Tombol Aksi Atas --}}
-            <div class="mb-3 d-flex justify-content-between">
-                
-
-                @if(Auth::user()->role === 'admin' && $dataPatrol->status === 'submitted')
-                    <form action="{{ route('data_patrol.approve', $dataPatrol->id) }}" method="POST" onsubmit="return confirm('Setujui data patroli ini?')">
-                        @csrf
-                        @method('PUT')
-                        <button type="submit" class="btn btn-success">
-                            <i class="fa fa-check me-1"></i> Approve
-                        </button>
-                    </form>
-                @endif
-            </div>
+ 
 
             <div class="row mb-3">
                 <div class="col-md-6">
