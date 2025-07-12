@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\DataPatrol;
+use App\Models\Region;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\Facades\DataTables;
@@ -14,63 +16,74 @@ class DataPatrolAdminController extends Controller
 {
     public function index()
     {
-        return view('admin.data_patrol.data_patrol');
+        $regions = Region::all();
+        $user = Auth::user();
+        return view('admin.data_patrol.data_patrol', compact('regions', 'user'));
     }
 
     public function getData(Request $request)
     {
-        $data = DataPatrol::with(['region', 'salesOffice', 'checkpoint', 'user'])->latest();
+        $query = DataPatrol::with(['region', 'salesOffice', 'checkpoint', 'user'])->latest();
 
-        return DataTables::of($data)
+        if ($request->filled('region_id')) {
+            $query->where('region_id', $request->region_id);
+        }
+
+        if ($request->filled('sales_office_id')) {
+            $query->where('sales_office_id', $request->sales_office_id);
+        }
+
+        if ($request->filled('year')) {
+            $query->whereYear('tanggal', $request->year);
+        }
+
+        if ($request->filled('month')) {
+            $query->whereMonth('tanggal', $request->month);
+        }
+
+        if ($request->filled('day')) {
+            $query->whereDay('tanggal', $request->day);
+        }
+
+
+        return DataTables::of($query)
             ->addIndexColumn()
             ->addColumn('region_name', fn($row) => $row->region->name ?? '-')
             ->addColumn('sales_office_name', fn($row) => $row->salesOffice->sales_office_name ?? '-')
             ->addColumn('checkpoint_name', fn($row) => $row->checkpoint->checkpoint_name ?? '-')
-            ->addColumn('security_name', fn($row) => $row->user->name ?? '-') // <= disini
-            ->addColumn('tanggal', fn($row) => Carbon::parse($row->tanggal)->format('d M Y'))
+            ->addColumn('security_name', fn($row) => $row->user->name ?? '-')
+            ->addColumn('tanggal', fn($row) => \Carbon\Carbon::parse($row->tanggal)->format('d M Y'))
             ->addColumn('kriteria_result', function ($row) {
                 $hasil = json_decode($row->kriteria_result, true);
-
-                $isNegative = collect($hasil)->filter(function ($val) {
-                    return stripos($val, 'tidak') !== false || stripos($val, 'negative') !== false;
-                })->isNotEmpty();
-
-                if ($isNegative) {
-                    return '<span class="badge bg-danger text-white">Tidak Aman</span>';
-                } else {
-                    return '<span class="badge bg-success text-white">Aman</span>';
-                }
+                $isNegative = collect($hasil)->filter(fn($v) => stripos($v, 'tidak') !== false || stripos($v, 'negative') !== false)->isNotEmpty();
+                return $isNegative
+                    ? '<span class="badge bg-danger text-white">Tidak Aman</span>'
+                    : '<span class="badge bg-success text-white">Aman</span>';
             })
             ->addColumn('status', function ($row) {
-                if ($row->status === 'submitted') {
-                    return '<span class="badge bg-warning text-white">Submitted</span>';
-                } elseif ($row->status === 'approved') {
-                    return '<span class="badge bg-success text-white">Approved</span>';
-                }
-                return '<span class="badge bg-secondary text-white">' . ucfirst($row->status) . '</span>';
+                return match($row->status) {
+                    'submitted' => '<span class="badge bg-warning text-white">Submitted</span>',
+                    'approved' => '<span class="badge bg-success text-white">Approved</span>',
+                    default => '<span class="badge bg-secondary text-white">' . ucfirst($row->status) . '</span>',
+                };
             })
-
-           ->addColumn('action', function ($row) {
-                $deleteUrl = route('data_patrol.destroy', $row->id);
-                $viewUrl = route('data_patrol.show', $row->id);
-
+            ->addColumn('action', function ($row) {
                 return '
-                    <a href="' . $viewUrl . '" class="action-icon view-icon view" title="Lihat">
+                    <a href="' . route('data_patrol.show', $row->id) . '" class="action-icon view-icon view" title="Lihat">
                         <i class="fa-solid fa-eye"></i>
                     </a>
                     <a href="#" class="action-icon approve-icon approve" data-id="' . $row->id . '" title="Setujui">
                         <i class="fa-solid fa-circle-check"></i>
                     </a>
-                    <a href="#" class="action-icon delete-icon delete" data-url="' . $deleteUrl . '" title="Hapus">
+                    <a href="#" class="action-icon delete-icon delete" data-url="' . route('data_patrol.destroy', $row->id) . '" title="Hapus">
                         <i class="fa-solid fa-trash"></i>
-                    </a>
-                ';
+                    </a>';
             })
-            ->rawColumns(['kriteria_result', 'action', 'status'])
+            ->rawColumns(['kriteria_result', 'status', 'action'])
             ->make(true);
-
-            
     }
+
+
 
     public function show($id)
     {

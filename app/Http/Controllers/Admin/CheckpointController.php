@@ -7,6 +7,7 @@ use App\Models\Checkpoint;
 use App\Models\Region;
 use App\Models\SalesOffice;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\Facades\DataTables;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Illuminate\Support\Str;
@@ -15,24 +16,29 @@ class CheckpointController extends Controller
 {
     public function index()
     {
-        return view('admin.checkpoint.checkpoint');
+        $regions = Region::all();
+        $user = Auth::user();
+        return view('admin.checkpoint.checkpoint', compact('regions', 'user'));
     }
 
-    public function data()
+    public function data(Request $request)
     {
         $checkpoints = Checkpoint::with(['region', 'salesOffice']);
 
+        // Tambahkan filter jika ada input dari dropdown
+        if ($request->has('region_id') && $request->region_id) {
+            $checkpoints->where('region_id', $request->region_id);
+        }
+
+        if ($request->has('sales_office_id') && $request->sales_office_id) {
+            $checkpoints->where('sales_office_id', $request->sales_office_id);
+        }
+
         return DataTables::of($checkpoints)
             ->addIndexColumn()
-            ->addColumn('region_name', function ($row) {
-                return $row->region->name ?? '-';
-            })
-            ->addColumn('sales_office_name', function ($row) {
-                return $row->salesOffice->sales_office_name ?? '-';
-            })
-            ->addColumn('qr_code', function ($row) {
-                return QrCode::format('svg')->size(100)->generate($row->checkpoint_code);
-            })
+            ->addColumn('region_name', fn($row) => $row->region->name ?? '-')
+            ->addColumn('sales_office_name', fn($row) => $row->salesOffice->sales_office_name ?? '-')
+            ->addColumn('qr_code', fn($row) => QrCode::format('svg')->size(100)->generate($row->checkpoint_code))
             ->addColumn('action', function ($row) {
                 return '
                     <a href="' . route('checkpoint.edit', $row->id) . '" class="action-icon edit-icon me-2" title="Edit">
@@ -48,7 +54,7 @@ class CheckpointController extends Controller
             })
             ->rawColumns(['qr_code', 'action'])
             ->make(true);
-    }   
+    }
 
 
     public function create()

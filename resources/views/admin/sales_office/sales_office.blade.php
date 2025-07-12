@@ -17,6 +17,20 @@
         </a>
     </div>
 
+    <div class="row mb-3">
+        <div class="col-md-4">
+            <label for="filter-region" class="form-label">Filter Region</label>
+            <select id="filter-region" class="form-select">
+                <option value="">Semua Region</option>
+                @foreach($regions as $region)
+                    <option value="{{ $region->id }}" {{ $user->salesOffice->region_id == $region->id ? 'selected' : '' }}>
+                        {{ $region->name }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
+    </div>
+
     <div class="table-data mt-4">
         <table id="sales-office-table" class="table table-striped">
             <thead>
@@ -28,9 +42,6 @@
                     <th>Action</th>
                 </tr>
             </thead>
-            <tbody>
-                <!-- DataTables akan mengisi -->
-            </tbody>
         </table>
     </div>
 </main>
@@ -49,7 +60,12 @@
         const table = $('#sales-office-table').DataTable({
             processing: true,
             serverSide: true,
-            ajax: '{{ route("sales_office.data") }}',
+            ajax: {
+                url: '{{ route("sales_office.data") }}',
+                data: function (d) {
+                    d.region_id = $('#filter-region').val();
+                }
+            },
             columns: [
                 { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false, className: 'text-center' },
                 { data: 'region.name', name: 'region.name' },
@@ -82,6 +98,10 @@
             },
             lengthMenu: [5, 10, 25, 50],
             pageLength: 10,
+        });
+
+        $('#filter-region').on('change', function () {
+            table.ajax.reload();
         });
 
         $('#sales-office-table').on('click', '.delete', function () {

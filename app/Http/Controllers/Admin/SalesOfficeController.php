@@ -5,14 +5,36 @@ use App\Http\Controllers\Controller;
 use App\Models\SalesOffice;
 use App\Models\Region;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\Facades\DataTables;
 
 class SalesOfficeController extends Controller
 {
     public function index()
     {
-        $salesOffices = SalesOffice::with('region')->get();
-        return view('admin.sales_office.sales_office', compact('salesOffices'));
+        $regions = Region::all();
+        $user = Auth::user();
+        return view('admin.sales_office.sales_office', compact('regions', 'user'));
+    }
+
+    public function getData(Request $request)
+    {
+        $query = SalesOffice::with('region');
+
+        if ($request->has('region_id') && !empty($request->region_id)) {
+            $query->where('region_id', $request->region_id);
+        }
+
+        return DataTables::of($query)
+            ->addIndexColumn()
+            ->addColumn('action', function ($row) {
+                return '
+                    <a href="' . route('sales_office.edit', $row->id) . '" class="action-icon edit-icon"><i class="fa-solid fa-file-pen" title="Edit"></i></a>
+                    <a href="#" class="action-icon delete-icon delete" data-id="' . $row->id . '"><i class="fa-solid fa-trash" title="Delete"></i></a>
+                ';
+            })
+            ->rawColumns(['action'])
+            ->make(true);
     }
 
     public function create()
@@ -21,21 +43,6 @@ class SalesOfficeController extends Controller
         return view('admin.sales_office.add_sales_office', compact('regions'));
     }
 
-    public function getdata(Request $request)
-    {
-        $salesOffices = SalesOffice::with('region');
-
-        return DataTables::of($salesOffices)
-            ->addIndexColumn()
-            ->addColumn('action', function ($row) {
-                return '
-                    <a href="' . route('sales_office.edit', $row->id) . '" class="action-icon edit-icon"><i class="fa-solid fa-file-pen" title="Edit"></i></a>
-                    <a href="" class="action-icon delete-icon delete" data-id="' . $row->id . '"><i class="fa-solid fa-trash" title="Delete"></i></a>
-                ';
-            })
-            ->rawColumns(['action'])
-            ->make(true);
-    }
 
     public function store(Request $request)
     {

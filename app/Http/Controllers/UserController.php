@@ -10,14 +10,40 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\Facades\DataTables;
 
 class UserController extends Controller
 {
     public function index()
     {
-        $users = User::with('salesOffice')->get();
-        return view('admin.user.user', compact('users'));
+        $regions = Region::all();
+        $user = Auth::user();
+        return view('admin.user.user', compact('regions', 'user'));
+    }
+
+    public function getdata(Request $request)
+    {
+        $users = User::with(['salesOffice', 'region']);
+
+        if ($request->filled('region_id')) {
+            $users->where('region_id', $request->region_id);
+        }
+
+        if ($request->filled('sales_office_id')) {
+            $users->where('sales_office_id', $request->sales_office_id);
+        }
+
+        return DataTables::of($users)
+            ->addIndexColumn()
+            ->addColumn('action', function ($row) {
+                return '
+                    <a href="' . route('user.edit', $row->id) . '" class="action-icon edit-icon"><i class="fa-solid fa-file-pen" title="Edit"></i></a>
+                    <a href="#" class="action-icon delete-icon delete" data-id="' . $row->id . '"><i class="fa-solid fa-trash" title="Delete"></i></a>
+                ';
+            })
+            ->rawColumns(['action'])
+            ->make(true);
     }
 
     public function create()
@@ -27,21 +53,6 @@ class UserController extends Controller
         return view('admin.user.add_user', compact('salesOffices','regions'));
     }
 
-    public function getdata(Request $request)
-    {
-        $users = User::with(['salesOffice','region']);
-
-        return DataTables::of($users)
-            ->addIndexColumn()
-            ->addColumn('action', function ($row) {
-                return '
-                    <a href="' . route('user.edit', $row->id) . '" class="action-icon edit-icon"><i class="fa-solid fa-file-pen" title="Edit"></i></a>
-                    <a href="" class="action-icon delete-icon delete" data-id="' . $row->id . '"><i class="fa-solid fa-trash" title="Delete"></i></a>
-                ';
-            })
-            ->rawColumns(['action'])
-            ->make(true);
-    }
 
     public function store(Request $request)
     {
