@@ -140,7 +140,6 @@ Route::get('/logout',[AuthController::class, 'logout'])->name('logout');
 Route::get('/get-sales-offices/{regionId}', [AjaxController::class, 'getSalesOfficesByRegion']);
 
 
-Route::get('/test-map', fn() => view('test_map'));
 Route::get('/debug-patrol/{id}', function ($id) {
     $data = App\Models\DataPatrol::find($id);
     // dd(Storage::disk('public')->exists($data->image));

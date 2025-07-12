@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\DataPatrol;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\Facades\DataTables;
@@ -26,7 +27,7 @@ class DataPatrolAdminController extends Controller
             ->addColumn('sales_office_name', fn($row) => $row->salesOffice->sales_office_name ?? '-')
             ->addColumn('checkpoint_name', fn($row) => $row->checkpoint->checkpoint_name ?? '-')
             ->addColumn('security_name', fn($row) => $row->user->name ?? '-') // <= disini
-            ->addColumn('tanggal', fn($row) => $row->tanggal)
+            ->addColumn('tanggal', fn($row) => Carbon::parse($row->tanggal)->format('d M Y'))
             ->addColumn('kriteria_result', function ($row) {
                 $hasil = json_decode($row->kriteria_result, true);
 
