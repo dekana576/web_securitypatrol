@@ -128,15 +128,7 @@
                             </button>
                         </form>
 
-                        @if($dataPatrol->status != 'approved')
-                            <form action="{{ route('data_patrol.approve', $dataPatrol->id) }}" method="POST" onsubmit="return confirm('Setujui data patroli ini?')" class="mt-3">
-                                @csrf
-                                @method('PUT')
-                                <button type="submit" class="btn btn-success">
-                                    <i class="fa fa-check me-1"></i> Approve
-                                </button>
-                            </form>
-                        @endif
+                        
                     </div>
                 </div>
             @elseif($dataPatrol->feedback_admin)
@@ -149,10 +141,19 @@
             @endif
 
             {{-- Tombol Kembali di Bawah --}}
-            <div class="mt-4 text-start">
+            <div class="mt-4 text-start d-flex justify-content-between align-items-center">
                 <a href="{{ route('data_patrol.index') }}" class="btn btn-secondary">
                     <i class="fa fa-arrow-left me-1"></i> Kembali
                 </a>
+                @if($dataPatrol->status != 'approved')
+                    <form action="{{ route('data_patrol.approve', $dataPatrol->id) }}" method="POST" onsubmit="return confirm('Setujui data patroli ini?')" class="mt-3">
+                        @csrf
+                        @method('PUT')
+                        <button type="submit" class="btn btn-success">
+                            <i class="fa fa-check me-1"></i> Approve
+                        </button>
+                    </form>
+                @endif
             </div>
         </div>
     </div>
