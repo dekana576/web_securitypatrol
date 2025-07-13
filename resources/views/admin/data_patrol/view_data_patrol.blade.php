@@ -20,25 +20,57 @@
                             {{ ucfirst($dataPatrol->status) }}
                         </span>
                     </p>
+                </div>
+                <div class="col-md-6">
                     <p><strong>Region:</strong> {{ $dataPatrol->region->name ?? '-' }}</p>
                     <p><strong>Sales Office:</strong> {{ $dataPatrol->salesOffice->sales_office_name ?? '-' }}</p>
                     <p><strong>Checkpoint:</strong> {{ $dataPatrol->checkpoint->checkpoint_name ?? '-' }}</p>
                 </div>
+            </div>
 
-                <div class="col-md-6">
-                    <p><strong>Deskripsi:</strong></p>
-                    <p class="text-muted">{{ $dataPatrol->description ?: '-' }}</p>
+            <hr class="my-3">
 
-                    @if($dataPatrol->image)
-                        <img src="{{ asset('storage/' . $dataPatrol->image) }}" alt="Foto Patroli"
-                            class="img-fluid rounded shadow mt-2" style="max-height: 300px;">
-                    @endif
+            @if($dataPatrol->description)
+            <div class="mb-3">
+                <h5 class="fw-semibold">Deskripsi</h5>
+                <p class="text-muted">{{ $dataPatrol->description }}</p>
+            </div>
+            @endif
+
+            @if($dataPatrol->image)
+                @php
+                    $images = is_array(json_decode($dataPatrol->image)) ? json_decode($dataPatrol->image) : [$dataPatrol->image];
+                @endphp
+                <div class="mb-4">
+                    <h5 class="fw-semibold">Foto Patroli</h5>
+                    <div class="swiper-container relative mt-2" style="overflow: hidden;">
+                        <div class="swiper-wrapper">
+                            @foreach ($images as $img)
+                                <div class="swiper-slide">
+                                    <img src="{{ url('storage/' . $img) }}" alt="Foto Patroli"
+                                        class="img-fluid rounded shadow mb-3 d-block mx-auto"
+                                        style="max-height: 400px; width: auto; object-fit: contain;">
+                                </div>
+
+                            @endforeach
+                        </div>
+                        <!-- Add Pagination -->
+                        <div class="swiper-pagination"></div>
+                        <!-- Add Navigation Arrows -->
+                        <div class="swiper-button-next swiper-button-custom"></div>
+                        <div class="swiper-button-prev swiper-button-custom"></div>
+                    </div>
+                </div>
+            @endif
+
+
                 </div>
             </div>
 
             <hr>
-
-            <div class="mb-4">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <div class="mb-4">
                 <h5 class="fw-semibold">Kriteria Checkpoint</h5>
                 @php
                     $kriteriaData = json_decode($dataPatrol->kriteria_result, true);
@@ -78,10 +110,13 @@
                 <h5 class="fw-semibold">Lokasi</h5>
                 <div id="map" class="rounded shadow" style="height: 400px;"></div>
             </div>
+                </div>
+            </div>
+            
 
             {{-- Feedback Admin --}}
             @if(Auth::user()->role === 'admin')
-                <div class="card mb-4 mt-4">
+                <div class="card mb-4 mt-4 shadow-sm">
                     <div class="card-body">
                         <h5 class="card-title">Feedback Admin</h5>
                         <form action="{{ route('data_patrol.feedback', $dataPatrol->id) }}" method="POST">
@@ -132,6 +167,11 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet"/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
+<!-- Swiper CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css" />
+<!-- Swiper JS -->
+<script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
+
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         const lokasi = "{{ $dataPatrol->lokasi }}".split(',');
@@ -168,6 +208,21 @@
                     }
                 });
             }
+        });
+
+        // Initialize Swiper
+        var swiper = new Swiper('.swiper-container', {
+            loop: true,
+            pagination: {
+                el: '.swiper-pagination',
+                clickable: true,
+            },
+            navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev',
+            },
+            slidesPerView: 1,
+            spaceBetween: 30,
         });
 
     @if(session('success'))

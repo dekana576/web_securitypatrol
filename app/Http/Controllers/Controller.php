@@ -9,4 +9,6 @@ use Illuminate\Routing\Controller as BaseController;
 class Controller extends BaseController
 {
     use AuthorizesRequests, ValidatesRequests;
+    // Simpan gambar
+        // $imagePath = $request->file('image')->store('patrol_images', 'public');
 }

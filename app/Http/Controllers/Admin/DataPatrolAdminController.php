@@ -153,9 +153,22 @@ class DataPatrolAdminController extends Controller
             ], 404);
         }
 
-        // Hapus gambar dari storage
-        if ($data->image && Storage::disk('public')->exists($data->image)) {
-            Storage::disk('public')->delete($data->image);
+        // Hapus semua gambar dari storage
+        if ($data->image) {
+            $images = json_decode($data->image, true);
+
+            if (is_array($images)) {
+                foreach ($images as $imagePath) {
+                    if (Storage::disk('public')->exists($imagePath)) {
+                        Storage::disk('public')->delete($imagePath);
+                    }
+                }
+            } else {
+                // Jika hanya satu gambar string (bukan array JSON)
+                if (Storage::disk('public')->exists($data->image)) {
+                    Storage::disk('public')->delete($data->image);
+                }
+            }
         }
 
         // Hapus data dari database
@@ -163,7 +176,7 @@ class DataPatrolAdminController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Data patroli dan gambar berhasil dihapus.'
+            'message' => 'Data patroli dan semua gambar berhasil dihapus.'
         ]);
     }
 }

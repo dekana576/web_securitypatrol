@@ -40,9 +40,27 @@
         </div>
 
         <div class="card p-3 mb-3">
-          <label for="image"><strong>Upload Foto</strong></label>
-          <input type="file" name="image" accept="image/*" capture="environment" class="form-control" required>
+          <label><strong>Upload Foto (maksimal 10 gambar)</strong></label>
+
+          {{-- Container untuk input file --}}
+          <div id="image-input-wrapper" style="display: none;"></div>
+
+          {{-- Container Preview Slider --}}
+          <div class="swiper-container mt-3" id="preview-swiper" style="display: none; overflow: hidden;">
+            <div class="swiper-wrapper" id="swiper-wrapper"></div>
+            <div class="swiper-pagination"></div>
+            <div class="swiper-button-next swiper-button-custom"></div>
+            <div class="swiper-button-prev swiper-button-custom"></div>
+          </div>
         </div>
+
+        {{-- Floating Camera Button --}}
+        <button type="button" class="btn btn-warning rounded-circle shadow" id="add-image-btn" 
+          style="position: fixed; bottom: 90px; right: 20px; z-index: 9999; width: 60px; height: 60px;">
+          <i class="fa fa-camera"></i>
+        </button>
+
+
 
         <button type="submit" class="btn btn-primary w-100">Simpan</button>
       </form>
@@ -52,6 +70,11 @@
 @endsection
 
 @push('scripts')
+
+<!-- Swiper CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css" />
+<!-- Swiper JS -->
+<script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script> 
 <script>
   // Ambil lokasi GPS
   if (navigator.geolocation) {
@@ -64,5 +87,100 @@
   } else {
     alert("Browser tidak mendukung Geolocation.");
   }
+
+  let imageCount = 0;
+  const maxImages = 10;
+  const imageInputWrapper = document.getElementById('image-input-wrapper');
+  const swiperWrapper = document.getElementById('swiper-wrapper');
+  const previewSwiper = document.getElementById('preview-swiper');
+  const addImageBtn = document.getElementById('add-image-btn');
+
+  const swiper = new Swiper('.swiper-container', {
+    loop: false,
+    pagination: { el: '.swiper-pagination', clickable: true },
+    navigation: {
+      nextEl: '.swiper-button-next',
+      prevEl: '.swiper-button-prev',
+    },
+    slidesPerView: 1,
+    spaceBetween: 10,
+  });
+
+  function updateSwiper() {
+    swiper.update();
+    previewSwiper.style.display = imageCount > 0 ? 'block' : 'none';
+  }
+
+  addImageBtn.addEventListener('click', () => {
+    if (imageCount >= maxImages) {
+      alert('Maksimal 10 gambar!');
+      return;
+    }
+
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.name = 'image[]';
+    input.accept = 'image/*';
+    input.capture = 'environment';
+    input.style.display = 'none';
+
+    input.addEventListener('change', function () {
+      if (input.files.length > 0) {
+        const file = input.files[0];
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          const slide = document.createElement('div');
+          slide.classList.add('swiper-slide', 'position-relative');
+
+          const img = document.createElement('img');
+          img.src = e.target.result;
+          img.className = 'w-100 h-auto rounded shadow';
+          img.style.maxHeight = '350px';
+          img.style.objectFit = 'contain';
+
+          const removeBtn = document.createElement('button');
+          removeBtn.type = 'button';
+          removeBtn.innerHTML = '&times;';
+          removeBtn.className = 'btn btn-danger btn-sm position-absolute top-0 end-0 m-2 rounded-circle';
+          removeBtn.style.width = '30px';
+          removeBtn.style.height = '30px';
+          removeBtn.title = 'Hapus gambar';
+
+          removeBtn.addEventListener('click', function () {
+            slide.remove();
+            input.remove();
+            imageCount--;
+            updateSwiper();
+          });
+
+          slide.appendChild(img);
+          slide.appendChild(removeBtn);
+          swiperWrapper.appendChild(slide);
+          imageInputWrapper.appendChild(input);
+          imageCount++;
+          updateSwiper();
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    input.click();
+  });
+
+  // Validasi saat submit
+  document.getElementById('patrolForm').addEventListener('submit', function(e) {
+    const totalInputs = imageWrapper.querySelectorAll('input[type="file"]').length;
+    if (totalInputs === 0) {
+      e.preventDefault();
+      alert('Minimal upload 1 gambar.');
+      return;
+    }
+
+    if (totalInputs > maxImages) {
+      e.preventDefault();
+      alert('Maksimal 10 gambar diperbolehkan.');
+    }
+  });
 </script>
 @endpush
+
