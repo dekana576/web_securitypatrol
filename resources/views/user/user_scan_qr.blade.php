@@ -62,7 +62,7 @@
 
 
 
-        <button type="submit" class="btn btn-primary w-100">Simpan</button>
+        <button type="submit" class="btn btn-primary w-100 mb-5">Simpan</button>
       </form>
     </div>
   </div>
