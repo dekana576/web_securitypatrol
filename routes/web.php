@@ -80,10 +80,15 @@ Route::middleware(['auth'])->group(function () {
 
         Route::prefix('security_schedule')->name('security_schedule.')->group(function () {
             Route::get('/', [SecurityScheduleController::class, 'index'])->name('index');
-            Route::get('/create/{sales_office_id}', [SecurityScheduleController::class, 'create'])->name('create');
+            Route::get('/data', [SecurityScheduleController::class, 'data'])->name('data');
+            Route::get('/{regionId}/{salesOfficeId}/{bulan}/{tahun}', [SecurityScheduleController::class, 'show'])->name('show');
+            Route::get('/create', [SecurityScheduleController::class, 'create'])->name('create');
             Route::post('/store', [SecurityScheduleController::class, 'store'])->name('store');
-            Route::get('/edit/{sales_office_id}', [SecurityScheduleController::class, 'edit'])->name('edit');
-            Route::post('/update/{sales_office_id}', [SecurityScheduleController::class, 'update'])->name('update');
+            Route::get('/{region}/{salesOffice}/{bulan}/{tahun}/edit', [SecurityScheduleController::class, 'edit'])->name('edit');
+            Route::put('/{region}/{sales_office}/{bulan}/{tahun}', [SecurityScheduleController::class, 'update'])->name('update');
+            Route::delete('/{regionId}/{salesOfficeId}/{bulan}/{tahun}', [SecurityScheduleController::class, 'destroy'])->name('destroy');
+
+
         });
 
         Route::prefix('checkpoint-criteria')->name('checkpoint_criteria.')->group(function () {

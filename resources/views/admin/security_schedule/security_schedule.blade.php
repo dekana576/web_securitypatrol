@@ -1,103 +1,163 @@
 @extends('layout.app')
 
-@section('title','Jadwal Security')
+@section('title','Jadwal Patroli Bulanan')
 
 @section('content')
 <main>
-    <div class="head-title mb-4">
-        <div class="d-flex justify-content-between align-items-center">
-            <h1 class="mb-0">Jadwal Security</h1>
+    <div class="head-title d-flex justify-content-between align-items-center">
+        <div class="left">
+            <h1>Jadwal Patroli Bulanan</h1>
+        </div>
+    </div>
+    <div class="control-button top mb-3">
+        <a href="{{ route('security_schedule.create') }}" class="btn-tambah">
+            <i class="fa-solid fa-plus"></i>
+            <span class="text">Tambah Schedule</span>
+        </a>
+    </div>
+        <div class="row mb-3">
+        <div class="col-md-4">
+            <label for="filter-region" class="form-label">Region</label>
+            <select id="filter-region" class="form-select">
+                <option value="">Semua Region</option>
+                @foreach($regions as $region)
+                    <option value="{{ $region->id }}" {{ $user->salesOffice->region_id == $region->id ? 'selected' : '' }}>
+                        {{ $region->name }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
+
+        <div class="col-md-4">
+            <label for="filter-sales-office" class="form-label">Sales Office</label>
+            <select id="filter-sales-office" class="form-select" disabled>
+                <option value="">Memuat...</option>
+            </select>
         </div>
     </div>
 
-    <!-- Filter Sales Office -->
-    <div class="card p-4 mb-4 shadow-sm">
-        <form method="GET" action="{{ route('security_schedule.index') }}">
-            <div class="row">
-                <div class="col-md-6 mb-3">
-                    <label for="region_id" class="form-label">Region</label>
-                    <select name="region_id" id="region_id" class="form-control" required onchange="this.form.submit()">
-                        <option value="">-- Pilih Region --</option>
-                        @foreach ($regions as $region)
-                            <option value="{{ $region->id }}" {{ request('region_id') == $region->id ? 'selected' : '' }}>
-                                {{ $region->name }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
-
-                <div class="col-md-6 mb-3">
-                    <label for="sales_office_id" class="form-label">Sales Office</label>
-                    <select name="sales_office_id" id="sales_office_id" class="form-control" required>
-                        <option value="">-- Pilih Sales Office --</option>
-                        @foreach ($salesOffices as $office)
-                            <option value="{{ $office->id }}" {{ request('sales_office_id') == $office->id ? 'selected' : '' }}>
-                                {{ $office->sales_office_name }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
-            </div>
-
-            @if(request('region_id'))
-                <div class="text-end">
-                    <button type="submit" class="btn btn-primary">Lihat Jadwal</button>
-                </div>
-            @endif
-        </form>
+    <div class="table-data mt-4">
+        <table id="patrol-schedule-table" class="table table-striped">
+            <thead>
+                <tr>
+                    <th>No</th>
+                    <th>Region</th>
+                    <th>Sales Office</th>
+                    <th>Bulan</th>
+                    <th>Tahun</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+        </table>
     </div>
-
-    @if ($selectedOffice)
-        <div class="d-flex justify-content-end mb-3">
-            @if ($selectedOffice->security_schedule->count() < 3)
-                <a href="{{ route('security_schedule.create', ['sales_office_id' => $selectedOffice->id]) }}" class="btn btn-success">
-                    <i class="bi bi-plus-circle me-1"></i> Tambah Jadwal
-                </a>
-            @else
-                <a href="{{ route('security_schedule.edit', ['sales_office_id' => $selectedOffice->id]) }}" class="btn btn-warning">
-                    <i class="bi bi-pencil-square me-1"></i> Update Jadwal
-                </a>
-            @endif
-        </div>
-
-        <div class="card shadow-sm">
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table table-bordered table-striped table-hover">
-                        <thead class="table-light text-center">
-                            <tr>
-                                <th>Shift</th>
-                                <th>Jam Mulai</th>
-                                <th>Jam Berakhir</th>
-                                <th>Senin</th>
-                                <th>Selasa</th>
-                                <th>Rabu</th>
-                                <th>Kamis</th>
-                                <th>Jumat</th>
-                                <th>Sabtu</th>
-                                <th>Minggu</th>
-                            </tr>
-                        </thead>
-                        <tbody class="text-center align-middle">
-                            @foreach ($jadwals as $jadwal)
-                                <tr>
-                                    <td>{{ $jadwal->shift }}</td>
-                                    <td>{{ $jadwal->jam_mulai }}</td>
-                                    <td>{{ $jadwal->jam_berakhir }}</td>
-                                    <td>{{ $jadwal->seninUser?->name ?? '-' }}</td>
-                                    <td>{{ $jadwal->selasaUser?->name ?? '-' }}</td>
-                                    <td>{{ $jadwal->rabuUser?->name ?? '-' }}</td>
-                                    <td>{{ $jadwal->kamisUser?->name ?? '-' }}</td>
-                                    <td>{{ $jadwal->jumatUser?->name ?? '-' }}</td>
-                                    <td>{{ $jadwal->sabtuUser?->name ?? '-' }}</td>
-                                    <td>{{ $jadwal->mingguUser?->name ?? '-' }}</td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    @endif
 </main>
 @endsection
+
+@push('styles')
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+@endpush
+
+@push('scripts')
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script>
+$(document).ready(function () {
+    const userSalesOfficeId = '{{ $user->sales_office_id }}';
+    const defaultRegionId = $('#filter-region').val();
+    const table = $('#patrol-schedule-table').DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: {
+            url: '{{ route("security_schedule.data") }}',
+            data: function (d) {
+                d.region_id = $('#filter-region').val();
+                d.sales_office_id = $('#filter-sales-office').val();
+            }
+        },
+        columns: [
+            { data: 'DT_RowIndex', orderable: false, searchable: false },
+            { data: 'region_name', name: 'region.name' },
+            { data: 'sales_office_name', name: 'salesOffice.sales_office_name' },
+            { data: 'bulan', name: 'bulan' },
+            { data: 'tahun', name: 'tahun' },
+            { 
+                data: 'action', 
+                name: 'action', 
+                orderable: false, 
+                searchable: false, 
+                className: 'text-center' 
+            }
+        ],
+        language: {
+            search: "",
+            searchPlaceholder: "Cari...",
+            lengthMenu: "Tampilkan _MENU_ entri",
+            info: "Menampilkan _START_ - _END_ dari _TOTAL_ entri",
+            paginate: {
+                previous: "<button class='btn btn-primary btn-sm me-2'>←</button>",
+                next: "<button class='btn btn-primary btn-sm'>→</button>"
+            },
+            processing: "Memuat data..."
+        },
+        lengthMenu: [5, 10, 25],
+        pageLength: 10,
+    });
+
+    // Load Sales Office saat halaman pertama kali dimuat
+    if (defaultRegionId) {
+        loadSalesOffices(defaultRegionId, userSalesOfficeId);
+    }
+
+    function loadSalesOffices(regionId, selectedId = null) {
+        $('#filter-sales-office').prop('disabled', true).html('<option value="">Memuat...</option>');
+
+        $.get(`/get-sales-offices/${regionId}`, function (data) {
+            let options = '<option value="">Semua Sales Office</option>';
+            data.forEach(function (so) {
+                const selected = selectedId == so.id ? 'selected' : '';
+                options += `<option value="${so.id}" ${selected}>${so.sales_office_name}</option>`;
+            });
+            $('#filter-sales-office').html(options).prop('disabled', false);
+            table.ajax.reload();
+        });
+    }
+
+    // Event: Filter Region → Load Sales Office
+    $('#filter-region').on('change', function () {
+        const regionId = $(this).val();
+        if (regionId) {
+            loadSalesOffices(regionId);
+        } else {
+            $('#filter-sales-office').html('<option value="">Pilih Region terlebih dahulu</option>').prop('disabled', true);
+            table.ajax.reload();
+        }
+    });
+
+    // Event: Filter Sales Office
+    $('#filter-sales-office').on('change', function () {
+        table.ajax.reload();
+    });
+
+    $('#patrol-schedule-table').on('click', '.delete', function () {
+        const regionId = $(this).data('region');
+        const salesOfficeId = $(this).data('id');
+        const bulan = $(this).data('bulan');
+        const tahun = $(this).data('tahun');
+
+        if (confirm("Yakin ingin menghapus jadwal ini?")) {
+            $.ajax({
+                url: `/security_schedule/${regionId}/${salesOfficeId}/${bulan}/${tahun}`,
+                type: 'DELETE',
+                data: { _token: '{{ csrf_token() }}' },
+                success: function (res) {
+                    alert(res.message);
+                    $('#patrol-schedule-table').DataTable().ajax.reload();
+                },
+                error: function () {
+                    alert('Terjadi kesalahan saat menghapus data.');
+                }
+            });
+        }
+    });
+});
+</script>
+@endpush

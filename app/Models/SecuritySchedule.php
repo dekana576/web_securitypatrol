@@ -9,25 +9,42 @@ class SecuritySchedule extends Model
 {
     use HasFactory;
 
+    protected $table = 'patrol_schedules';
+
     protected $fillable = [
-        'region_id', 'sales_office_id', 'shift', 'jam_mulai', 'jam_berakhir',
-        'senin', 'selasa', 'rabu', 'kamis', 'jumat', 'sabtu', 'minggu'
+        'region_id',
+        'sales_office_id',
+        'tanggal',
+        'shift',
+        'jam_mulai',
+        'jam_selesai',
+        'security_1_id',
+        'security_2_id',
     ];
 
-    public function region() {
+    protected $dates = ['tanggal'];
+
+    // Relasi ke region
+    public function region()
+    {
         return $this->belongsTo(Region::class);
     }
 
-    public function salesOffice() {
+    // Relasi ke sales office
+    public function salesOffice()
+    {
         return $this->belongsTo(SalesOffice::class);
     }
 
-    public function seninUser()  { return $this->belongsTo(User::class, 'senin'); }
-    public function selasaUser() { return $this->belongsTo(User::class, 'selasa'); }
-    public function rabuUser()   { return $this->belongsTo(User::class, 'rabu'); }
-    public function kamisUser()  { return $this->belongsTo(User::class, 'kamis'); }
-    public function jumatUser()  { return $this->belongsTo(User::class, 'jumat'); }
-    public function sabtuUser()  { return $this->belongsTo(User::class, 'sabtu'); }
-    public function mingguUser() { return $this->belongsTo(User::class, 'minggu'); }
+    // Relasi ke user (security 1)
+    public function securityOne()
+    {
+        return $this->belongsTo(User::class, 'security_1_id');
+    }
 
+    // Relasi ke user (security 2)
+    public function securityTwo()
+    {
+        return $this->belongsTo(User::class, 'security_2_id');
+    }
 }
