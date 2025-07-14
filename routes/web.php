@@ -14,6 +14,7 @@ use App\Http\Controllers\Security\FeedbackController;
 use App\Http\Controllers\Security\UserHomeController;
 use App\Http\Controllers\Security\ScanQRController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Storage;
 
 /*
@@ -33,7 +34,7 @@ Route::middleware(['auth'])->group(function () {
 
 
         Route::get('/', fn () => view('admin.dashboard'))->name('dashboard');
-        Route::get('/dashboard', fn () => view('admin.dashboard'))->name('dashboard');
+        Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
         // ====================== User Management ======================
         Route::prefix('user')->name('user.')->group(function () {
             Route::get('/', [UserController::class, 'index'])->name('index');
@@ -138,6 +139,8 @@ Route::prefix('login')->name('login.')->group(function () {
 
 Route::get('/logout',[AuthController::class, 'logout'])->name('logout');
 Route::get('/get-sales-offices/{regionId}', [AjaxController::class, 'getSalesOfficesByRegion']);
+Route::get('/get-patrol-chart/{salesOfficeId}', [AjaxController::class, 'getPatrolChartBySalesOffice']);
+
 
 
 Route::get('/debug-patrol/{id}', function ($id) {
