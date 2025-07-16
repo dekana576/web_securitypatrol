@@ -13,11 +13,27 @@
         <p><strong>Gender</strong> : {{ ucfirst($user->gender) }}</p>
         <p><strong>Region</strong> : {{ $user->region->name ?? '-' }}</p>
         <p><strong>Sales Office</strong> : {{ $user->salesOffice->sales_office_name ?? '-' }}</p>
+
+        <div class="target-counter card" style="margin-top: 1rem;
+            text-align: center;
+            padding: 1rem;
+            border-radius: 8px;">
+            <h6 class="mb-1 text-muted text-white"><strong>{{ ucfirst($shift) }}</strong></h6>
+            <span class="counter-number text-primary" style="font-size: 2rem;
+            font-weight: 700;
+            display: block;">{{ $remaining }}</span>
+            <div class="counter-label" style="font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-top: 0.25rem;">Targets Remaining</div>
+        </div>
+
+
+
       </div>
 
       {{-- Tombol Lihat Jadwal --}}
       <div class="d-grid gap-2 mb-3 d-flex justify-content-between">
-        <a href="" class="btn btn-outline-primary w-100 me-2">
+        <a href="{{ route('schedule.index')}}" class="btn btn-outline-primary w-100 me-2">
           <i class="fa fa-calendar-alt me-2"></i> Jadwal
         </a>
         <a href="{{ route('security.feedback') }}" class="btn btn-outline-warning w-100">

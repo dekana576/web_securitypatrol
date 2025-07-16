@@ -11,6 +11,7 @@ class DataPatrol extends Model
 
     protected $fillable = [
         'tanggal',
+        'shift',
         'region_id',
         'sales_office_id',
         'checkpoint_id',
@@ -21,6 +22,7 @@ class DataPatrol extends Model
         'image',
         'lokasi',
         'feedback_admin',
+        'feedback_image',
     ];
 
     protected $casts = [

@@ -39,7 +39,7 @@
           <textarea name="description" class="form-control" rows="3" required></textarea>
         </div>
 
-        <div class="card p-3 mb-3">
+        <div class="card p-3" style="margin-bottom: 150px">
           <label><strong>Upload Foto (maksimal 10 gambar)</strong></label>
 
           {{-- Container untuk input file --}}
@@ -54,15 +54,34 @@
           </div>
         </div>
 
-        {{-- Floating Camera Button --}}
-        <button type="button" class="btn btn-warning rounded-circle shadow" id="add-image-btn" 
-          style="position: fixed; bottom: 90px; right: 20px; z-index: 9999; width: 60px; height: 60px;">
-          <i class="fa fa-camera"></i>
-        </button>
+        <!-- Container tombol mengambang -->
+        <div class="d-flex justify-content-center">
+
+          <div class="position-fixed d-flex gap-3 align-items-center" style="bottom: 20px; z-index: 9999;">
+            
+            <!-- Tombol Back -->
+            <a href="{{ url()->previous() }}" class="btn btn-secondary rounded-circle shadow d-flex align-items-center justify-content-center me-5"
+              style="width: 60px; height: 60px;">
+              <i class="fa fa-arrow-left"></i>
+            </a>
+  
+            <!-- Tombol Kamera -->
+            <button type="button" class="btn btn-danger rounded-circle shadow d-flex align-items-center justify-content-center" id="add-image-btn"
+              style="width: 80px; height: 80px;">
+              <i class="fa fa-camera fa-lg"></i>
+            </button>
+  
+            <!-- Tombol Simpan -->
+            <button type="submit" class="btn btn-primary rounded-circle shadow d-flex align-items-center justify-content-center ms-5"
+              style="width: 60px; height: 60px;">
+              <i class="fa fa-save"></i>
+            </button>
+  
+          </div>
+        </div>
 
 
 
-        <button type="submit" class="btn btn-primary w-100 mb-5">Simpan</button>
       </form>
     </div>
   </div>

@@ -47,8 +47,8 @@
                     <th>NIK</th>
                     <th>Phone Number</th>
                     <th>Gender</th>
-                    <th>Sales Office</th>
                     <th>Region</th>
+                    <th>Sales Office</th>
                     <th>Action</th>
                 </tr>
             </thead>
@@ -86,8 +86,8 @@ $(document).ready(function () {
             { data: 'nik', name: 'nik' },
             { data: 'phone_number', name: 'phone_number' },
             { data: 'gender', name: 'gender' },
-            { data: 'sales_office.sales_office_name', name: 'salesOffice.sales_office_name' },
             { data: 'region.name', name: 'region.name' },
+            { data: 'sales_office.sales_office_name', name: 'salesOffice.sales_office_name' },
             {
                 data: 'action',
                 name: 'action',

@@ -15,6 +15,7 @@ use App\Http\Controllers\Security\UserHomeController;
 use App\Http\Controllers\Security\ScanQRController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\Security\UserSecurityScheduleController;
 use Illuminate\Support\Facades\Storage;
 
 /*
@@ -105,7 +106,6 @@ Route::middleware(['auth'])->group(function () {
             Route::delete('/{id}', [DataPatrolAdminController::class, 'destroy'])->name('destroy');
             Route::get('/{id}/view', [DataPatrolAdminController::class, 'show'])->name('show');
             Route::put('/{id}/approve', [DataPatrolAdminController::class, 'approve'])->name('approve');
-            Route::put('/{id}/approve', [DataPatrolAdminController::class, 'approveView'])->name('approve');
             Route::put('/{id}/approveView', [DataPatrolAdminController::class, 'approveView'])->name('approve');
             Route::put('/{id}/feedback', [DataPatrolAdminController::class, 'updateFeedback'])->name('feedback');
 
@@ -123,6 +123,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/scan-qr/result', [ScanQRController::class, 'result'])->name('user.scan.qr.result');
         Route::get('/patrol/{checkpoint}/create', [DataPatrolController::class, 'create'])->name('patrol.create');
         Route::post('/patrol', [DataPatrolController::class, 'store'])->name('patrol.store');
+        Route::get('/jadwal-saya', [UserSecurityScheduleController::class, 'index'])->name('schedule.index');
         
         Route::get('/security/feedback', [FeedbackController::class, 'index'])->name('security.feedback');
         Route::get('/security/feedback/{id}', [FeedbackController::class, 'show'])->name('security.feedback.show');

@@ -65,6 +65,7 @@
                 <tr>
                     <th>No</th>
                     <th>Tanggal</th>
+                    <th>shift</th>
                     <th>Region</th>
                     <th>Sales Office</th>
                     <th>Checkpoint</th>
@@ -107,6 +108,7 @@ $(document).ready(function () {
         columns: [
             { data: 'DT_RowIndex', orderable: false, searchable: false, className: 'text-center' },
             { data: 'tanggal', name: 'tanggal' },
+            { data: 'shift', name: 'shift' },
             { data: 'region_name', name: 'region.name' },
             { data: 'sales_office_name', name: 'salesOffice.sales_office_name' },
             { data: 'checkpoint_name', name: 'checkpoint.checkpoint_name' },

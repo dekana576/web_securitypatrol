@@ -57,12 +57,25 @@ class DataPatrolController extends Controller
             $imagePaths[] = 'patrol_images/' . $filename;
         }
 
+        // Deteksi shift berdasarkan waktu sekarang
+        $now = Carbon::now();
+        $jam = $now->format('H:i');
+
+        if ($jam >= '06:01' && $jam <= '14:00') {
+            $shift = 'pagi';
+        } elseif ($jam > '14:00' && $jam <= '22:00') {
+            $shift = 'siang';
+        } else {
+            $shift = 'malam';
+        }
+
         $negativeAnswers = collect($request->criteria)->filter(fn($val) =>
             str_contains(strtolower($val), 'tidak') || str_contains(strtolower($val), 'negative')
         );
 
         DataPatrol::create([
-            'tanggal'           => Carbon::now(),
+            'tanggal'           => $now,
+            'shift'             => $shift,
             'region_id'         => $request->region_id,
             'sales_office_id'   => $request->sales_office_id,
             'checkpoint_id'     => $request->checkpoint_id,
@@ -70,11 +83,12 @@ class DataPatrolController extends Controller
             'description'       => $request->description,
             'kriteria_result'   => json_encode($request->criteria),
             'status'            => 'submitted',
-            'image'             => json_encode($imagePaths), // Simpan array path sebagai JSON
+            'image'             => json_encode($imagePaths),
             'lokasi'            => $request->latitude . ',' . $request->longitude,
             'feedback_admin'    => null,
         ]);
 
         return redirect()->route('user.home')->with('success', 'Data patroli berhasil dikirim.');
     }
+
 }

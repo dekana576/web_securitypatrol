@@ -144,18 +144,6 @@ body {
   list-style: none;
 }
 
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  #sidebar {
-    position: relative;
-    width: 100%;
-    height: auto;
-  }
-
-  #sidebar.hide {
-    width: 100%;
-  }
-}
 
 /* SIDEBAR */
 

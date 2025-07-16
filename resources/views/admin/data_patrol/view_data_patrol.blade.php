@@ -115,6 +115,7 @@
             
 
             {{-- Feedback Admin --}}
+            
             @if(Auth::user()->role === 'admin')
                 <div class="card mb-4 mt-4 shadow-sm">
                     <div class="card-body">
@@ -130,6 +131,31 @@
 
                         
                     </div>
+                    @if($dataPatrol->feedback_image)
+                        @php
+                            $feedback_images = is_array(json_decode($dataPatrol->feedback_image)) ? json_decode($dataPatrol->feedback_image) : [$dataPatrol->feedback_image];
+                        @endphp
+                        <div class="mb-4">
+                            <h5 class="fw-semibold ms-3">Bukti Perbaikan</h5>
+                            <div class="swiper-container relative mt-2" style="overflow: hidden;">
+                                <div class="swiper-wrapper">
+                                    @foreach ($feedback_images as $fbimg)
+                                        <div class="swiper-slide">
+                                            <img src="{{ url('storage/' . $fbimg) }}" alt="Foto Patroli"
+                                                class="img-fluid rounded shadow mb-3 d-block mx-auto"
+                                                style="max-height: 400px; width: auto; object-fit: contain;">
+                                        </div>
+
+                                    @endforeach
+                                </div>
+                                <!-- Add Pagination -->
+                                <div class="swiper-pagination"></div>
+                                <!-- Add Navigation Arrows -->
+                                <div class="swiper-button-next swiper-button-custom"></div>
+                                <div class="swiper-button-prev swiper-button-custom"></div>
+                            </div>
+                        </div>
+                    @endif
                 </div>
             @elseif($dataPatrol->feedback_admin)
                 <div class="card mb-4 mt-4">

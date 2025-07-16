@@ -53,6 +53,7 @@ class DataPatrolAdminController extends Controller
             ->addColumn('checkpoint_name', fn($row) => $row->checkpoint->checkpoint_name ?? '-')
             ->addColumn('security_name', fn($row) => $row->user->name ?? '-')
             ->addColumn('tanggal', fn($row) => \Carbon\Carbon::parse($row->tanggal)->format('d M Y'))
+            ->addColumn('shift', fn($row) => $row->shift ?? '-')
             ->addColumn('kriteria_result', function ($row) {
                 $hasil = json_decode($row->kriteria_result, true);
                 $isNegative = collect($hasil)->filter(fn($v) => stripos($v, 'tidak') !== false || stripos($v, 'negative') !== false)->isNotEmpty();
