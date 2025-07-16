@@ -78,6 +78,8 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/{id}/edit', [CheckpointController::class, 'edit'])->name('edit');
             Route::put('/{id}', [CheckpointController::class, 'update'])->name('update');
             Route::delete('/{id}', [CheckpointController::class, 'destroy'])->name('destroy');
+            Route::get('/checkpoint/export/pdf', [CheckpointController::class, 'exportPDF'])->name('export.pdf');
+
         });
 
         Route::prefix('security_schedule')->name('security_schedule.')->group(function () {

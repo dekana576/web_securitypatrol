@@ -69,16 +69,18 @@ class DataPatrolAdminController extends Controller
                 };
             })
             ->addColumn('action', function ($row) {
-                return '
-                    <a href="' . route('data_patrol.show', $row->id) . '" class="action-icon view-icon view" title="Lihat">
-                        <i class="fa-solid fa-eye"></i>
-                    </a>
-                    <a href="#" class="action-icon approve-icon approve" data-id="' . $row->id . '" title="Setujui">
-                        <i class="fa-solid fa-circle-check"></i>
-                    </a>
-                    <a href="#" class="action-icon delete-icon delete" data-url="' . route('data_patrol.destroy', $row->id) . '" title="Hapus">
-                        <i class="fa-solid fa-trash"></i>
-                    </a>';
+                return '<div class="d-flex justify-content-center align-items-center">
+                <a href="' . route('data_patrol.show', $row->id) . '" class="action-icon view-icon view" title="Lihat">
+                    <i class="fa-solid fa-eye"></i>
+                </a>
+                <a href="#" class="action-icon approve-icon approve" data-id="' . $row->id . '" title="Setujui">
+                    <i class="fa-solid fa-circle-check"></i>
+                </a>
+                <a href="#" class="action-icon delete-icon delete" data-url="' . route('data_patrol.destroy', $row->id) . '" title="Hapus">
+                    <i class="fa-solid fa-trash"></i>
+                </a>
+                </div>
+                ';
             })
             ->rawColumns(['kriteria_result', 'status', 'action'])
             ->make(true);

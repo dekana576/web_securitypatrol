@@ -3,6 +3,7 @@
 @section('title','Data Patrol')
 
 @section('content')
+
 <main>
     <div class="head-title">
         <div class="left">
@@ -23,6 +24,7 @@
                 @endforeach
             </select>
         </div>
+        
 
         {{-- Filter Sales Office --}}
         <div class="col-md-4">
@@ -75,24 +77,49 @@
                     <th>Aksi</th>
                 </tr>
             </thead>
+            <tbody>
+
+            </tbody>
         </table>
     </div>
 </main>
 @endsection
 
 @push('styles')
-<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/2.3.2/css/dataTables.bootstrap5.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/3.2.4/css/buttons.dataTables.css">
+</style>
 @endpush
 
 @push('scripts')
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/2.3.2/js/dataTables.js"></script>
+<script src="https://cdn.datatables.net/2.3.2/js/dataTables.bootstrap5.js"></script>
+<script src="https://cdn.datatables.net/buttons/3.2.4/js/buttons.print.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/3.2.4/js/buttons.dataTables.js"></script>
+<script src="https://cdn.datatables.net/buttons/3.2.4/js/dataTables.buttons.js"></script>
 <script>
 $(document).ready(function () {
     const defaultRegionId = "{{ auth()->user()->salesOffice->region_id }}";
     const defaultSalesOfficeId = "{{ auth()->user()->sales_office_id }}";
 
     const table = $('#data-patrol-table').DataTable({
+        layout: {
+        bottomStart: {
+            buttons: [{
+                extend: 'print',
+                text: '<i class="fa-solid fa-print"></i>',
+                className: 'btn btn-secondary',
+                titleAttr: 'Print Data Patrol',
+                exportOptions: {
+                    columns: ':not(.no-export)'
+                }
+            }]
+            ,
+            info: 'Menampilkan _START_ - _END_ dari _TOTAL_ entri',
+            
+        }
+    },
         processing: true,
         serverSide: true,
         ajax: {
@@ -118,22 +145,19 @@ $(document).ready(function () {
             { data: 'action', orderable: false, searchable: false, className: 'text-center' }
         ],
         responsive: true,
-        dom: '<"row mb-3"<"col-sm-6"l><"col-sm-6 text-end"f>>' +
-             '<"table-responsive"tr>' +
-             '<"row mt-3"<"col-sm-6"i><"col-sm-6 text-end"p>>',
+
         language: {
             search: "", searchPlaceholder: " Cari Data Patrol...",
             lengthMenu: "Tampilkan _MENU_ entri",
             info: "Menampilkan _START_ - _END_ dari _TOTAL_ entri",
             emptyTable: "Belum ada data patrol.",
-            paginate: {
-                previous: "<button class='btn btn-primary btn-sm me-2'>←</button>",
-                next: "<button class='btn btn-primary btn-sm'>→</button>"
-            },
             processing: "Sedang memuat data..."
+
         },
         lengthMenu: [5, 10, 25, 50],
         pageLength: 10,
+
+        
     });
 
     function loadSalesOffices(regionId, selectedId = '') {

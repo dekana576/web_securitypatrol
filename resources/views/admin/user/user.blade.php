@@ -54,6 +54,7 @@
             </thead>
         </table>
     </div>
+    
 </main>
 @endsection
 
@@ -63,7 +64,8 @@
 
 @push('scripts')
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/2.3.2/js/dataTables.js"></script>
+<script src="https://cdn.datatables.net/2.3.2/js/dataTables.bootstrap5.js"></script>
 
 <script>
 $(document).ready(function () {
@@ -103,10 +105,6 @@ $(document).ready(function () {
             info: "Menampilkan _START_ - _END_ dari _TOTAL_ entri",
             infoEmpty: "Tidak ada data untuk ditampilkan",
             emptyTable: "Belum ada data User.",
-            paginate: {
-                previous: "<button class='btn btn-primary btn-sm me-2'>←</button>",
-                next: "<button class='btn btn-primary btn-sm'>→</button>"
-            },
             processing: "Sedang memuat data..."
         },
         lengthMenu: [5, 10, 25, 50],

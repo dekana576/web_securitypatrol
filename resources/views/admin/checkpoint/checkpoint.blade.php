@@ -15,6 +15,7 @@
             <i class="fa-solid fa-plus"></i>
             <span class="text">Tambah Checkpoint</span>
         </a>
+
     </div>
 
     <div class="row mb-3">
@@ -62,7 +63,12 @@
 
 @push('scripts')
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/2.3.2/js/dataTables.js"></script>
+<script src="https://cdn.datatables.net/2.3.2/js/dataTables.bootstrap5.js"></script>
+<script src="https://cdn.datatables.net/buttons/3.2.4/js/buttons.print.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/3.2.4/js/buttons.dataTables.js"></script>
+<script src="https://cdn.datatables.net/buttons/3.2.4/js/dataTables.buttons.js"></script>
+
 <script>
 $(document).ready(function () {
     const userSalesOfficeId = '{{ $user->sales_office_id }}';
@@ -70,6 +76,22 @@ $(document).ready(function () {
 
     // Inisialisasi DataTable
     const table = $('#checkpoint-table').DataTable({
+        layout: {
+        bottomStart: {
+            buttons: [{
+                extend: 'print',
+                text: '<i class="fa-solid fa-print"></i>',
+                className: 'btn btn-secondary',
+                titleAttr: 'Print Data Patrol',
+                exportOptions: {
+                    columns: ':not(.no-export)'
+                }
+            }]
+            ,
+            info: 'Menampilkan _START_ - _END_ dari _TOTAL_ entri',
+            
+        }
+    },
         processing: true,
         serverSide: true,
         ajax: {
@@ -95,9 +117,7 @@ $(document).ready(function () {
             }
         ],
         responsive: true,
-        dom: '<"row mb-3"<"col-sm-6"l><"col-sm-6 text-end"f>>' +
-             '<"table-responsive"tr>' +
-             '<"row mt-3"<"col-sm-6"i><"col-sm-6 text-end"p>>',
+
         language: {
             search: "",
             searchPlaceholder: " Cari Checkpoint...",
@@ -105,12 +125,9 @@ $(document).ready(function () {
             info: "Menampilkan _START_ - _END_ dari _TOTAL_ entri",
             infoEmpty: "Tidak ada data untuk ditampilkan",
             emptyTable: "Belum ada data Sales Office.",
-            paginate: {
-                previous: "<button class='btn btn-primary btn-sm me-2'>←</button>",
-                next: "<button class='btn btn-primary btn-sm'>→</button>"
-            },
             processing: "Sedang memuat data..."
         },
+        
         lengthMenu: [5, 10, 25, 50],
         pageLength: 10,
     });

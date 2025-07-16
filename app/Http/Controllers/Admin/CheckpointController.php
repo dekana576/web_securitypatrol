@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\Facades\DataTables;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Illuminate\Support\Str;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class CheckpointController extends Controller
 {
@@ -136,4 +137,30 @@ class CheckpointController extends Controller
         $salesOffices = SalesOffice::where('region_id', $regionId)->get();
         return response()->json($salesOffices);
     }
+
+    public function exportPDF()
+{
+    $checkpoints = Checkpoint::with(['region', 'salesOffice'])->get();
+
+    $data = $checkpoints->map(function ($cp) {
+        // Dapatkan PNG binary dari QR Code (menggunakan GD, bukan imagick)
+        $pngData = QrCode::format('png')->size(200)->margin(1)->generate($cp->checkpoint_code);
+
+        // Ubah ke base64
+        $qrBase64 = 'data:image/png;base64,' . base64_encode($pngData);
+
+        return [
+            'region'         => $cp->region->name ?? '-',
+            'sales_office'   => $cp->salesOffice->sales_office_name ?? '-',
+            'checkpoint_name'=> $cp->checkpoint_name,
+            'checkpoint_code'=> $cp->checkpoint_code,
+            'qr_base64'      => $qrBase64,
+        ];
+    });
+
+    $pdf = Pdf::loadView('exports.checkpoints', ['checkpoints' => $data])
+        ->setPaper('a4', 'landscape');
+
+    return $pdf->stream('checkpoint_qr.pdf');
+}
 }
