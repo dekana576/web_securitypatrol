@@ -12,6 +12,9 @@ use Yajra\DataTables\Facades\DataTables;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Illuminate\Support\Str;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
+use Spatie\Browsershot\Browsershot;
 
 class CheckpointController extends Controller
 {
@@ -74,6 +77,16 @@ class CheckpointController extends Controller
 
         $code = strtoupper(Str::random(8));
 
+        // Simpan QR Code ke file SVG
+        $qrSvg = QrCode::format('svg')->size(200)->generate($code);
+
+        // Path file di storage
+        $filePath = "public/qrcodes/{$code}.svg";
+
+        // Simpan ke storage
+        Storage::put($filePath, $qrSvg);
+
+        // Simpan checkpoint ke DB
         Checkpoint::create([
             'region_id' => $request->region_id,
             'sales_office_id' => $request->sales_office_id,
@@ -138,29 +151,40 @@ class CheckpointController extends Controller
         return response()->json($salesOffices);
     }
 
-    public function exportPDF()
-{
-    $checkpoints = Checkpoint::with(['region', 'salesOffice'])->get();
+    public function printAll(Request $request)
+    {
+        $query = Checkpoint::with(['region', 'salesOffice']);
 
-    $data = $checkpoints->map(function ($cp) {
-        // Dapatkan PNG binary dari QR Code (menggunakan GD, bukan imagick)
-        $pngData = QrCode::format('png')->size(200)->margin(1)->generate($cp->checkpoint_code);
+        // Filter berdasarkan region dan sales office jika ada
+        if ($request->filled('region_id')) {
+            $query->where('region_id', $request->region_id);
+        }
 
-        // Ubah ke base64
-        $qrBase64 = 'data:image/png;base64,' . base64_encode($pngData);
+        if ($request->filled('sales_office_id')) {
+            $query->where('sales_office_id', $request->sales_office_id);
+        }
 
-        return [
-            'region'         => $cp->region->name ?? '-',
-            'sales_office'   => $cp->salesOffice->sales_office_name ?? '-',
-            'checkpoint_name'=> $cp->checkpoint_name,
-            'checkpoint_code'=> $cp->checkpoint_code,
-            'qr_base64'      => $qrBase64,
-        ];
-    });
+        $checkpoints = $query->get();
 
-    $pdf = Pdf::loadView('exports.checkpoints', ['checkpoints' => $data])
-        ->setPaper('a4', 'landscape');
+        // Render view ke HTML
+        $html = view('exports.checkpoints', compact('checkpoints'))->render();
 
-    return $pdf->stream('checkpoint_qr.pdf');
-}
+        // File PDF sementara
+        $filename = 'semua-qrcode-' . Str::random(6) . '.pdf';
+        $filepath = storage_path('app/public/' . $filename);
+
+        // Generate PDF
+        Browsershot::html($html)
+            ->waitUntilNetworkIdle()
+            ->timeout(60)
+            ->format('A4')
+            ->savePdf($filepath);
+
+        // Stream PDF dan hapus file setelah selesai dikirim
+        return response()->streamDownload(function () use ($filepath) {
+            echo file_get_contents($filepath);
+            // Hapus file setelah dikirim
+            File::delete($filepath);
+        }, $filename);
+    }
 }

@@ -15,6 +15,10 @@
             <i class="fa-solid fa-plus"></i>
             <span class="text">Tambah Checkpoint</span>
         </a>
+        <a href="{{ route('checkpoint.printAll', ['region_id' => request('region_id'), 'sales_office_id' => request('sales_office_id')]) }}" class="btn-print" >
+            <i class="fas fa-print"></i> Print QR (PDF)
+
+        </a>
 
     </div>
 
@@ -74,24 +78,7 @@ $(document).ready(function () {
     const userSalesOfficeId = '{{ $user->sales_office_id }}';
     const defaultRegionId = $('#filter-region').val();
 
-    // Inisialisasi DataTable
     const table = $('#checkpoint-table').DataTable({
-        layout: {
-        bottomStart: {
-            buttons: [{
-                extend: 'print',
-                text: '<i class="fa-solid fa-print"></i>',
-                className: 'btn btn-secondary',
-                titleAttr: 'Print Data Patrol',
-                exportOptions: {
-                    columns: ':not(.no-export)'
-                }
-            }]
-            ,
-            info: 'Menampilkan _START_ - _END_ dari _TOTAL_ entri',
-            
-        }
-    },
         processing: true,
         serverSide: true,
         ajax: {
@@ -117,7 +104,6 @@ $(document).ready(function () {
             }
         ],
         responsive: true,
-
         language: {
             search: "",
             searchPlaceholder: " Cari Checkpoint...",
@@ -127,14 +113,16 @@ $(document).ready(function () {
             emptyTable: "Belum ada data Sales Office.",
             processing: "Sedang memuat data..."
         },
-        
         lengthMenu: [5, 10, 25, 50],
         pageLength: 10,
     });
 
-    // Load Sales Office saat halaman pertama kali dimuat
-    if (defaultRegionId) {
-        loadSalesOffices(defaultRegionId, userSalesOfficeId);
+    function updatePrintLink() {
+        const regionId = $('#filter-region').val();
+        const salesOfficeId = $('#filter-sales-office').val();
+        const baseUrl = `{{ route('checkpoint.printAll') }}`;
+        const query = `?region_id=${regionId || ''}&sales_office_id=${salesOfficeId || ''}`;
+        $('.btn-print').attr('href', baseUrl + query);
     }
 
     function loadSalesOffices(regionId, selectedId = null) {
@@ -147,11 +135,18 @@ $(document).ready(function () {
                 options += `<option value="${so.id}" ${selected}>${so.sales_office_name}</option>`;
             });
             $('#filter-sales-office').html(options).prop('disabled', false);
+            updatePrintLink(); // ✅ Update link setelah sales office di-load
             table.ajax.reload();
         });
     }
 
-    // Event: Filter Region → Load Sales Office
+    // Saat halaman pertama kali dibuka
+    if (defaultRegionId) {
+        loadSalesOffices(defaultRegionId, userSalesOfficeId);
+    } else {
+        updatePrintLink(); // ✅ Panggil jika tidak ada region default
+    }
+
     $('#filter-region').on('change', function () {
         const regionId = $(this).val();
         if (regionId) {
@@ -159,15 +154,15 @@ $(document).ready(function () {
         } else {
             $('#filter-sales-office').html('<option value="">Pilih Region terlebih dahulu</option>').prop('disabled', true);
             table.ajax.reload();
+            updatePrintLink();
         }
     });
 
-    // Event: Filter Sales Office
     $('#filter-sales-office').on('change', function () {
+        updatePrintLink();
         table.ajax.reload();
     });
 
-    // Tombol delete
     $('#checkpoint-table').on('click', '.delete', function () {
         const id = $(this).data('id');
         if (confirm("Yakin ingin menghapus checkpoint ini?")) {
@@ -187,4 +182,5 @@ $(document).ready(function () {
     });
 });
 </script>
+
 @endpush
