@@ -170,7 +170,7 @@ class CheckpointController extends Controller
         $html = view('exports.checkpoints', compact('checkpoints'))->render();
 
         // File PDF sementara
-        $filename = 'semua-qrcode-' . Str::random(6) . '.pdf';
+        $filename = 'QRcode-' . Str::random(6) . '.pdf';
         $filepath = storage_path('app/public/' . $filename);
 
         // Generate PDF
