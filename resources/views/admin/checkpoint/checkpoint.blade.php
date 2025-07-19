@@ -165,20 +165,33 @@ $(document).ready(function () {
 
     $('#checkpoint-table').on('click', '.delete', function () {
         const id = $(this).data('id');
-        if (confirm("Yakin ingin menghapus checkpoint ini?")) {
-            $.ajax({
-                url: `/checkpoint/${id}`,
-                type: 'DELETE',
-                data: { _token: '{{ csrf_token() }}' },
-                success: function (res) {
-                    alert(res.message);
-                    table.ajax.reload();
-                },
-                error: function () {
-                    alert('Terjadi kesalahan saat menghapus data.');
+        Swal.fire({
+            title: 'Yakin ingin menghapus checkpoint ini?',
+            text: "Tindakan ini tidak dapat dikembalikan.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Ya, hapus!',
+            cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: `/checkpoint/${id}`,
+                        type: 'DELETE',
+                        data: {
+                            _token: '{{ csrf_token() }}'
+                        },
+                        success: function (response) {
+                            toastr.success(response.message || 'Data berhasil dihapus');
+                            $('#checkpoint-table').DataTable().ajax.reload();
+                        },
+                        error: function () {
+                            toastr.error('Terjadi kesalahan saat menghapus data.');
+                        }
+                    });
                 }
             });
-        }
     });
 });
 </script>

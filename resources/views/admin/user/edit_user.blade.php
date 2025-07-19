@@ -11,42 +11,49 @@
                 <h1>Edit User</h1>
             </div>
         </div>
-
+    
         <div class="table-data">
             <div class="todo">
                 <div class="head">
                     <h3>Form Edit User</h3>
                 </div>
-
+    
                 <form action="{{ route('user.update', $user->id) }}" method="POST" class="form-input">
                     @csrf
                     @method('PUT')
-
+    
                     <div class="form-group">
                         <label for="name">Name</label>
                         <input type="text" id="name" name="name" class="form-control @error('name') is-invalid @enderror" value="{{ old('name', $user->name) }}" required>
                         @error('name')
-                        <div class="invalid-feedback">
-                            {{ $message }}
-                        </div>
+                            <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
-
+    
                     <div class="form-group">
                         <label for="username">Username</label>
-                        <input type="text" id="username" name="username" class="form-control" value="{{ old('username', $user->username) }}" required>
+                        <input type="text" id="username" name="username" class="form-control @error('username') is-invalid @enderror" value="{{ old('username', $user->username) }}" required>
+                        @error('username')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
-
+    
                     <div class="form-group">
                         <label for="nik">NIK</label>
-                        <input type="number" id="nik" name="nik" class="form-control" value="{{ old('nik', $user->nik) }}" required>
+                        <input type="number" id="nik" name="nik" class="form-control @error('nik') is-invalid @enderror" value="{{ old('nik', $user->nik) }}" required>
+                        @error('nik')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
-
+    
                     <div class="form-group">
                         <label for="phone_number">Phone Number</label>
-                        <input type="number" id="phone_number" name="phone_number" class="form-control" value="{{ old('phone_number', $user->phone_number) }}" required>
+                        <input type="number" id="phone_number" name="phone_number" class="form-control @error('phone_number') is-invalid @enderror" value="{{ old('phone_number', $user->phone_number) }}" required>
+                        @error('phone_number')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
-
+    
                     <div class="form-group">
                         <label for="gender">Gender</label>
                         <select id="gender" name="gender" class="form-control" required>
@@ -55,7 +62,7 @@
                             <option value="female" {{ $user->gender == 'female' ? 'selected' : '' }}>Perempuan</option>
                         </select>
                     </div>
-
+    
                     <div class="form-group">
                         <label for="role">Role</label>
                         <select id="role" name="role" class="form-control" required>
@@ -63,7 +70,7 @@
                             <option value="admin" {{ $user->role == 'admin' ? 'selected' : '' }}>Admin</option>
                         </select>
                     </div>
-
+    
                     <div class="form-group">
                         <label for="region_id">Region</label>
                         <select name="region_id" id="region_id" class="form-control" required>
@@ -89,15 +96,39 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="password">Password</label>
-                        <input type="password" id="password" name="password" class="form-control @error('name') is-invalid @enderror">
-                        @error('name')
-                        <div class="invalid-feedback">
-                            {{ $message }}
-                        </div>
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" class="form-control @error('email') is-invalid @enderror" value="{{ old('email', $user->email) }}">
+                        @error('email')
+                            <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
 
+                    <div class="form-group position-relative">
+                        <label for="password">Password</label>
+                        <div class="password-wrapper">
+                            <input type="password" id="password" name="password" class="form-control @error('password') is-invalid @enderror">
+                            <span class="toggle-password" onclick="togglePassword('password', this)">
+                                <i class="fa fa-eye"></i>
+                            </span>
+                        </div>
+                        @error('password')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                    
+                    <div class="form-group position-relative">
+                        <label for="password_confirmation">Retype Password</label>
+                        <div class="password-wrapper">
+                            <input type="password" id="password_confirmation" name="password_confirmation" class="form-control @error('password_confirmation') is-invalid @enderror">
+                            <span class="toggle-password" onclick="togglePassword('password_confirmation', this)">
+                                <i class="fa fa-eye"></i>
+                            </span>
+                        </div>
+                        @error('password_confirmation')
+                            <div class="invalid-feedback d-block">{{ $message }}</div>
+                        @enderror
+                    </div>
+    
                     <button type="submit" class="btn btn-primary">Update</button>
                     <a href="{{ route('user.index') }}" class="btn-cancel">Batal</a>
                 </form>
@@ -117,5 +148,16 @@
             });
         });
     });
+
+    //Show hide password
+    function togglePassword(fieldId, icon) {
+        const input = document.getElementById(fieldId);
+        const isPassword = input.type === 'password';
+
+        input.type = isPassword ? 'text' : 'password';
+        icon.innerHTML = isPassword
+            ? '<i class="fa fa-eye-slash"></i>'
+            : '<i class="fa fa-eye"></i>';
+    }
 </script>
 @endpush

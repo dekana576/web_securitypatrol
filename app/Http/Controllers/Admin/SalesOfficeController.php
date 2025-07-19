@@ -30,7 +30,7 @@ class SalesOfficeController extends Controller
             ->addColumn('action', function ($row) {
                 return '
                     <a href="' . route('sales_office.edit', $row->id) . '" class="action-icon edit-icon"><i class="fa-solid fa-file-pen" title="Edit"></i></a>
-                    <a href="#" class="action-icon delete-icon delete" data-id="' . $row->id . '"><i class="fa-solid fa-trash" title="Delete"></i></a>
+                    <a href="javascript:void(0)" class="action-icon delete-icon delete" data-id="' . $row->id . '" title="Delete"><i class="fa-solid fa-trash"></i></a>
                 ';
             })
             ->rawColumns(['action'])

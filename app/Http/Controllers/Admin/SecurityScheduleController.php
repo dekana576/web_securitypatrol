@@ -56,7 +56,7 @@ class SecurityScheduleController extends Controller
                     ]) . '" class="action-icon view-icon view" title="Lihat">
                         <i class="fa-solid fa-eye"></i>
                     </a>
-                    <a href="#" class="action-icon delete-icon delete"
+                    <a href="javascript:void(0)" class="action-icon delete-icon delete"
                         data-region="' . $row->region_id . '"
                         data-id="' . $row->sales_office_id . '"
                         data-bulan="' . $bulan . '"

@@ -136,25 +136,40 @@ $(document).ready(function () {
     });
 
     $('#patrol-schedule-table').on('click', '.delete', function () {
+        console.log("Tombol delete diklik"); // Tambahkan log
         const regionId = $(this).data('region');
         const salesOfficeId = $(this).data('id');
         const bulan = $(this).data('bulan');
         const tahun = $(this).data('tahun');
+        
 
-        if (confirm("Yakin ingin menghapus jadwal ini?")) {
-            $.ajax({
-                url: `/security_schedule/${regionId}/${salesOfficeId}/${bulan}/${tahun}`,
-                type: 'DELETE',
-                data: { _token: '{{ csrf_token() }}' },
-                success: function (res) {
-                    alert(res.message);
-                    $('#patrol-schedule-table').DataTable().ajax.reload();
-                },
-                error: function () {
-                    alert('Terjadi kesalahan saat menghapus data.');
+        Swal.fire({
+            title: 'Yakin ingin menghapus jadwal ini?',
+            text: "Tindakan ini tidak dapat dikembalikan.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Ya, hapus!',
+            cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: `/security_schedule/${regionId}/${salesOfficeId}/${bulan}/${tahun}`,
+                        type: 'DELETE',
+                        data: {
+                            _token: '{{ csrf_token() }}'
+                        },
+                        success: function (response) {
+                            toastr.success(response.message || 'Data berhasil dihapus');
+                            $('#patrol-schedule-table').DataTable().ajax.reload();
+                        },
+                        error: function () {
+                            toastr.error('Terjadi kesalahan saat menghapus data.');
+                        }
+                    });
                 }
             });
-        }
     });
 });
 </script>

@@ -172,13 +172,9 @@
                     <i class="fa fa-arrow-left me-1"></i> Kembali
                 </a>
                 @if($dataPatrol->status != 'approved')
-                    <form action="{{ route('data_patrol.approve', $dataPatrol->id) }}" method="POST" onsubmit="return confirm('Setujui data patroli ini?')" class="mt-3">
-                        @csrf
-                        @method('PUT')
-                        <button type="submit" class="btn btn-success">
-                            <i class="fa fa-check me-1"></i> Approve
-                        </button>
-                    </form>
+                    <button type="button" class="btn btn-success btn-approve-detail" data-id="{{ $dataPatrol->id }}">
+                        <i class="fa fa-check me-1"></i> Approve
+                    </button>
                 @endif
             </div>
         </div>
@@ -217,25 +213,36 @@
 
     // Handler tombol approve
         $('#data-patrol-table').on('click', '.approve', function () {
-            const id = $(this).data('id');
+        const id = $(this).data('id');
 
-            if (confirm("Setujui data patroli ini?")) {
+        Swal.fire({
+            title: 'Setujui Data?',
+            text: 'Apakah Anda yakin ingin menyetujui data patroli ini?',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#28a745',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Ya, Setujui!',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
                 $.ajax({
                     url: `/data_patrol/${id}/approve`,
                     type: 'PUT',
                     data: {
-                        _token: '{{ csrf_token() }}'
+                        _token: $('meta[name="csrf-token"]').attr('content')
                     },
                     success: function (response) {
-                        alert(response.message);
-                        table.ajax.reload();
+                        toastr.success(response.message || 'Data patroli berhasil disetujui');
+                        $('#data-patrol-table').DataTable().ajax.reload();
                     },
                     error: function () {
-                        alert('Terjadi kesalahan saat menyetujui data.');
+                        toastr.error('Terjadi kesalahan saat menyetujui data.');
                     }
                 });
             }
         });
+    });
 
         // Initialize Swiper
         var swiper = new Swiper('.swiper-container', {
@@ -252,14 +259,41 @@
             spaceBetween: 30,
         });
 
-    @if(session('success'))
-        toastr.success("{{ session('success') }}");
-    @endif
-    @if(session('info'))
-        toastr.info("{{ session('info') }}");
-    @endif
-    @if(session('error'))
-        toastr.error("{{ session('error') }}");
-    @endif
+        //btn approve
+        $(document).on('click', '.btn-approve-detail', function () {
+            const id = $(this).data('id');
+
+            Swal.fire({
+                title: 'Setujui Data?',
+                text: 'Apakah Anda yakin ingin menyetujui data patroli ini?',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#28a745',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: 'Ya, Setujui!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: `/data_patrol/${id}/approve`,
+                        type: 'PUT',
+                        data: {
+                            _token: $('meta[name="csrf-token"]').attr('content')
+                        },
+                        success: function (response) {
+                            toastr.success(response.message || 'Data patroli berhasil disetujui');
+                            setTimeout(() => {
+                                window.location.reload();
+                            }, 1500);
+                        },
+                        error: function () {
+                            toastr.error('Terjadi kesalahan saat menyetujui data.');
+                        }
+                    });
+                }
+            });
+        });
+
+
 </script>
 @endpush

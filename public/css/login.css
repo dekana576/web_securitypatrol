@@ -56,23 +56,27 @@ body {
   }
   
   
-  .login-form input[type="text"],
-  .login-form input[type="password"] {
+  .login-form input[type="email"],
+  .login-form input[name="password"] {
     width: 100%;
-    padding: 12px;
+    padding: 12px 45px 12px 12px; 
     margin-bottom: 20px;
     border: 1px solid #ddd;
     border-radius: 25px;
     background: #eee;
-    
+    font-family: 'Poppins', sans-serif;
   }
-
-  .login-form input[type="text"]:focus,
-.login-form input[type="password"]:focus {
-  outline: none;
-  border: 1px solid #aeaaaa;
-
-}
+  
+  .login-form input[type="email"]:focus,
+  .login-form input[name="password"]:focus {
+    outline: none;
+    border: 1px solid #aeaaaa;
+    background-color: #fff;
+  }
+  
+  #togglePassword {
+    font-size: 16px;
+  }
 
   
   .custome-checkbox .remember-me {
@@ -87,7 +91,7 @@ body {
 
   
   
-  .login-form button {
+  .login-form .btn-login {
     width: 100%;
     padding: 12px;
     border: none;
@@ -100,14 +104,14 @@ body {
     margin-top: 70px;
   }
 
-  .login-form button:focus {
+  .login-form .btn-login:focus {
     outline: none;
     border: 1px solid #007bff;
     
   }
   
   
-  .login-form button:hover {
+  .login-form .btn-login:hover {
     background: #0056b3;
   }
   

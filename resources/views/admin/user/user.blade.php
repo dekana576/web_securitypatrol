@@ -10,13 +10,14 @@
         </div>
     </div>
 
+
     <div class="control-button top mb-3">
         <a href="{{ route('user.create') }}" class="btn-tambah">
             <i class="fa-solid fa-plus"></i>
             <span class="text">Tambah User</span>
         </a>
     </div>
-
+    
     <div class="row mb-3">
         <div class="col-md-4">
             <label for="filter-region" class="form-label">Region</label>
@@ -45,6 +46,7 @@
                     <th>No</th>
                     <th>Name</th>
                     <th>NIK</th>
+                    <th>Email</th>
                     <th>Phone Number</th>
                     <th>Gender</th>
                     <th>Region</th>
@@ -66,6 +68,8 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.datatables.net/2.3.2/js/dataTables.js"></script>
 <script src="https://cdn.datatables.net/2.3.2/js/dataTables.bootstrap5.js"></script>
+<!-- SweetAlert2 -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
 $(document).ready(function () {
@@ -86,6 +90,7 @@ $(document).ready(function () {
             { data: 'DT_RowIndex', orderable: false, searchable: false },
             { data: 'name', name: 'name' },
             { data: 'nik', name: 'nik' },
+            { data: 'email', name: 'email' },
             { data: 'phone_number', name: 'phone_number' },
             { data: 'gender', name: 'gender' },
             { data: 'region.name', name: 'region.name' },
@@ -143,8 +148,19 @@ $(document).ready(function () {
     });
 
     $('#user-table').on('click', '.delete', function () {
-        const id = $(this).data('id');
-        if (confirm("Yakin ingin menghapus user ini?")) {
+    const id = $(this).data('id');
+
+    Swal.fire({
+        title: 'Yakin ingin menghapus user ini?',
+        text: "Tindakan ini tidak dapat dikembalikan.",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#6c757d',
+        confirmButtonText: 'Ya, hapus!',
+        cancelButtonText: 'Batal'
+    }).then((result) => {
+        if (result.isConfirmed) {
             $.ajax({
                 url: `/user/${id}`,
                 type: 'DELETE',
@@ -152,15 +168,17 @@ $(document).ready(function () {
                     _token: '{{ csrf_token() }}'
                 },
                 success: function (response) {
-                    alert(response.message);
-                    table.ajax.reload();
+                    toastr.success(response.message || 'Data berhasil dihapus');
+                    $('#user-table').DataTable().ajax.reload();
                 },
                 error: function () {
-                    alert('Terjadi kesalahan saat menghapus data.');
+                    toastr.error('Terjadi kesalahan saat menghapus data.');
                 }
             });
         }
     });
+ });
+
 });
 </script>
 @endpush

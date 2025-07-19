@@ -101,22 +101,33 @@
         $('#sales-office-table').on('click', '.delete', function () {
             const id = $(this).data('id');
 
-            if (confirm("Yakin ingin menghapus Sales Office ini?")) {
-                $.ajax({
-                    url: `/sales_office/${id}`,
-                    type: 'DELETE',
-                    data: {
-                        _token: '{{ csrf_token() }}'
-                    },
-                    success: function (response) {
-                        alert(response.message);
-                        table.ajax.reload();
-                    },
-                    error: function () {
-                        alert('Terjadi kesalahan saat menghapus data.');
-                    }
-                });
-            }
+            Swal.fire({
+            title: 'Yakin ingin menghapus sales office ini?',
+            text: "Tindakan ini tidak dapat dikembalikan.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Ya, hapus!',
+            cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: `/sales_office/${id}`,
+                        type: 'DELETE',
+                        data: {
+                            _token: '{{ csrf_token() }}'
+                        },
+                        success: function (response) {
+                            toastr.success(response.message || 'Data berhasil dihapus');
+                            $('#sales-office-table').DataTable().ajax.reload();
+                        },
+                        error: function () {
+                            toastr.error('Terjadi kesalahan saat menghapus data.');
+                        }
+                    });
+                }
+            });
         });
     });
 </script>

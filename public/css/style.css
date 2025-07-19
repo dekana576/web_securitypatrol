@@ -492,6 +492,19 @@ body {
 	background: #0056b3;
   }
 
+  .password-wrapper {
+    position: relative;
+  }
+
+  .password-wrapper .toggle-password {
+    position: absolute;
+    top: 50%;
+    right: 15px;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #888;
+  }
+
   .table-data .form-input .btn-cancel {
 	padding: 10px 20px;
 	background: #f22811;

@@ -16,6 +16,11 @@
 	<!-- Custom CSS -->
 	<link rel="stylesheet" href="{{ url('css/style.css') }}">
 
+	<!-- Toastr -->
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet"/>
+
+	<meta name="csrf-token" content="{{ csrf_token() }}">
+
 	<title>@yield('title')</title>
 </head>
 <body>
@@ -119,6 +124,16 @@
 	<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 	<script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+	<script>
+        @if(session('success'))
+            toastr.success("{{ session('success') }}");
+        @endif
+
+        @if(session('error'))
+            toastr.error("{{ session('error') }}");
+        @endif
+    </script>
 
 	<!-- Custom Scripts -->
 	<script src="{{ url('js/script.js') }}"></script>

@@ -44,11 +44,21 @@ class CheckpointCriteriaController extends Controller
 
     public function destroy($id)
     {
-        $kriteria = CheckpointCriteria::findOrFail($id);
-        $checkpointId = $kriteria->checkpoint_id;
+        $kriteria = CheckpointCriteria::find($id);
+
+        if (!$kriteria) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Kriteria tidak ditemukan.'
+            ], 404);
+        }
+
         $kriteria->delete();
 
-        return redirect()->route('checkpoint_criteria.index', $checkpointId)
-                         ->with('success', 'Kriteria berhasil dihapus.');
+        return response()->json([
+            'success' => true,
+            'message' => 'Kriteria berhasil dihapus.'
+        ]);
     }
+
 }

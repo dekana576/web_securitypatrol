@@ -68,11 +68,12 @@
                         <td>{{ $kriteria->positive_answer }}</td>
                         <td>{{ $kriteria->negative_answer }}</td>
                         <td class="text-center">
-                            <form action="{{ route('checkpoint_criteria.destroy', $kriteria->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus kriteria ini?')">
-                                @csrf
-                                @method('DELETE')
-                                <button class="btn btn-sm btn-danger"><i class="fa fa-trash"></i> Hapus</button>
-                            </form>
+                            <button 
+                                class="btn btn-sm btn-danger delete-kriteria" 
+                                data-id="{{ $kriteria->id }}" 
+                                data-name="{{ $kriteria->nama_kriteria }}">
+                                <i class="fa fa-trash"></i> Hapus
+                            </button>
                         </td>
                     </tr>
                     @endforeach
@@ -93,3 +94,50 @@
     </div>
 </main>
 @endsection
+
+@push('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('.delete-kriteria').forEach(function (button) {
+            button.addEventListener('click', function () {
+                const id = this.dataset.id;
+                const name = this.dataset.name;
+    
+                Swal.fire({
+                    title: 'Yakin ingin menghapus kriteris ini?',
+                    text: `Kriteria "${name}" akan dihapus secara permanen.`,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#6c757d',
+                    confirmButtonText: 'Ya, hapus!',
+                    cancelButtonText: 'Batal'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        fetch(`/checkpoint-criteria/${id}`, {
+                            method: 'DELETE',
+                            headers: {
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                'Accept': 'application/json',
+                            }
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                toastr.success(data.message);
+                                setTimeout(() => window.location.reload(), 1000);
+                            } else {
+                                toastr.error(data.message || 'Gagal menghapus data.');
+                            }
+                        })
+                        .catch(() => {
+                            toastr.error('Terjadi kesalahan saat menghapus.');
+                        });
+                    }
+                });
+            });
+        });
+    });
+</script>
+    
+@endpush

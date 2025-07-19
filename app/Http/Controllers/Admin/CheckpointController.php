@@ -51,7 +51,7 @@ class CheckpointController extends Controller
                     <a href="' . route('checkpoint_criteria.index', $row->id) . '" class="action-icon criteria-icon me-2" title="Create Kriteria">
                         <i class="fa-solid fa-list-check"></i>
                     </a>
-                    <a href="#" class="action-icon delete-icon delete" data-id="' . $row->id . '" title="Delete">
+                    <a href="javascript:void(0)" class="action-icon delete-icon delete" data-id="' . $row->id . '" title="Delete">
                         <i class="fa-solid fa-trash"></i>
                     </a>
                 ';

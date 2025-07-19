@@ -9,24 +9,9 @@
         <div class="head-title">
             <div class="left">
                 <h1>User</h1>
-                <!-- <ul class="breadcrumb">
-                    <li>
-                        <a href="#">Dashboard</a>
-                    </li>
-                    <li><i class='bx bx-chevron-right' ></i></li>
-                    <li>
-                        <a class="active" href="#">Home</a>
-                    </li>
-                </ul> -->
+                
             </div>
-            {{-- <a href="#" class="btn-download">
-                <i class='bx bxs-cloud-download' ></i>
-                <span class="text">Download PDF</span>
-            </a> --}}
         </div>
-
-       
-
 
         <div class="table-data">
            
@@ -117,13 +102,29 @@
                       @enderror
                   </div>
   
-                  <div class="form-group">
-                      <label for="password">Password</label>
-                      <input type="password" id="password" name="password" class="form-control @error('password') is-invalid @enderror" required>
-                      @error('password')
-                          <div class="invalid-feedback">{{ $message }}</div>
-                      @enderror
-                  </div>
+                  <div class="form-group position-relative">
+                    <label for="password">Password</label>
+                    <div class="password-wrapper">
+                        <input type="password" id="password" name="password" class="form-control @error('password') is-invalid @enderror" required>
+                        <span class="toggle-password" onclick="togglePassword('password', this)">
+                            <i class="fa fa-eye"></i>
+                        </span>
+                    </div>
+                    @error('password')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+                
+                <div class="form-group position-relative">
+                    <label for="password_confirmation">Retype Password</label>
+                    <div class="password-wrapper">
+                        <input type="password" id="password_confirmation" name="password_confirmation" class="form-control" required>
+                        <span class="toggle-password" onclick="togglePassword('password_confirmation', this)">
+                            <i class="fa fa-eye"></i>
+                        </span>
+                    </div>
+                </div>
+                
   
                   <button type="submit" class="btn btn-primary">Tambah</button>
                   <a href="{{ route('user.index') }}" class="btn-cancel">Batal</a>
@@ -146,6 +147,18 @@
             });
         });
     });
+
+    //Show hide password
+    function togglePassword(fieldId, icon) {
+        const input = document.getElementById(fieldId);
+        const isPassword = input.type === 'password';
+
+        input.type = isPassword ? 'text' : 'password';
+        icon.innerHTML = isPassword
+            ? '<i class="fa fa-eye-slash"></i>'
+            : '<i class="fa fa-eye"></i>';
+    }
 </script>
+
 @endpush
     

@@ -62,9 +62,9 @@ class UserController extends Controller
             'name' => 'required|string|max:255',
             'username' => 'required|string|max:255|unique:users,username',
             'nik' => 'required|string|max:255|unique:users,nik',
-            'phone_number' => 'required|string|max:20',
+            'phone_number' => 'required|string|max:13|unique:users,phone_number',
             'gender' => 'required|in:male,female',
-            'password' => 'required|string|min:8',
+            'password' => 'required|min:8|confirmed',
             'role' => 'required|in:admin,security',
             'sales_office_id' => 'required|exists:sales_offices,id',
             'region_id' => 'required|exists:regions,id',
@@ -98,37 +98,41 @@ class UserController extends Controller
     
     public function update(Request $request, $id)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'username' => 'required|string|max:255|unique:users,username,' . $id,
-            'nik' => 'required|numeric',
-            'phone_number' => 'required|numeric',
-            'gender' => 'required|in:male,female',
-            'role' => 'required|in:admin,security',
-            'sales_office_id' => 'required|exists:sales_offices,id',
-            'region_id' => 'required|exists:regions,id',
-            'password' => 'nullable|string|min:8',
-        ]);
-    
-        $user = User::findOrFail($id);
-    
-        $user->name = $request->name;
-        $user->username = $request->username;
-        $user->nik = $request->nik;
-        $user->phone_number = $request->phone_number;
-        $user->gender = $request->gender;
-        $user->role = $request->role;
-        $user->sales_office_id = $request->sales_office_id;
-        $user->region_id = $request->region_id;
-    
-        if ($request->filled('password')) {
-            $user->password = bcrypt($request->password);
-        }
-    
-        $user->save();
-    
-        return redirect()->route('user.index')->with('success', 'User berhasil diperbarui.');
+    $request->validate([
+        'name' => 'required|string|max:255',
+        'username' => 'required|string|max:255|unique:users,username,' . $id,
+        'email' => 'nullable|email|unique:users,email,' . $id,
+        'nik' => 'required|numeric|unique:users,nik,' . $id,
+        'phone_number' => 'required|numeric|unique:users,phone_number,' . $id,
+        'gender' => 'required|in:male,female',
+        'role' => 'required|in:admin,security',
+        'sales_office_id' => 'required|exists:sales_offices,id',
+        'region_id' => 'required|exists:regions,id',
+        'password' => 'nullable|string|min:8|confirmed',
+        
+    ]);
+
+    $user = User::findOrFail($id);
+
+    $user->name = $request->name;
+    $user->username = $request->username;
+    $user->email = $request->email;
+    $user->nik = $request->nik;
+    $user->phone_number = $request->phone_number;
+    $user->gender = $request->gender;
+    $user->role = $request->role;
+    $user->sales_office_id = $request->sales_office_id;
+    $user->region_id = $request->region_id;
+
+    if ($request->filled('password')) {
+        $user->password = bcrypt($request->password);
     }
+
+    $user->save();
+
+    return redirect()->route('user.index')->with('success', 'User berhasil diperbarui.');
+    }
+
     
     public function destroy($id)
     {

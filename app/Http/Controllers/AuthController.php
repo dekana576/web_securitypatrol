@@ -15,16 +15,16 @@ class AuthController extends Controller
 
     public function Login(Request $request)
     {
-        // Validasi input username dan password
+        // Validasi input email dan password
         $request->validate([
-            'username' => 'required',
+            'email' => 'required',
             'password' => 'required',
         ]);
     
-        // Ambil data request username dan password saja
-        $credential = $request->only('username', 'password');
+        // Ambil data request email dan password saja
+        $credential = $request->only('email', 'password');
     
-        // Cek jika data username dan password valid
+        // Cek jika data email dan password valid
         if (Auth::attempt($credential)) {
             // Kalau berhasil, simpan data user di variabel $user
             $user = Auth::user();
