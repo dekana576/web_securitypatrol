@@ -61,6 +61,15 @@ class DataPatrolAdminController extends Controller
             });
         }
 
+        if ($request->filled('shift')) {
+            $query->where('shift', $request->shift);
+        }
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+
         return DataTables::of($query)
             ->addIndexColumn()
             ->addColumn('region_name', fn($row) => $row->region->name ?? '-')

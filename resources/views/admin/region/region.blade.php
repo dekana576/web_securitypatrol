@@ -18,10 +18,7 @@
             <i class="fa-solid fa-plus"></i>
             <span class="text">Tambah Region</span>
         </a>
-        <a href="#" class="btn-import" data-bs-toggle="modal" data-bs-target="#importModal">
-            <i class="fa-solid fa-file-import"></i>
-            <span class="text">Import Region</span>
-        </a>
+        
     </div>
 
     <!-- Modal Import Excel -->

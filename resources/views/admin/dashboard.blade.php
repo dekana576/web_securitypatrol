@@ -44,26 +44,32 @@
         </div>
     </div> --}}
 
-    <div class="row mt-4 mb-3">
-        <div class="col-md-4">
-            <label for="filter-region" class="form-label">Region</label>
-            <select id="filter-region" class="form-select">
-                <option value="">Semua Region</option>
-                @foreach($regions as $region)
-                <option value="{{ $region->id }}" {{ $user->salesOffice->region_id == $region->id ? 'selected' : '' }}>
-                    {{ $region->name }}
-                </option>
-                @endforeach
-            </select>
-        </div>
+    <div class="card shadow-sm border-0 mb-4 mt-4 bg-light">
+        <div class="card-body">
 
-        <div class="col-md-4">
-            <label for="filter-sales-office" class="form-label">Sales Office</label>
-            <select id="filter-sales-office" class="form-select" disabled>
-                <option value="">Memuat...</option>
-            </select>
+            <div class="row mt-2 mb-3 ">
+                <div class="col-md-4">
+                    <label for="filter-region" class="form-label">Region</label>
+                    <select id="filter-region" class="form-select">
+                        <option value="">Semua Region</option>
+                        @foreach($regions as $region)
+                        <option value="{{ $region->id }}" {{ $user->salesOffice->region_id == $region->id ? 'selected' : '' }}>
+                            {{ $region->name }}
+                        </option>
+                        @endforeach
+                    </select>
+                </div>
+        
+                <div class="col-md-4">
+                    <label for="filter-sales-office" class="form-label">Sales Office</label>
+                    <select id="filter-sales-office" class="form-select" disabled>
+                        <option value="">Memuat...</option>
+                    </select>
+                </div>
+            </div>
         </div>
     </div>
+
 
     <!-- Grafik -->
     <div class="card mt-4">
