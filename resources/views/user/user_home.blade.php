@@ -33,13 +33,19 @@
 
       {{-- Tombol Lihat Jadwal --}}
       <div class="d-grid gap-2 mb-3 d-flex justify-content-between">
-        <a href="{{ route('schedule.index')}}" class="btn btn-outline-primary w-100 me-2">
-          <i class="fa fa-calendar-alt me-2"></i> Jadwal
-        </a>
-        <a href="{{ route('security.feedback') }}" class="btn btn-outline-warning w-100">
-          <i class="fa fa-comments me-2"></i> Feedback
-        </a>
+          <a href="{{ route('schedule.index') }}" class="btn btn-outline-primary w-100 me-2">
+              <i class="fa fa-calendar-alt me-2"></i> Jadwal
+          </a>
+          <a href="{{ route('security.feedback') }}" class="btn btn-outline-warning w-100 position-relative">
+              <i class="fa fa-comments me-2"></i> Feedback
+              @if(isset($unreadFeedbackCount) && $unreadFeedbackCount > 0)
+                  <span class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle">
+                      <span class="visually-hidden">New feedback</span>
+                  </span>
+              @endif
+          </a>
       </div>
+
 
 
 

@@ -45,6 +45,30 @@ class DataPatrolAdminController extends Controller
             $query->whereDay('tanggal', $request->day);
         }
 
+        if ($request->filled('kriteria')) {
+            $query->where(function ($q) use ($request) {
+                if ($request->kriteria === 'aman') {
+                    $q->where(function ($sub) {
+                        $sub->whereRaw("JSON_SEARCH(LOWER(kriteria_result), 'one', '%tidak%') IS NULL")
+                            ->whereRaw("JSON_SEARCH(LOWER(kriteria_result), 'one', '%negative%') IS NULL");
+                    });
+                } elseif ($request->kriteria === 'tidak_aman') {
+                    $q->where(function ($sub) {
+                        $sub->whereRaw("JSON_SEARCH(LOWER(kriteria_result), 'one', '%tidak%') IS NOT NULL")
+                            ->orWhereRaw("JSON_SEARCH(LOWER(kriteria_result), 'one', '%negative%') IS NOT NULL");
+                    });
+                }
+            });
+        }
+
+        if ($request->filled('shift')) {
+            $query->where('shift', $request->shift);
+        }
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
 
         return DataTables::of($query)
             ->addIndexColumn()

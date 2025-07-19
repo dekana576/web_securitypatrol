@@ -4,12 +4,15 @@
 
 @section('content')
 <main class="px-3 px-md-5 py-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="h3 fw-bold mb-0">Jadwal Patroli Saya</h1>
+    <div class="d-flex justify-content-between align-items-center">
+
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="h3 fw-bold mb-0">Jadwal Patroli Saya</h1>
+        </div>
+        <a href="{{ route('user.home') }}" class="btn btn-secondary mb-3">
+            <i class="fa fa-arrow-left me-1"></i> Kembali
+        </a>
     </div>
-    <a href="{{ route('user.home') }}" class="btn btn-secondary mb-3">
-        <i class="fa fa-arrow-left me-1"></i> Kembali
-    </a>
 
     <div class="table-responsive">
         <table class="table table-striped table-hover table-bordered align-middle shadow-sm">

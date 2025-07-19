@@ -34,7 +34,8 @@ Route::middleware(['auth'])->group(function () {
     Route::middleware(['cek_login:admin'])->group(function () {
 
 
-        Route::get('/', fn () => view('admin.dashboard'))->name('dashboard');
+        
+        Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
         // ====================== User Management ======================
         Route::prefix('user')->name('user.')->group(function () {

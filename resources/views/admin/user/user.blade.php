@@ -10,14 +10,13 @@
         </div>
     </div>
 
-
     <div class="control-button top mb-3">
         <a href="{{ route('user.create') }}" class="btn-tambah">
             <i class="fa-solid fa-plus"></i>
             <span class="text">Tambah User</span>
         </a>
     </div>
-    
+
     <div class="row mb-3">
         <div class="col-md-4">
             <label for="filter-region" class="form-label">Region</label>

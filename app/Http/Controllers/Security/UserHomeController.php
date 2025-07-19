@@ -58,6 +58,12 @@ class UserHomeController extends Controller
 
         $remaining = max(0, $target - $dataPatrolCount);
 
-        return view('user.user_home', compact('user', 'shift', 'remaining'));
+        $unreadFeedbackCount = DataPatrol::where('sales_office_id', $salesOfficeId)
+            ->whereNotNull('feedback_admin')
+            ->where('status', 'submitted')
+            ->count();
+
+
+        return view('user.user_home', compact('user', 'shift', 'remaining', 'unreadFeedbackCount'));
     }
 }

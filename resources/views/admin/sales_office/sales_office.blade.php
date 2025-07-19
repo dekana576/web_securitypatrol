@@ -10,24 +10,29 @@
         </div>
     </div>
 
-    <div class="control-button top mb-3">
-        <a href="{{ route('sales_office.create') }}" class="btn-tambah">
-            <i class="fa-solid fa-plus"></i>
-            <span class="text">Tambah Sales Office</span>
-        </a>
-    </div>
+    <div class="card shadow-sm border-0 mb-4 bg-light">
+        <div class="card-body">
 
-    <div class="row mb-3">
-        <div class="col-md-4">
-            <label for="filter-region" class="form-label">Filter Region</label>
-            <select id="filter-region" class="form-select">
-                <option value="">Semua Region</option>
-                @foreach($regions as $region)
-                    <option value="{{ $region->id }}" {{ $user->salesOffice->region_id == $region->id ? 'selected' : '' }}>
-                        {{ $region->name }}
-                    </option>
-                @endforeach
-            </select>
+            <div class="control-button top mb-3">
+                <a href="{{ route('sales_office.create') }}" class="btn-tambah">
+                    <i class="fa-solid fa-plus"></i>
+                    <span class="text">Tambah Sales Office</span>
+                </a>
+            </div>
+        
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <label for="filter-region" class="form-label">Filter Region</label>
+                    <select id="filter-region" class="form-select">
+                        <option value="">Semua Region</option>
+                        @foreach($regions as $region)
+                            <option value="{{ $region->id }}" {{ $user->salesOffice->region_id == $region->id ? 'selected' : '' }}>
+                                {{ $region->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
         </div>
     </div>
 
