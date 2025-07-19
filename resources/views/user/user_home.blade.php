@@ -81,25 +81,31 @@
   let isScanning = false;
 
   async function startCameraScan() {
-    overlay.classList.remove('d-none');
-    html5QrCode = new Html5Qrcode("reader");
+  overlay.classList.remove('d-none');
+  html5QrCode = new Html5Qrcode("reader");
 
-    const config = { fps: 10, qrbox: 250 };
+  const config = { fps: 10, qrbox: 250 };
 
+  try {
+    await html5QrCode.start({ facingMode: "environment" }, config, handleScan, handleError);
+    isScanning = true;
+  } catch (err) {
+    console.warn("Kamera belakang gagal, coba kamera depan:", err);
     try {
-      await html5QrCode.start({ facingMode: "environment" }, config, handleScan, handleError);
+      await html5QrCode.start({ facingMode: "user" }, config, handleScan, handleError);
       isScanning = true;
-    } catch (err) {
-      console.warn("Kamera belakang gagal, coba kamera depan:", err);
-      try {
-        await html5QrCode.start({ facingMode: "user" }, config, handleScan, handleError);
-        isScanning = true;
-      } catch (err2) {
-        alert("Tidak bisa mengakses kamera: " + err2.message);
-        overlay.classList.add('d-none');
-      }
+    } catch (err2) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Akses Kamera Gagal',
+        text: 'Tidak bisa mengakses kamera: ' + err2.message,
+        confirmButtonText: 'Tutup'
+      });
+      overlay.classList.add('d-none');
     }
   }
+}
+
 
   function handleScan(decodedText) {
     html5QrCode.stop().then(() => {

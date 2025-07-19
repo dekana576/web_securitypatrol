@@ -37,10 +37,9 @@
                 @endforeach
             </ul>
             @if($feedback->status === 'submitted')
-                <form action="{{ route('security.feedback.done', $feedback->id) }}" method="POST"
-                    enctype="multipart/form-data"
-                    onsubmit="return confirm('Tandai feedback ini sebagai selesai?')">
-                    
+            <form id="patrolForm" action="{{ route('security.feedback.done', $feedback->id) }}" method="POST"
+              enctype="multipart/form-data">
+              
                     @csrf
                     @method('PUT')
 
@@ -116,7 +115,7 @@
 
   addImageBtn.addEventListener('click', () => {
     if (imageCount >= maxImages) {
-      alert('Maksimal 10 gambar!');
+      toastr.warning('Maksimal 10 gambar!');
       return;
     }
 
@@ -172,16 +171,16 @@
 
   // Validasi saat submit
   document.getElementById('patrolForm').addEventListener('submit', function(e) {
-    const totalInputs = imageWrapper.querySelectorAll('input[type="file"]').length;
+    const totalInputs = imageInputWrapper.querySelectorAll('input[type="file"]').length;
     if (totalInputs === 0) {
       e.preventDefault();
-      alert('Minimal upload 1 gambar.');
+      toastr.error('Minimal upload 1 gambar.');
       return;
     }
 
     if (totalInputs > maxImages) {
       e.preventDefault();
-      alert('Maksimal 10 gambar diperbolehkan.');
+      toastr.error('Maksimal 10 gambar diperbolehkan.');
     }
   });
 </script>

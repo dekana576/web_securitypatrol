@@ -12,6 +12,8 @@
   <link rel="stylesheet" href="https://cdn.datatables.net/2.3.1/css/dataTables.bootstrap5.css">
   <!-- My CSS -->
   <link rel="stylesheet" href="{{url("css/user.css")}}">
+  <!-- Toastr CSS -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet">
  
 </head>
 <body>
@@ -58,14 +60,26 @@
  
 
    
-    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+  <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
 	<script src="https://cdn.datatables.net/2.3.1/js/dataTables.js"></script>
 	<script src="https://cdn.datatables.net/2.3.1/js/dataTables.bootstrap5.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 	<script src="{{url("js/datatable.js")}}"></script>
   <script src="{{url("js/user.js")}}"></script>   
+
   @stack('scripts')
+
+  <script>
+    @if(session('success'))
+        toastr.success("{{ session('success') }}");
+    @endif
+
+    @if(session('error'))
+        toastr.error("{{ session('error') }}");
+    @endif
+</script>
 
 	
 </body>

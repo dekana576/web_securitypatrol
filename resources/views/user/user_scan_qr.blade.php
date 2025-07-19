@@ -101,10 +101,10 @@
       document.getElementById("latitude").value = position.coords.latitude;
       document.getElementById("longitude").value = position.coords.longitude;
     }, function(error) {
-      alert("Gagal mengambil lokasi: " + error.message);
+      toastr.error("Gagal mengambil lokasi: " + error.message);
     });
   } else {
-    alert("Browser tidak mendukung Geolocation.");
+    toastr.error("Browser tidak mendukung Geolocation.");
   }
 
   let imageCount = 0;
@@ -132,7 +132,7 @@
 
   addImageBtn.addEventListener('click', () => {
     if (imageCount >= maxImages) {
-      alert('Maksimal 10 gambar!');
+      toastr.error('Maksimal 10 gambar!');
       return;
     }
 
@@ -191,13 +191,13 @@
     const totalInputs = imageWrapper.querySelectorAll('input[type="file"]').length;
     if (totalInputs === 0) {
       e.preventDefault();
-      alert('Minimal upload 1 gambar.');
+      toastr.error('Minimal upload 1 gambar.');
       return;
     }
 
     if (totalInputs > maxImages) {
       e.preventDefault();
-      alert('Maksimal 10 gambar diperbolehkan.');
+      toastr.error('Maksimal 10 gambar diperbolehkan.');
     }
   });
 </script>
