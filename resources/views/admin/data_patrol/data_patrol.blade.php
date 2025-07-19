@@ -5,69 +5,82 @@
 @section('content')
 
 <main>
-    <div class="head-title">
+    <div class="head-title mb-3">
         <div class="left">
             <h1>Data Patrol</h1>
         </div>
     </div>
 
-    <div class="row mb-3">
-        {{-- Filter Region --}}
-        <div class="col-md-4">
-            <label for="filter-region" class="form-label">Region</label>
-            <select id="filter-region" class="form-select">
-                <option value="">Semua Region</option>
-                @foreach($regions as $region)
-                    <option value="{{ $region->id }}" {{ $user->salesOffice->region_id == $region->id ? 'selected' : '' }}>
-                        {{ $region->name }}
-                    </option>
-                @endforeach
-            </select>
-        </div>
-        
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-body">
+            <div class="row g-3">
+                {{-- Filter Region --}}
+                <div class="col-md-4">
+                    <label for="filter-region" class="form-label"><strong>Region</strong></label>
+                    <select id="filter-region" class="form-select">
+                        <option value="">Semua Region</option>
+                        @foreach($regions as $region)
+                            <option value="{{ $region->id }}" {{ $user->salesOffice->region_id == $region->id ? 'selected' : '' }}>
+                                {{ $region->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
 
-        {{-- Filter Sales Office --}}
-        <div class="col-md-4">
-            <label for="filter-sales-office" class="form-label">Sales Office</label>
-            <select id="filter-sales-office" class="form-select" disabled>
-                <option value="">Memuat...</option>
-            </select>
-        </div>
+                {{-- Filter Sales Office --}}
+                <div class="col-md-4">
+                    <label for="filter-sales-office" class="form-label"><strong>Sales Office</strong></label>
+                    <select id="filter-sales-office" class="form-select" disabled>
+                        <option value="">Memuat...</option>
+                    </select>
+                </div>
 
-        {{-- Filter Tanggal --}}
-        <div class="col-md-4">
-            <label class="form-label">Tanggal</label>
-            <div class="d-flex gap-2">
-                <select id="filter-year" class="form-select">
-                    <option value="">Tahun</option>
-                    @for ($y = now()->year; $y >= 2023; $y--)
-                        <option value="{{ $y }}">{{ $y }}</option>
-                    @endfor
-                </select>
-                <select id="filter-month" class="form-select">
-                    <option value="">Bulan</option>
-                    @for ($m = 1; $m <= 12; $m++)
-                        <option value="{{ str_pad($m, 2, '0', STR_PAD_LEFT) }}">{{ DateTime::createFromFormat('!m', $m)->format('F') }}</option>
-                    @endfor
-                </select>
-                <select id="filter-day" class="form-select">
-                    <option value="">Hari</option>
-                    @for ($d = 1; $d <= 31; $d++)
-                        <option value="{{ str_pad($d, 2, '0', STR_PAD_LEFT) }}">{{ $d }}</option>
-                    @endfor
-                </select>
+                {{-- Filter Kriteria --}}
+                <div class="col-md-4">
+                    <label class="form-label"><strong>Kriteria</strong></label>
+                    <select id="filter-kriteria" class="form-select">
+                        <option value="">Semua</option>
+                        <option value="aman">Aman</option>
+                        <option value="tidak_aman">Tidak Aman</option>
+                    </select>
+                </div>
+
+                {{-- Filter Tanggal (menyamping) --}}
+                <div class="col-12">
+                    <label class="form-label d-block"><strong>Tanggal</strong></label>
+                    <div class="d-flex gap-2 flex-wrap">
+                        <select id="filter-year" class="form-select w-auto">
+                            <option value="">Tahun</option>
+                            @for ($y = now()->year; $y >= 2023; $y--)
+                                <option value="{{ $y }}">{{ $y }}</option>
+                            @endfor
+                        </select>
+                        <select id="filter-month" class="form-select w-auto">
+                            <option value="">Bulan</option>
+                            @for ($m = 1; $m <= 12; $m++)
+                                <option value="{{ str_pad($m, 2, '0', STR_PAD_LEFT) }}">{{ DateTime::createFromFormat('!m', $m)->format('F') }}</option>
+                            @endfor
+                        </select>
+                        <select id="filter-day" class="form-select w-auto">
+                            <option value="">Hari</option>
+                            @for ($d = 1; $d <= 31; $d++)
+                                <option value="{{ str_pad($d, 2, '0', STR_PAD_LEFT) }}">{{ $d }}</option>
+                            @endfor
+                        </select>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
-
-    <div class="table-data mt-4">
+    {{-- Table --}}
+    <div class="table-data">
         <table id="data-patrol-table" class="table table-striped">
             <thead>
                 <tr>
                     <th>No</th>
                     <th>Tanggal</th>
-                    <th>shift</th>
+                    <th>Shift</th>
                     <th>Region</th>
                     <th>Sales Office</th>
                     <th>Checkpoint</th>
@@ -77,12 +90,12 @@
                     <th>Aksi</th>
                 </tr>
             </thead>
-            <tbody>
-
-            </tbody>
+            <tbody></tbody>
         </table>
     </div>
 </main>
+
+
 @endsection
 
 @push('styles')
@@ -130,7 +143,9 @@ $(document).ready(function () {
                 d.year = $('#filter-year').val();
                 d.month = $('#filter-month').val();
                 d.day = $('#filter-day').val();
+                d.kriteria = $('#filter-kriteria').val(); // ← ini tambahan
             }
+
         },
         columns: [
             { data: 'DT_RowIndex', orderable: false, searchable: false, className: 'text-center' },
@@ -192,9 +207,15 @@ $(document).ready(function () {
     $('#filter-sales-office').on('change', function () {
         table.ajax.reload();
     });
+
     $('#filter-year, #filter-month, #filter-day').on('change', function () {
         table.ajax.reload();
     });
+
+    $('#filter-kriteria').on('change', function () {
+        table.ajax.reload();
+    });
+
 
     $('#data-patrol-table').on('click', '.approve', function () {
         const id = $(this).data('id');
