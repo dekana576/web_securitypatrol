@@ -8,6 +8,9 @@
 
       {{-- Info User --}}
       <div class="card p-3 mb-3 shadow">
+        <div class="text-center mb-4 mt-2">
+            <img src="{{ url('img/logo_AM_Patrol_no_Text_PNG.png') }}" width="80" alt="logo">
+        </div>
         <p><strong>Security Name</strong> : {{ $user->name }}</p>
         <p><strong>Phone Number</strong> : {{ $user->phone_number }}</p>
         <p><strong>Gender</strong> : {{ ucfirst($user->gender) }}</p>

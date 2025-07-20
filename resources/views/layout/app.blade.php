@@ -3,6 +3,7 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="icon" type="image/x-icon" href="/img/logo_AM_Patrol_no_Text_ICO.ico">
 	
 	<!-- Font Awesome -->
 	<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
@@ -26,9 +27,13 @@
 <body>
 	<!-- SIDEBAR -->
 	<section id="sidebar">
-		<a href="{{ url('dashboard') }}" class="brand">
-			<img src="{{ url('img/logo_astra.png') }}" width="150" alt="logo">
-		</a>
+		<div class="d-flex align-items-center">
+
+			<a href="{{ url('dashboard') }}" class="brand d-flex align-items-center gap-2">
+				<img src="{{ url('img/logo_AM_Patrol_no_Text_PNG.png') }}" width="40" alt="logo">
+				<span class="logo-text" style="font-family: Anton; font-size: 30px;"><span style="color: black">AM</span> <span style="color: #074377">Patrol</span></span>
+			</a>
+		</div>
 		<ul class="side-menu top">
 			<li class="{{ request()->is('dashboard') ? 'active' : '' }}">
 				<a href="{{ url('dashboard') }}">

@@ -122,6 +122,7 @@ Route::middleware(['auth'])->group(function () {
     // Group khusus Security (jika ingin ditambahkan route khusus security)
     Route::middleware(['cek_login:security'])->group(function () {
         // Halaman utama security
+        Route::get('/', [UserHomeController::class, 'index'])->name('user.home');
         Route::get('/security', [UserHomeController::class, 'index'])->name('user.home');
         Route::get('/scan-qr', [ScanQRController::class, 'form'])->name('user.scan.qr');
         Route::get('/scan-qr/result', [ScanQRController::class, 'result'])->name('user.scan.qr.result');

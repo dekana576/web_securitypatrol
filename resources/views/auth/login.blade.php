@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="/img/logo_AM_Patrol_no_Text_ICO.ico">
     <title>Login Page</title>
 
     <!-- My CSS -->
@@ -28,7 +29,10 @@
                 <img src="{{ asset('img/Data_security_26.jpg') }}" alt="Login Illustration">
             </div>
             <div class="login-form">
-                <h2>Welcome</h2>
+                <div class="text-center mb-3">
+
+                    <img src="{{ url('img/logo_AM_Patrol_w_Text_PNG.png') }}" width="90" alt="logo">
+                </div>
 
                 <form method="POST" action="{{ route('login.index') }}">
                     @csrf
