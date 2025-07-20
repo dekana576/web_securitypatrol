@@ -4,20 +4,20 @@
 @section('content')
 <main>
   <div class="mainContent">
-    <div class="container mt-5">
+    <div class="container mt-3">
 
       {{-- Info User --}}
       <div class="card p-3 mb-3 shadow">
         <div class="text-center mb-4 mt-2">
-            <img src="{{ url('img/logo_AM_Patrol_no_Text_PNG.png') }}" width="80" alt="logo">
+            <img src="{{ url('img/logo_AM_Patrol_no_Text_PNG.png') }}" width="60" alt="logo">
         </div>
-        <p><strong>Security Name</strong> : {{ $user->name }}</p>
-        <p><strong>Phone Number</strong> : {{ $user->phone_number }}</p>
-        <p><strong>Gender</strong> : {{ ucfirst($user->gender) }}</p>
-        <p><strong>Region</strong> : {{ $user->region->name ?? '-' }}</p>
-        <p><strong>Sales Office</strong> : {{ $user->salesOffice->sales_office_name ?? '-' }}</p>
+        <p class="d-flex justify-content-between border-bottom pb-1">Security Name  <strong>{{ $user->name }}</strong></p>
+        <p class="d-flex justify-content-between border-bottom pb-1">Email <strong>{{ $user->email }}</strong></p>
+        <p class="d-flex justify-content-between border-bottom pb-1">Phone Number <strong>{{ $user->phone_number }}</strong> </p>
+        <p class="d-flex justify-content-between border-bottom pb-1">Region <strong>{{ $user->region->name ?? '-' }}</strong></p>
+        <p class="d-flex justify-content-between border-bottom pb-1">Sales Office <strong>{{ $user->salesOffice->sales_office_name ?? '-' }}</strong></p>
 
-        <div class="target-counter card" style="margin-top: 1rem;
+        <div class="target-counter card" style="
             text-align: center;
             padding: 1rem;
             border-radius: 8px;">
