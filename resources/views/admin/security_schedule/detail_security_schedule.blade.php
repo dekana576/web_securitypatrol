@@ -18,7 +18,7 @@
 
         <div class="right mt-3">
             <a href="{{ route('security_schedule.pdf', [$region->id, $salesOfficeId, $bulan, $tahun]) }}" class="btn btn-danger">
-                <i class="fa fa-file-pdf me-1"></i> Cetak PDF
+                <i class="fas fa-print"></i> Cetak PDF
             </a>
             <a href="{{ route('security_schedule.edit', [$region->id, $salesOfficeId, $bulan, $tahun]) }}" class="btn btn-primary">
                 <i class="fa fa-edit me-1"></i> Edit Jadwal
