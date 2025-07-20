@@ -104,14 +104,14 @@ body {
 }
 
 #sidebar .side-menu li.active a {
-  color: rgb(90, 148, 255);
+  color: #0f79d6;
   font-weight: 600;
 }
 
 
 #sidebar .side-menu li a:hover {
   background-color: var(--primary-light);
-  color: rgb(90, 148, 255);
+  color: #0f79d6;
   font-weight: 600;
 }
 

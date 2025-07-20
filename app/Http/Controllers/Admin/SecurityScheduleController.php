@@ -8,7 +8,10 @@ use App\Models\{Region, SalesOffice, User, SecuritySchedule};
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Spatie\Browsershot\Browsershot;
 use Yajra\DataTables\Facades\DataTables;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\File;
 
 class SecurityScheduleController extends Controller
 {
@@ -252,6 +255,84 @@ class SecurityScheduleController extends Controller
             return response()->json(['success' => false, 'message' => 'Gagal menghapus jadwal.']);
         }
     }
+
+    public function exportPdf($regionId, $salesOfficeId, $bulan, $tahun)
+    {
+        $region = Region::findOrFail($regionId);
+        $salesOffice = SalesOffice::findOrFail($salesOfficeId);
+
+        // Pastikan format bulan dua digit
+        $bulan = str_pad($bulan, 2, '0', STR_PAD_LEFT);
+
+        $startDate = \Carbon\Carbon::createFromDate($tahun, $bulan, 1);
+        $endDate = $startDate->copy()->endOfMonth();
+        $dates = collect();
+
+        for ($date = $startDate->copy(); $date->lte($endDate); $date->addDay()) {
+            $dates->push($date->copy());
+        }
+
+        $securityUsers = User::with(['region', 'salesOffice'])
+            ->where('role', 'security')
+            ->where('region_id', $regionId)
+            ->where('sales_office_id', $salesOfficeId)
+            ->get();
+
+        $schedules = SecuritySchedule::where('region_id', $regionId)
+            ->where('sales_office_id', $salesOfficeId)
+            ->whereMonth('tanggal', $bulan)
+            ->whereYear('tanggal', $tahun)
+            ->get();
+
+        $dataPerSecurity = [];
+
+        foreach ($securityUsers as $security) {
+            $dataPerSecurity[$security->name] = [];
+
+            foreach ($dates as $date) {
+                $shiftCodes = $schedules->where('tanggal', $date->format('Y-m-d'))
+                    ->filter(fn($s) => $s->security_1_id == $security->id || $s->security_2_id == $security->id)
+                    ->pluck('shift')
+                    ->map(fn($s) => match ($s) {
+                        'Pagi' => 'p',
+                        'Siang' => 's',
+                        'Malam' => 'm',
+                        'Non-Shift' => 'p8',
+                        default => '',
+                    })->join(', ');
+
+                $dataPerSecurity[$security->name][$date->format('Y-m-d')] = $shiftCodes;
+            }
+        }
+
+        // Render HTML untuk PDF
+        $html = view('exports.security_schedules', compact(
+        'region',
+        'salesOffice',
+        'dataPerSecurity',
+        'dates',
+        'bulan',
+        'tahun'
+    ))->render();
+
+    $filename = 'Schedule-' . Str::random(6) . '.pdf';
+            $filepath = storage_path('app/public/' . $filename);
+
+        Browsershot::html($html)
+                ->waitUntilNetworkIdle()
+                ->timeout(60)
+                ->format('A4')
+                ->savePdf($filepath);
+
+            // Stream PDF dan hapus file setelah selesai dikirim
+            return response()->streamDownload(function () use ($filepath) {
+                echo file_get_contents($filepath);
+                // Hapus file setelah dikirim
+                File::delete($filepath);
+            }, $filename);
+    }
+
+
 
     
 }

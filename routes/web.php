@@ -148,6 +148,7 @@ Route::prefix('login')->name('login.')->group(function () {
     Route::get('/', [AuthController::class, 'index'])->name('index');
     Route::post('/', [AuthController::class, 'Login'])->name('login');
 });
+Route::get('/security-schedule/{regionId}/{salesOfficeId}/{bulan}/{tahun}/pdf', [SecurityScheduleController::class, 'exportPdf'])->name('security_schedule.pdf');
 
 Route::get('/logout',[AuthController::class, 'logout'])->name('logout');
 Route::get('/get-sales-offices/{regionId}', [AjaxController::class, 'getSalesOfficesByRegion']);
