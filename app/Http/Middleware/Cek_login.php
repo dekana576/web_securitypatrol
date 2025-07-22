@@ -14,18 +14,30 @@ class Cek_login
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function handle(Request $request, Closure $next,$roles): Response
+    public function handle(Request $request, Closure $next, $roles): Response
     {
-        
+        // Jika belum login, redirect ke login
         if (!Auth::check()) {
             return redirect('/login');
         }
+
         $user = Auth::user();
 
-        if($user->role == $roles)
+        // Jika role sesuai, lanjutkan
+        if ($user->role == $roles) {
             return $next($request);
+        }
 
+        // Jika tidak sesuai role, redirect sesuai peran
+        if ($user->role == 'admin') {
+            return redirect('/dashboard')->with('error', 'Anda tidak memiliki akses ke halaman tersebut.');
+        }
 
-        return redirect('/login')->with('error',"Anda tidak memiliki akses !");
+        if ($user->role == 'security') {
+            return redirect('/security');
+        }
+
+        // Jika role tidak dikenal, redirect ke login
+        return redirect('/login')->with('error', 'Akses ditolak.');
     }
 }
