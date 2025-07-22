@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\{Region, SalesOffice, User, SecuritySchedule};
+use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -256,12 +257,13 @@ class SecurityScheduleController extends Controller
         }
     }
 
+
     public function exportPdf($regionId, $salesOfficeId, $bulan, $tahun)
     {
         $region = Region::findOrFail($regionId);
         $salesOffice = SalesOffice::findOrFail($salesOfficeId);
 
-        // Pastikan format bulan dua digit
+        // Format bulan menjadi dua digit
         $bulan = str_pad($bulan, 2, '0', STR_PAD_LEFT);
 
         $startDate = \Carbon\Carbon::createFromDate($tahun, $bulan, 1);
@@ -305,32 +307,19 @@ class SecurityScheduleController extends Controller
             }
         }
 
-        // Render HTML untuk PDF
-        $html = view('exports.security_schedules', compact(
-        'region',
-        'salesOffice',
-        'dataPerSecurity',
-        'dates',
-        'bulan',
-        'tahun'
-    ))->render();
+        // Render HTML
+        $pdf = Pdf::loadView('exports.security_schedules', compact(
+            'region',
+            'salesOffice',
+            'dataPerSecurity',
+            'dates',
+            'bulan',
+            'tahun'
+        ))->setPaper('A4', 'landscape'); // Set kertas landscape
 
-    $filename = 'Schedule-' . Str::random(6) . '.pdf';
-            $filepath = storage_path('app/public/' . $filename);
-
-        Browsershot::html($html)
-                ->waitUntilNetworkIdle()
-                ->timeout(60)
-                ->format('A4')
-                ->savePdf($filepath);
-
-            // Stream PDF dan hapus file setelah selesai dikirim
-            return response()->streamDownload(function () use ($filepath) {
-                echo file_get_contents($filepath);
-                // Hapus file setelah dikirim
-                File::delete($filepath);
-            }, $filename);
+        return $pdf->download('Schedule-' . Str::random(6) . '.pdf');
     }
+
 
 
 
