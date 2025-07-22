@@ -68,34 +68,32 @@ class CheckpointController extends Controller
     }
 
     public function store(Request $request)
-    {
-        $request->validate([
-            'region_id' => 'required|exists:regions,id',
-            'sales_office_id' => 'required|exists:sales_offices,id',
-            'checkpoint_name' => 'required|string|max:255',
-        ]);
+{
+    $request->validate([
+        'region_id' => 'required|exists:regions,id',
+        'sales_office_id' => 'required|exists:sales_offices,id',
+        'checkpoint_name' => 'required|string|max:255',
+    ]);
 
-        $code = strtoupper(Str::random(8));
+    $code = strtoupper(Str::random(8));
 
-        // Simpan QR Code ke file SVG
-        $qrSvg = QrCode::format('svg')->size(200)->generate($code);
+    // Path file di storage (dengan ekstensi PNG)
+    $filePath = "public/qrcodes/{$code}.png";
 
-        // Path file di storage
-        $filePath = "public/qrcodes/{$code}.svg";
+    // Buat QR Code dalam format PNG dan simpan ke storage
+    $qrPng = QrCode::format('png')->size(200)->generate($code);
+    Storage::put($filePath, $qrPng);
 
-        // Simpan ke storage
-        Storage::put($filePath, $qrSvg);
+    // Simpan checkpoint ke database
+    Checkpoint::create([
+        'region_id' => $request->region_id,
+        'sales_office_id' => $request->sales_office_id,
+        'checkpoint_name' => $request->checkpoint_name,
+        'checkpoint_code' => $code,
+    ]);
 
-        // Simpan checkpoint ke DB
-        Checkpoint::create([
-            'region_id' => $request->region_id,
-            'sales_office_id' => $request->sales_office_id,
-            'checkpoint_name' => $request->checkpoint_name,
-            'checkpoint_code' => $code,
-        ]);
-
-        return redirect()->route('checkpoint.index')->with('success', 'Checkpoint berhasil ditambahkan');
-    }
+    return redirect()->route('checkpoint.index')->with('success', 'Checkpoint berhasil ditambahkan');
+}
 
     public function edit($id)
     {
@@ -152,39 +150,28 @@ class CheckpointController extends Controller
     }
 
     public function printAll(Request $request)
-    {
-        $query = Checkpoint::with(['region', 'salesOffice']);
+{
+    $query = Checkpoint::with(['region', 'salesOffice']);
 
-        // Filter berdasarkan region dan sales office jika ada
-        if ($request->filled('region_id')) {
-            $query->where('region_id', $request->region_id);
-        }
-
-        if ($request->filled('sales_office_id')) {
-            $query->where('sales_office_id', $request->sales_office_id);
-        }
-
-        $checkpoints = $query->get();
-
-        // Render view ke HTML
-        $html = view('exports.checkpoints', compact('checkpoints'))->render();
-
-        // File PDF sementara
-        $filename = 'QRcode-' . Str::random(6) . '.pdf';
-        $filepath = storage_path('app/public/' . $filename);
-
-        // Generate PDF
-        Browsershot::html($html)
-            ->waitUntilNetworkIdle()
-            ->timeout(60)
-            ->format('A4')
-            ->savePdf($filepath);
-
-        // Stream PDF dan hapus file setelah selesai dikirim
-        return response()->streamDownload(function () use ($filepath) {
-            echo file_get_contents($filepath);
-            // Hapus file setelah dikirim
-            File::delete($filepath);
-        }, $filename);
+    // Filter berdasarkan region dan sales office jika ada
+    if ($request->filled('region_id')) {
+        $query->where('region_id', $request->region_id);
     }
+
+    if ($request->filled('sales_office_id')) {
+        $query->where('sales_office_id', $request->sales_office_id);
+    }
+
+    $checkpoints = $query->get();
+
+    // Generate nama file PDF
+    $filename = 'QRcode-' . Str::random(6) . '.pdf';
+
+    // Render PDF dari Blade view
+    $pdf = Pdf::loadView('exports.checkpoints', compact('checkpoints'))
+        ->setPaper('A4', 'portrait');
+
+    // Stream PDF langsung ke browser
+    return $pdf->stream($filename);
+}
 }
