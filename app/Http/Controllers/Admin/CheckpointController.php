@@ -135,6 +135,30 @@ class CheckpointController extends Controller
             ], 404);
         }
 
+        // Hapus gambar QR code jika ada (file .png dari checkpoint_code)
+        $qrPath = 'qr_codes/' . $checkpoint->checkpoint_code . '.png';
+        if (Storage::disk('public')->exists($qrPath)) {
+            Storage::disk('public')->delete($qrPath);
+        }
+
+        // Hapus semua gambar image[] jika ada (foto tambahan dari checkpoint, misalnya)
+        if ($checkpoint->image) {
+            $images = json_decode($checkpoint->image, true);
+
+            if (is_array($images)) {
+                foreach ($images as $imagePath) {
+                    if (Storage::disk('public')->exists($imagePath)) {
+                        Storage::disk('public')->delete($imagePath);
+                    }
+                }
+            } else {
+                // Jika hanya satu gambar string (bukan array)
+                if (Storage::disk('public')->exists($checkpoint->image)) {
+                    Storage::disk('public')->delete($checkpoint->image);
+                }
+            }
+        }
+
         $checkpoint->delete();
 
         return response()->json([
@@ -152,46 +176,46 @@ class CheckpointController extends Controller
 
 
 
-public function printAll(Request $request)
-{
-    $query = Checkpoint::with(['region', 'salesOffice']);
+    public function printAll(Request $request)
+    {
+        $query = Checkpoint::with(['region', 'salesOffice']);
 
-    // Filter berdasarkan region dan sales office jika ada
-    if ($request->filled('region_id')) {
-        $query->where('region_id', $request->region_id);
-    }
-
-    if ($request->filled('sales_office_id')) {
-        $query->where('sales_office_id', $request->sales_office_id);
-    }
-
-    $checkpoints = $query->get();
-
-    // Buat array baru berisi checkpoint + qr_base64
-    $checkpointsWithQr = [];
-
-    foreach ($checkpoints as $checkpoint) {
-        $item = (object) $checkpoint; // cast ke object biasa
-
-        $qrPath = 'public/qrcodes/' . $item->checkpoint_code . '.png';
-
-        if (Storage::exists($qrPath)) {
-            $image = 'data:image/png;base64,' . base64_encode(Storage::get($qrPath));
-            $item->qr_base64 = $image;
-        } else {
-            $item->qr_base64 = null;
+        // Filter berdasarkan region dan sales office jika ada
+        if ($request->filled('region_id')) {
+            $query->where('region_id', $request->region_id);
         }
 
-        $checkpointsWithQr[] = $item;
+        if ($request->filled('sales_office_id')) {
+            $query->where('sales_office_id', $request->sales_office_id);
+        }
+
+        $checkpoints = $query->get();
+
+        // Buat array baru berisi checkpoint + qr_base64
+        $checkpointsWithQr = [];
+
+        foreach ($checkpoints as $checkpoint) {
+            $item = (object) $checkpoint; // cast ke object biasa
+
+            $qrPath = 'public/qrcodes/' . $item->checkpoint_code . '.png';
+
+            if (Storage::exists($qrPath)) {
+                $image = 'data:image/png;base64,' . base64_encode(Storage::get($qrPath));
+                $item->qr_base64 = $image;
+            } else {
+                $item->qr_base64 = null;
+            }
+
+            $checkpointsWithQr[] = $item;
+        }
+
+        $filename = 'QRcode-' . Str::random(6) . '.pdf';
+
+        $pdf = Pdf::loadView('exports.checkpoints', ['checkpoints' => $checkpointsWithQr])
+            ->setPaper('A4', 'portrait');
+
+        return $pdf->download($filename);
     }
-
-    $filename = 'QRcode-' . Str::random(6) . '.pdf';
-
-    $pdf = Pdf::loadView('exports.checkpoints', ['checkpoints' => $checkpointsWithQr])
-        ->setPaper('A4', 'portrait');
-
-    return $pdf->download($filename);
-}
 
 
 }
