@@ -53,7 +53,7 @@
             </div>
             <div class="qr-code">
                 @if ($checkpoint->qr_base64)
-                    <img src="{{ $checkpoint->qr_base64 }}" alt="QR Code" style="max-width: 100px;">
+                    <img src="{{ $checkpoint->qr_base64 }}" alt="QR Code" style="max-width: 200px;">
                 @else
                     <p class="not-found">QR code tidak ditemukan</p>
                 @endif
