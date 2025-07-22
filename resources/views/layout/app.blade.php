@@ -29,14 +29,14 @@
 	<section id="sidebar">
 		<div class="d-flex align-items-center">
 
-			<a href="{{ url('dashboard') }}" class="brand d-flex align-items-center gap-2">
+			<a href="{{ url('/') }}" class="brand d-flex align-items-center gap-2">
 				<img src="{{ url('img/logo_AM_Patrol_no_Text_PNG.png') }}" width="40" alt="logo">
 				<span class="logo-text" style="font-family: Anton; font-size: 30px;"><span style="color: black">AM</span> <span style="color: #074377">Patrol</span></span>
 			</a>
 		</div>
 		<ul class="side-menu top">
 			<li class="{{ request()->is('dashboard') ? 'active' : '' }}">
-				<a href="{{ url('dashboard') }}">
+				<a href="{{ url('/') }}">
 					<i class="fa-solid fa-gauge-high"></i>
 					<span class="text">Dashboard</span>
 				</a>
