@@ -53,7 +53,7 @@
         </div>
         <div class="qr-code">
             @php
-                $svgPath = public_path('storage/qrcodes/' . $checkpoint->checkpoint_code . '.svg');
+                $svgPath = public_path('storage/qrcodes/' . $checkpoint->checkpoint_code . '.png');
             @endphp
 
             @if (file_exists($svgPath))
