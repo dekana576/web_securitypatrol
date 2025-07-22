@@ -75,25 +75,25 @@
                     <td>
                         @switch($val)
                             @case('p')
-                                <span style="display:inline-block; padding:2px 6px; font-size:9px; font-weight:bold; border-radius:4px; background-color:#198754; color:black;">
+                                <span style="display:inline-block; padding:2px 6px; font-size:9px; font-weight:bold; border-radius:4px;  color:black;">
                                     P
                                 </span>
                                 @break
 
                             @case('s')
-                                <span style="display:inline-block; padding:2px 6px; font-size:9px; font-weight:bold; border-radius:4px; background-color:#ffc107; color:black;">
+                                <span style="display:inline-block; padding:2px 6px; font-size:9px; font-weight:bold; border-radius:4px;  color:black;">
                                     S
                                 </span>
                                 @break
 
                             @case('m')
-                                <span style="display:inline-block; padding:2px 6px; font-size:9px; font-weight:bold; border-radius:4px; background-color:#343a40; color:black;">
+                                <span style="display:inline-block; padding:2px 6px; font-size:9px; font-weight:bold; border-radius:4px;  color:black;">
                                     M
                                 </span>
                                 @break
 
                             @case('p8')
-                                <span style="display:inline-block; padding:2px 6px; font-size:9px; font-weight:bold; border-radius:4px; background-color:#f8d7da; color:black;">
+                                <span style="display:inline-block; padding:2px 6px; font-size:9px; font-weight:bold; border-radius:4px; background-color:#ffc107; color:black;">
                                     P8
                                 </span>
                                 @break
