@@ -15,6 +15,7 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Spatie\Browsershot\Browsershot;
+use Intervention\Image\Facades\Image;
 
 class CheckpointController extends Controller
 {
@@ -149,7 +150,9 @@ class CheckpointController extends Controller
         return response()->json($salesOffices);
     }
 
-    public function printAll(Request $request)
+
+
+public function printAll(Request $request)
 {
     $query = Checkpoint::with(['region', 'salesOffice']);
 
@@ -164,14 +167,31 @@ class CheckpointController extends Controller
 
     $checkpoints = $query->get();
 
-    // Generate nama file PDF
+    // Buat array baru berisi checkpoint + qr_base64
+    $checkpointsWithQr = [];
+
+    foreach ($checkpoints as $checkpoint) {
+        $item = (object) $checkpoint; // cast ke object biasa
+
+        $qrPath = 'public/qrcodes/' . $item->checkpoint_code . '.png';
+
+        if (Storage::exists($qrPath)) {
+            $image = 'data:image/png;base64,' . base64_encode(Storage::get($qrPath));
+            $item->qr_base64 = $image;
+        } else {
+            $item->qr_base64 = null;
+        }
+
+        $checkpointsWithQr[] = $item;
+    }
+
     $filename = 'QRcode-' . Str::random(6) . '.pdf';
 
-    // Render PDF dari Blade view
-    $pdf = Pdf::loadView('exports.checkpoints', compact('checkpoints'))
+    $pdf = Pdf::loadView('exports.checkpoints', ['checkpoints' => $checkpointsWithQr])
         ->setPaper('A4', 'portrait');
 
-    // Stream PDF langsung ke browser
-    return $pdf->stream($filename);
+    return $pdf->download($filename);
 }
+
+
 }
