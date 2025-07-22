@@ -141,7 +141,7 @@
                                 <div class="swiper-wrapper">
                                     @foreach ($feedback_images as $fbimg)
                                         <div class="swiper-slide">
-                                            <img src="{{ url('storage/' . $fbimg) }}" alt="Foto Patroli"
+                                            <img src="{{ url('storage/app/public/' . $fbimg) }}" alt="Foto Patroli"
                                                 class="img-fluid rounded shadow mb-3 d-block mx-auto"
                                                 style="max-height: 400px; width: auto; object-fit: contain;">
                                         </div>
