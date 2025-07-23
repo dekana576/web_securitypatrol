@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Hash;
 
 class UserHomeController extends Controller
 {
@@ -66,4 +67,29 @@ class UserHomeController extends Controller
 
         return view('user.user_home', compact('user', 'shift', 'remaining', 'unreadFeedbackCount'));
     }
+
+    public function changePassword()
+    {
+        return view('user.change_password');
+    }
+
+    public function updatePassword(Request $request)
+    {
+        $request->validate([
+            'current_password' => 'required',
+            'new_password' => 'required|min:8|confirmed',
+        ]);
+
+        $user = User::find(auth()->id());
+
+        if (!Hash::check($request->current_password, $user->password)) {
+            return back()->with('error', 'Password lama tidak sesuai.');
+        }
+
+        $user->password = bcrypt($request->new_password);
+        $user->save();
+
+        return back()->with('success', 'Password berhasil diubah.');
+    }
+
 }

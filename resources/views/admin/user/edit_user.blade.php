@@ -30,13 +30,6 @@
                         @enderror
                     </div>
     
-                    <div class="form-group">
-                        <label for="username">Username</label>
-                        <input type="text" id="username" name="username" class="form-control @error('username') is-invalid @enderror" value="{{ old('username', $user->username) }}" required>
-                        @error('username')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
     
                     <div class="form-group">
                         <label for="nik">NIK</label>

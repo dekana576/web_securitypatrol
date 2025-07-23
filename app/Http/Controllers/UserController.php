@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\UserCreatedMail;
 use App\Models\Checkpoint;
 use App\Models\CheckpointCriteria;
 use App\Models\Region;
@@ -11,6 +12,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Yajra\DataTables\Facades\DataTables;
 
 class UserController extends Controller
@@ -56,11 +58,8 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
-        // dd($request->all());
-
         $request->validate([
             'name' => 'required|string|max:255',
-            'username' => 'required|string|max:255|unique:users,username',
             'nik' => 'required|string|max:255|unique:users,nik',
             'phone_number' => 'required|string|max:13|unique:users,phone_number',
             'gender' => 'required|in:male,female',
@@ -71,20 +70,24 @@ class UserController extends Controller
             'email' => 'required|email|unique:users,email',
         ]);
 
-        User::create([
+        $plainPassword = $request->password;
+
+        $user = User::create([
             'name' => $request->name,
-            'username' => $request->username,
             'nik' => $request->nik,
             'phone_number' => $request->phone_number,
             'gender' => $request->gender,
-            'password' => bcrypt($request->password),
+            'password' => bcrypt($plainPassword),
             'role' => $request->role,
             'sales_office_id' => $request->sales_office_id,
             'region_id' => $request->region_id,
             'email' => $request->email,
         ]);
 
-        return redirect()->route('user.index')->with('success', 'User berhasil ditambahkan.');
+        // Kirim email
+        Mail::to($user->email)->send(new UserCreatedMail($user, $plainPassword));
+
+        return redirect()->route('user.index')->with('success', 'User berhasil ditambahkan dan email telah dikirim.');
     }
 
     public function edit($id)
@@ -100,7 +103,6 @@ class UserController extends Controller
     {
     $request->validate([
         'name' => 'required|string|max:255',
-        'username' => 'required|string|max:255|unique:users,username,' . $id,
         'email' => 'nullable|email|unique:users,email,' . $id,
         'nik' => 'required|numeric|unique:users,nik,' . $id,
         'phone_number' => 'required|numeric|unique:users,phone_number,' . $id,
@@ -115,7 +117,6 @@ class UserController extends Controller
     $user = User::findOrFail($id);
 
     $user->name = $request->name;
-    $user->username = $request->username;
     $user->email = $request->email;
     $user->nik = $request->nik;
     $user->phone_number = $request->phone_number;
@@ -152,6 +153,7 @@ class UserController extends Controller
             'message' => 'User berhasil dihapus.'
         ]);
     }
+    
 
 
 

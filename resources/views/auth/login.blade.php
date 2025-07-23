@@ -55,7 +55,6 @@
 
                     <button class="btn-login mt-3" type="submit">Login</button>
                     <hr>
-                    <a href="#" class="forgot">Forgot Password?</a>
                 </form>
             </div>
         </div>

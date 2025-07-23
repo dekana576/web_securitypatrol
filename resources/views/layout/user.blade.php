@@ -21,31 +21,38 @@
 <body>
 
   <!-- Sidebar -->
-  <section class="sidebar" id="sidebar">
+<section class="sidebar" id="sidebar">
     <ul class="sidebar-menu top">
         <li class="active">
             <a href="{{ route('user.home') }}">
-              <i class="fa-solid fa-house"></i>
-              <span class="text">Home</span>
+                <i class="fa-solid fa-house"></i>
+                <span class="text">Home</span>
             </a>
         </li>
         <li>
-          <a href="{{ route('schedule.index') }}">
-            <i class="fa-solid fa-table"></i>
-            <span class="text">Jadwal</span>
-          </a>
+            <a href="{{ route('schedule.index') }}">
+                <i class="fa-solid fa-table"></i>
+                <span class="text">Jadwal</span>
+            </a>
         </li>
     </ul>
-     <ul class="sidebar-menu">
+
+    <ul class="sidebar-menu">
         <li>
-            <a href="{{ route('logout') }}" class="logout">
-              <i class="fa-solid fa-arrow-right-from-bracket"></i>
-              <span class="text">Logout</span>
+            <a href="{{ route('security.change_password') }}">
+                <i class="fa-solid fa-key"></i>
+                <span class="text">Ubah Password</span>
             </a>
         </li>
-     </ul>
-    
-  </section>
+        <li>
+            <a href="{{ route('logout') }}" class="logout">
+                <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                <span class="text">Logout</span>
+            </a>
+        </li>
+    </ul>
+</section>
+
    
   <!-- Content -->
   <section id="content">

@@ -134,6 +134,9 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/security/feedback/{id}', [FeedbackController::class, 'show'])->name('security.feedback.show');
         Route::put('/feedback/{id}/done', [FeedbackController::class, 'markAsDone'])->name('security.feedback.done');
 
+        Route::get('/change-password', [UserHomeController::class, 'changePassword'])->name('security.change_password');
+        Route::post('/change-password', [UserHomeController::class, 'updatePassword'])->name('security.update_password');
+
 
 
 
