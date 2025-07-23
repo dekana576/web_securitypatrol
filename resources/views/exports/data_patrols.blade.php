@@ -93,7 +93,7 @@
                     </td>
                     <td>{{ $dp->user->name ?? '-' }}</td>
                     <td>{{ ucfirst($dp->status) }}</td>
-                    <td>{{ $dp->deskripsi ?? '-' }}</td>
+                    <td>{{ $dp->description ?? '-' }}</td>
                 </tr>
             @empty
                 <tr>
