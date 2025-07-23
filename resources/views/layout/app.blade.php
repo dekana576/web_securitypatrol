@@ -112,10 +112,10 @@
 		<!-- NAVBAR -->
 		<nav class="shadow-sm">
 			<i class="fa-solid fa-bars"></i>
-			<a href="#" class="profile">
+			<a href="#" class="profile align-items-center d-flex gap-2">
+				<span class="ms-2">{{Illuminate\Support\Facades\Auth::user()->name}}</span>
 				<img src="{{ url('img/user.png') }}" alt="Profile">
 			</a>
-            <span class="ms-2">Admin</span>
 		</nav>
 
 		<!-- MAIN -->
