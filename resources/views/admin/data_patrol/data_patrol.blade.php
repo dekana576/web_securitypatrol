@@ -15,7 +15,7 @@
         <div class="card-body ">
             <div class="control-button top mb-3">
                 <a href="#" id="print-patrol-data" class="btn-print" >
-                    <i class="fas fa-print"></i> Print QR (PDF)
+                    <i class="fas fa-print"></i> Print Data Patrol (PDF)
         
                 </a>
 
