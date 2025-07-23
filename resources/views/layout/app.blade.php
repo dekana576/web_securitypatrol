@@ -4,6 +4,15 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="icon" type="image/x-icon" href="/img/logo_AM_Patrol_no_Text_ICO.ico">
+
+	<!-- Manifest -->
+	<link rel="manifest" href="/manifest.json">
+	<meta name="theme-color" content="#0d6efd">
+
+	<!-- Icons (for Android) -->
+	<link rel="icon" sizes="192x192" href="/icons/icon-192x192.png">
+	<link rel="apple-touch-icon" href="/icons/icon-512x512.png">
+
 	
 	<!-- Font Awesome -->
 	<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
