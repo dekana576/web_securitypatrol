@@ -6,11 +6,12 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\DataPatrol;
 use App\Models\Region;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\Facades\DataTables;
+use Illuminate\Support\Str;
 
 class DataPatrolAdminController extends Controller
 {
@@ -205,5 +206,66 @@ class DataPatrolAdminController extends Controller
             'success' => true,
             'message' => 'Data patroli dan semua gambar berhasil dihapus.'
         ]);
+    }
+
+    public function printAll(Request $request)
+    {
+        $query = DataPatrol::with(['region', 'salesOffice', 'checkpoint', 'user'])->latest();
+
+        // Filter seperti yang kamu lakukan di getData()
+        if ($request->filled('region_id')) {
+            $query->where('region_id', $request->region_id);
+        }
+
+        if ($request->filled('sales_office_id')) {
+            $query->where('sales_office_id', $request->sales_office_id);
+        }
+
+        if ($request->filled('year')) {
+            $query->whereYear('tanggal', $request->year);
+        }
+
+        if ($request->filled('month')) {
+            $query->whereMonth('tanggal', $request->month);
+        }
+
+        if ($request->filled('day')) {
+            $query->whereDay('tanggal', $request->day);
+        }
+
+        if ($request->filled('kriteria')) {
+            $query->where(function ($q) use ($request) {
+                if ($request->kriteria === 'aman') {
+                    $q->where(function ($sub) {
+                        $sub->whereRaw("JSON_SEARCH(LOWER(kriteria_result), 'one', '%tidak%') IS NULL")
+                            ->whereRaw("JSON_SEARCH(LOWER(kriteria_result), 'one', '%negative%') IS NULL");
+                    });
+                } elseif ($request->kriteria === 'tidak_aman') {
+                    $q->where(function ($sub) {
+                        $sub->whereRaw("JSON_SEARCH(LOWER(kriteria_result), 'one', '%tidak%') IS NOT NULL")
+                            ->orWhereRaw("JSON_SEARCH(LOWER(kriteria_result), 'one', '%negative%') IS NOT NULL");
+                    });
+                }
+            });
+        }
+
+        if ($request->filled('shift')) {
+            $query->where('shift', $request->shift);
+        }
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        $dataPatrols = $query->get();
+
+        // Buat filename random
+        $filename = 'DataPatrol-' . Str::random(6) . '.pdf';
+
+        // Load blade view untuk PDF
+        $pdf = Pdf::loadView('exports.data_patrols', ['dataPatrols' => $dataPatrols])
+            ->setPaper('A4', 'landscape');
+
+        return $pdf->download($filename);
     }
 }

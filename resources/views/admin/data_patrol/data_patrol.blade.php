@@ -13,6 +13,14 @@
 
     <div class="card shadow-sm border-0 mb-4 bg-light">
         <div class="card-body ">
+            <div class="control-button top mb-3">
+                <a href="#" id="print-patrol-data" class="btn-print" >
+                    <i class="fas fa-print"></i> Print QR (PDF)
+        
+                </a>
+
+        
+            </div>
             <div class="row g-3">
             {{-- Baris 1: Region | Sales Office | Kriteria --}}
             <div class="col-md-4">
@@ -138,26 +146,14 @@ $(document).ready(function () {
     const table = $('#data-patrol-table').DataTable({
         dom:
             "<'row mb-2'" +
-                "<'col-md-6 d-flex align-items-center gap-2'lB>" + // Row + Print di kiri atas
-                "<'col-md-6 d-flex justify-content-end'f>" +       // Search di kanan atas
+                "<'col-md-6 d-flex align-items-center gap-2'l>" +
+                "<'col-md-6 d-flex justify-content-end'f>" +
             ">" +
-            "<'row'<'col-sm-12'tr>>" +                             // Tabel utama
+            "<'row'<'col-sm-12'tr>>" +
             "<'row mt-2'" +
-                "<'col-md-6'i>" +                                  // Info jumlah di kiri bawah
-                "<'col-md-6 d-flex justify-content-end'p>" +       // Pagination kanan bawah
+                "<'col-md-6'i>" +
+                "<'col-md-6 d-flex justify-content-end'p>" +
             ">",
-
-        buttons: [
-            {
-                extend: 'print',
-                text: '<i class="fa-solid fa-print"></i>',
-                className: 'btn btn-secondary',
-                titleAttr: 'Print Data Patrol',
-                exportOptions: {
-                    columns: ':not(.no-export)'
-                }
-            }
-        ],
 
         processing: true,
         serverSide: true,
@@ -170,10 +166,9 @@ $(document).ready(function () {
                 d.month = $('#filter-month').val();
                 d.day = $('#filter-day').val();
                 d.kriteria = $('#filter-kriteria').val();
-                d.shift = $('#filter-shift').val();         // NEW
-                d.status = $('#filter-status').val();       // NEW
+                d.shift = $('#filter-shift').val();
+                d.status = $('#filter-status').val();
             }
-
         },
 
         columns: [
@@ -186,11 +181,10 @@ $(document).ready(function () {
             { data: 'kriteria_result', name: 'kriteria_result' },
             { data: 'security_name', name: 'user.name' },
             { data: 'status', name: 'status' },
-            { data: 'action', orderable: false, searchable: false, className: 'text-center' }
+            { data: 'action', orderable: false, searchable: false, className: 'text-center no-export' }
         ],
 
         responsive: true,
-
         language: {
             search: "",
             searchPlaceholder: " Cari Data Patrol...",
@@ -199,13 +193,9 @@ $(document).ready(function () {
             emptyTable: "Belum ada data patrol.",
             processing: "Sedang memuat data..."
         },
-
         lengthMenu: [5, 10, 25, 50],
         pageLength: 10
     });
-
-
-
 
     function loadSalesOffices(regionId, selectedId = '') {
         $('#filter-sales-office').html('<option>Memuat...</option>').prop('disabled', true);
@@ -226,7 +216,6 @@ $(document).ready(function () {
         });
     }
 
-    // Load default sales office saat pertama
     if (defaultRegionId) {
         loadSalesOffices(defaultRegionId, defaultSalesOfficeId);
     }
@@ -236,27 +225,12 @@ $(document).ready(function () {
         loadSalesOffices(regionId);
     });
 
-    $('#filter-sales-office').on('change', function () {
+    $('#filter-sales-office, #filter-year, #filter-month, #filter-day, #filter-kriteria, #filter-shift, #filter-status').on('change', function () {
         table.ajax.reload();
     });
-
-    $('#filter-year, #filter-month, #filter-day').on('change', function () {
-        table.ajax.reload();
-    });
-
-    $('#filter-kriteria').on('change', function () {
-        table.ajax.reload();
-    });
-
-    $('#filter-shift, #filter-status').on('change', function () {
-        table.ajax.reload();
-    });
-
-
 
     $('#data-patrol-table').on('click', '.approve', function () {
         const id = $(this).data('id');
-
         Swal.fire({
             title: 'Setujui Data?',
             text: 'Apakah Anda yakin ingin menyetujui data patroli ini?',
@@ -276,7 +250,7 @@ $(document).ready(function () {
                     },
                     success: function (response) {
                         toastr.success(response.message || 'Data patroli berhasil disetujui');
-                        $('#data-patrol-table').DataTable().ajax.reload();
+                        table.ajax.reload();
                     },
                     error: function () {
                         toastr.error('Terjadi kesalahan saat menyetujui data.');
@@ -286,38 +260,58 @@ $(document).ready(function () {
         });
     });
 
-
     $('#data-patrol-table').on('click', '.delete', function () {
-    const url = $(this).data('url');
+        const url = $(this).data('url');
+        Swal.fire({
+            title: 'Hapus Data ?',
+            text: 'Data ini akan dihapus secara permanen.',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Ya, hapus!',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: url,
+                    type: 'DELETE',
+                    data: {
+                        _token: $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function (response) {
+                        toastr.success(response.message || 'Data berhasil dihapus');
+                        table.ajax.reload();
+                    },
+                    error: function () {
+                        toastr.error('Terjadi kesalahan saat menghapus data.');
+                    }
+                });
+            }
+        });
+    });
 
-    Swal.fire({
-        title: 'Hapus Data ?',
-        text: 'Data ini akan dihapus secara permanen.',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#d33',
-        cancelButtonColor: '#6c757d',
-        confirmButtonText: 'Ya, hapus!',
-        cancelButtonText: 'Batal'
-    }).then((result) => {
-        if (result.isConfirmed) {
-            $.ajax({
-                url: url,
-                type: 'DELETE',
-                data: {
-                    _token: $('meta[name="csrf-token"]').attr('content')
-                },
-                success: function (response) {
-                    toastr.success(response.message || 'Data berhasil dihapus');
-                    $('#data-patrol-table').DataTable().ajax.reload();
-                },
-                error: function () {
-                    toastr.error('Terjadi kesalahan saat menghapus data.');
-                }
-            });
-        }
+    // Tombol Print custom
+    $('#print-patrol-data').on('click', function () {
+        const params = {
+            region_id: $('#filter-region').val(),
+            sales_office_id: $('#filter-sales-office').val(),
+            year: $('#filter-year').val(),
+            month: $('#filter-month').val(),
+            day: $('#filter-day').val(),
+            kriteria: $('#filter-kriteria').val(),
+            shift: $('#filter-shift').val(),
+            status: $('#filter-status').val()
+        };
+
+        const queryString = Object.keys(params)
+            .map(key => `${key}=${encodeURIComponent(params[key] ?? '')}`)
+            .join('&');
+
+        const url = `/data_patrol/print?${queryString}`;
+        window.open(url, '_blank');
     });
 });
-});
 </script>
+
 @endpush

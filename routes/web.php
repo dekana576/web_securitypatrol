@@ -113,6 +113,9 @@ Route::middleware(['auth'])->group(function () {
             Route::put('/{id}/approveView', [DataPatrolAdminController::class, 'approveView'])->name('approve');
             Route::put('/{id}/feedback', [DataPatrolAdminController::class, 'updateFeedback'])->name('feedback');
 
+            Route::get('/print', [DataPatrolAdminController::class, 'printAll'])->name('print');
+
+
 
 
         });
