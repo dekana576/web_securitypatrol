@@ -1,10 +1,10 @@
 {
-  "name": "Patroli App",
-  "short_name": "Patroli",
+  "name": "AM Patrol",
+  "short_name": "AM Patrol",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
-  "theme_color": "#0d6efd",
+  "theme_color": "#ffffff",
   "orientation": "portrait",
   "icons": [
     {
