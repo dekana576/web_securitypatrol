@@ -38,13 +38,21 @@ class UserController extends Controller
 
         return DataTables::of($users)
             ->addIndexColumn()
+            ->addColumn('role', function ($row) {
+                return match($row->role) {
+                    'admin' => '<span class="badge bg-danger text-white">Admin</span>',
+                    'security' => '<span class="badge bg-primary text-white">Security</span>',
+                    
+                };
+            })
             ->addColumn('action', function ($row) {
                 return '
                     <a href="' . route('user.edit', $row->id) . '" class="action-icon edit-icon"><i class="fa-solid fa-file-pen" title="Edit"></i></a>
                     <a href="#" class="action-icon delete-icon delete" data-id="' . $row->id . '"><i class="fa-solid fa-trash" title="Delete"></i></a>
+                    
                 ';
             })
-            ->rawColumns(['action'])
+            ->rawColumns(['action', 'role'])
             ->make(true);
     }
 

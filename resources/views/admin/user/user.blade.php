@@ -54,9 +54,13 @@
                     <th>Gender</th>
                     <th>Region</th>
                     <th>Sales Office</th>
+                    <th>Role</th>
                     <th>Action</th>
                 </tr>
             </thead>
+            <tbody>
+                
+            </tbody>
         </table>
     </div>
     
@@ -98,6 +102,7 @@ $(document).ready(function () {
             { data: 'gender', name: 'gender' },
             { data: 'region.name', name: 'region.name' },
             { data: 'sales_office.sales_office_name', name: 'salesOffice.sales_office_name' },
+            { data: 'role', name: 'role' },
             {
                 data: 'action',
                 name: 'action',
