@@ -38,7 +38,7 @@
         if (!bulan) return;
 
         if (existingMonths.includes(bulan)) {
-            alert('Jadwal untuk bulan ini sudah ada. Silakan pilih bulan lain.');
+            toastr.error('Jadwal untuk bulan ini sudah ada. Silakan pilih bulan lain.');
             this.value = '';
             return;
         }
