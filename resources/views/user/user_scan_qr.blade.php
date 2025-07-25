@@ -188,7 +188,7 @@
 
   // Validasi saat submit
   document.getElementById('patrolForm').addEventListener('submit', function(e) {
-    const totalInputs = imageWrapper.querySelectorAll('input[type="file"]').length;
+    const totalInputs = imageInputWrapper.querySelectorAll('input[type="file"]').length;
     if (totalInputs === 0) {
       e.preventDefault();
       toastr.error('Minimal upload 1 gambar.');
