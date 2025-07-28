@@ -46,10 +46,10 @@ class UserController extends Controller
                 };
             })
             ->addColumn('action', function ($row) {
-                return '
+                return '<div class="d-flex justify-content-center align-items-center">
                     <a href="' . route('user.edit', $row->id) . '" class="action-icon edit-icon"><i class="fa-solid fa-file-pen" title="Edit"></i></a>
                     <a href="#" class="action-icon delete-icon delete" data-id="' . $row->id . '"><i class="fa-solid fa-trash" title="Delete"></i></a>
-                    
+                    </div>
                 ';
             })
             ->rawColumns(['action', 'role'])
