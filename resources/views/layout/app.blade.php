@@ -129,6 +129,12 @@
 
 		<!-- MAIN -->
 		@yield('content')
+
+		<!-- FOOTER -->
+		<footer class="text-center py-3 text-muted" style="font-size: 14px;">
+			<hr>
+			<p>V1.0 | &copy; 2025 AM Patrol</p>
+		</footer>
 	</section>
 	<!-- END CONTENT -->
 
